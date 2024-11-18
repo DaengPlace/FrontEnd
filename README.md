@@ -3,7 +3,7 @@
 ## 기술 스택
 
 - 프레임워크: Next.js
-- 언어: JypeScript
+- 언어: JavaScript
 - 패키지 매니저: yarn
 - CSS 프레임워크: MUI
 - 전역 상태 관리: Zustand

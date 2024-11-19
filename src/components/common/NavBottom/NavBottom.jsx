@@ -48,7 +48,6 @@ const Container = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 0 34px;
-  background-color: ${({ theme }) => theme.colors.white};
   position: sticky;
   bottom: 0;
   left: 0;

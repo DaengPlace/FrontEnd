@@ -1,6 +1,5 @@
 import React from "react";
 import NavBottom from "./NavBottom";
-import { RouterContext } from "next/dist/shared/lib/router-context";
 
 export default {
   title: "Components/NavBottom",
@@ -8,11 +7,7 @@ export default {
   decorators: [(Story) => <Story />],
 };
 
-const Template = (args) => (
-  <RouterContext.Provider value={{ pathname: args.pathname }}>
-    <NavBottom />
-  </RouterContext.Provider>
-);
+const Template = (args) => <NavBottom {...args} />;
 
 export const HomeSelected = Template.bind({});
 HomeSelected.args = {

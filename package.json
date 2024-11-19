@@ -14,9 +14,13 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.7",
+    "msw-storybook-addon": "^2.0.4",
     "next": "15.0.3",
+    "next-router-mock": "^0.9.13",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
+    "styled-components": "^6.1.13",
+    "styled-icons": "^10.47.1",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
@@ -26,7 +30,7 @@
     "@storybook/addon-links": "^8.4.4",
     "@storybook/addon-onboarding": "8.4.4",
     "@storybook/blocks": "8.4.4",
-    "@storybook/nextjs": "8.4.4",
+    "@storybook/nextjs": "^8.4.4",
     "@storybook/react": "^8.4.4",
     "@storybook/test": "8.4.4",
     "eslint": "^8",

@@ -43,15 +43,17 @@ export default BottomNav;
 
 const Container = styled.div`
   width: 100%;
-  height: 60px;
+  height: 75px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 0 34px;
-  position: sticky;
+  position: absolute;
   bottom: 0;
   left: 0;
-  z-index: 500;
+  z-index: 10;
+  background-color: ${({ theme }) => theme.colors.white};
+  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.05);
 `;
 
 const Tab = styled.div`

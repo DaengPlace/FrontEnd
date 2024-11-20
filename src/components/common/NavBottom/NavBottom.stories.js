@@ -2,7 +2,7 @@ import React from "react";
 import NavBottom from "./NavBottom";
 
 export default {
-  title: "Components/NavBottom",
+  title: "Common/NavBottom",
   component: NavBottom,
   decorators: [(Story) => <Story />],
 };

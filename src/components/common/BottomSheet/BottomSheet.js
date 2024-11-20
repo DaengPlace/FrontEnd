@@ -10,23 +10,25 @@ const BottomSheet = ({
   content,
   onClose,
   onConfirm,
-  cancelText = "취소",
-  confirmText = "확인",
-  isDanger = false,
-  styleVariant = "default",
+  cancelText,
+  confirmText,
 }) => {
   return (
     <Overlay>
-      <Sheet styleVariant={styleVariant}>
+      <Sheet>
         {title && <Title>{title}</Title>}
-        {content && <Content styleVariant={styleVariant}>{content}</Content>}
-        <ButtonContainer styleVariant={styleVariant}>
-          <Button className="cancel" onClick={onClose}>
-            {cancelText}
-          </Button>
-          <Button className="confirm" isActive onClick={onConfirm}>
-            {confirmText}
-          </Button>
+        {content && <Content>{content}</Content>}
+        <ButtonContainer>
+          {cancelText && (
+            <Button className="cancel" onClick={onClose}>
+              {cancelText}
+            </Button>
+          )}
+          {confirmText && (
+            <Button className="confirm" isActive onClick={onConfirm}>
+              {confirmText}
+            </Button>
+          )}
         </ButtonContainer>
       </Sheet>
     </Overlay>
@@ -40,8 +42,6 @@ BottomSheet.propTypes = {
   onConfirm: PropTypes.func.isRequired,
   cancelText: PropTypes.string,
   confirmText: PropTypes.string,
-  isDanger: PropTypes.bool,
-  styleVariant: PropTypes.oneOf(["default", "compact"]),
 };
 
 BottomSheet.defaultProps = {
@@ -49,8 +49,6 @@ BottomSheet.defaultProps = {
   content: null,
   cancelText: "Cancel",
   confirmText: "Confirm",
-  isDanger: false,
-  styleVariant: "default",
 };
 
 export default BottomSheet;
@@ -74,7 +72,7 @@ const Sheet = styled.div`
   background: white;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
-  padding: ${(props) => (props.styleVariant === "compact" ? "10px" : "20px")};
+  padding: 20px;
   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
 `;
 
@@ -86,7 +84,7 @@ const Title = styled.h2`
 `;
 
 const Content = styled.div`
-  font-size: ${(props) => (props.styleVariant === "compact" ? "12px" : "14px")};
+  font-size: 14px;
   color: #333;
   text-align: center;
 `;

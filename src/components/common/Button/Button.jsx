@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import Image from "next/image";
 
-const Button = ({ isActive, onClick, children, hasImage }) => {
+const Button = ({ isActive, onClick, children, hasImage, style }) => {
   return (
-    <Wrapper>
+    <Wrapper style={style}>
       {hasImage && (
         <StyledImage
           src="/assets/common/dog.svg"
@@ -40,11 +40,18 @@ export default Button;
 const Wrapper = styled.div`
   position: relative;
   display: inline-block;
-  width: 600px;
+  max-width: 600px;
+  width: 100%;
 `;
 
 const StyledButton = styled.button`
   width: 100%;
+  height: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import BottomSheet from "./BottomSheet";
 import Input from "../Input/Input";
+import Button from "../Button/Button";
 
 export default {
   title: "Common/BottomSheet",
@@ -30,10 +31,18 @@ const Template = (args) => {
 export const Default = Template.bind({});
 Default.args = {
   title: "이메일로 발송된 인증번호 7자리를 입력해주세요",
-  content: <Input type="text" placeholder="인증번호 입력" />,
-  cancelText: "취소",
-  confirmText: "확인",
-  styleVariant: "compact",
+  content: (
+    <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
+      <Input type="text" placeholder="인증번호 입력" />
+      <Button
+        isActive
+        onClick={() => alert("재발송 클릭")}
+        style={{ maxWidth: "100px", whiteSpace: "nowrap" }}
+      >
+        재발송
+      </Button>
+    </div>
+  ),
 };
 
 export const Success = Template.bind({});

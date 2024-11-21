@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { BirthdateInput, PhoneInput, EmailInput, TextInput } from "./Input";
 
 export default {
-  title: "Components/Inputs",
+  title: "Common/Input",
   component: TextInput,
 };
 

@@ -16,6 +16,7 @@ const BottomSheet = ({
   return (
     <Overlay>
       <Sheet>
+        <CloseButton onClick={onClose}>&times;</CloseButton>
         {title && <Title>{title}</Title>}
         {content && <Content>{content}</Content>}
         <ButtonContainer>
@@ -72,8 +73,20 @@ const Sheet = styled.div`
   background: white;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
-  padding: 20px;
+  padding: 25px;
   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  color: #333;
+  cursor: pointer;
 `;
 
 const Title = styled.h2`

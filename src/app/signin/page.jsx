@@ -4,6 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
 import { Input } from "@/components/common/Input/Input";
+import Button from "@/components/common/Button/Button";
 
 const SigninPage = () => {
   const {
@@ -22,10 +23,11 @@ const SigninPage = () => {
     <Container>
       <Title>
         <p>보호자님의</p>
-        <p>휴대폰 번호를 입력해주세요</p>
+        <p>정보를 입력해주세요</p>
       </Title>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <InputBox>
+          <p>이메일</p>
           <Controller
             name="email"
             control={control}
@@ -53,6 +55,7 @@ const SigninPage = () => {
         </InputBox>
 
         <InputBox>
+          <p>휴대폰</p>
           <Controller
             name="phone"
             control={control}
@@ -80,6 +83,7 @@ const SigninPage = () => {
         </InputBox>
 
         <InputBox>
+          <p>생년월일</p>
           <Controller
             name="birthdate"
             control={control}
@@ -107,21 +111,22 @@ const SigninPage = () => {
         </InputBox>
 
         <InputBox>
+          <p>이름</p>
           <Controller
             name="name"
             control={control}
             rules={{
               required: "이름은 필수 입력입니다.",
               maxLength: {
-                value: 50,
-                message: "이름은 최대 50자까지 가능합니다.",
+                value: 10,
+                message: "이름은 최대 10자까지 가능합니다.",
               },
             }}
             render={({ field, fieldState }) => (
               <>
                 <Input
                   {...field}
-                  placeholder="이름 입력 (예: 홍길동)"
+                  placeholder="이름 입력"
                   type="text"
                   isValid={!fieldState.invalid}
                 />
@@ -133,7 +138,19 @@ const SigninPage = () => {
           />
         </InputBox>
 
-        <SubmitButton type="submit">제출</SubmitButton>
+        <Button
+          isActive={false}
+          onClick={() => {}}
+          hasImage="true"
+          type="submit"
+          style={{
+            position: "absolute",
+            bottom: "0",
+            left: "0",
+          }}
+        >
+          제출
+        </Button>
       </Form>
     </Container>
   );
@@ -144,41 +161,44 @@ export default SigninPage;
 const Container = styled.div`
   margin: 0 auto;
   padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.h1`
   color: ${({ theme }) => theme.colors.black};
   font-size: 1.4rem;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  position: relative;
+  height: calc(100vh - 100px - 4rem);
+  flex: 1;
 `;
 
 const InputBox = styled.div`
-  margin-bottom: 16px;
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 1.1rem;
 `;
 
 const ErrorText = styled.span`
-  font-size: 12px;
+  font-size: 1rem;
   color: red;
   margin-top: 5px;
   display: block;
 `;
 
-const SubmitButton = styled.button`
-  padding: 10px 15px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primaryDark};
-  }
+const SubmitButton = styled(Button)`
+  margin-top: auto;
+  align-self: center;
+  width: 100%;
 `;

@@ -42,11 +42,16 @@ const Wrapper = styled.div`
   display: inline-block;
   max-width: 600px;
   width: 100%;
+
+  img {
+    position: absolute;
+    z-index: 1;
+  }
 `;
 
 const StyledButton = styled.button`
   width: 100%;
-  height: 40px;
+  height: 60px;
 
   display: flex;
   justify-content: center;
@@ -60,7 +65,7 @@ const StyledButton = styled.button`
     isActive ? theme.colors.primary : "#f2f2f2"};
   border: none;
   border-radius: 8px;
-  cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
+  cursor: ${({ isActive }) => (isActive ? "pointer" : undefined)};
   transition: background-color 0.3s, color 0.3s;
 
   &:hover {

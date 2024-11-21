@@ -31,7 +31,7 @@ Input.defaultProps = {
 
 const StyledInput = styled.input`
   width: 100%;
-  height: 40px;
+  height: 48px;
   padding: 0 12px;
   border: 1px solid #ccc;
   border-radius: 10px;

@@ -9,7 +9,12 @@ export const Form = () => {
     control,
     formState: { errors },
   } = useForm({
-    mode: "onChange",
+    defaultValues: {
+      email: "",
+      phone: "",
+      birthdate: "",
+      name: "",
+    },
   });
 
   const onSubmit = (data) => {

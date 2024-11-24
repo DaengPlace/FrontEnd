@@ -3,11 +3,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 
 const SigninPage = () => {
+  const router = useRouter();
   const [step, setStep] = useState(1);
+  const [isVerificationSent, setIsVerificationSent] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -22,15 +28,12 @@ const SigninPage = () => {
   const birthdateRef = useRef(null);
   const phoneRef = useRef(null);
   const emailRef = useRef(null);
+  const verificationRef = useRef(null);
 
   const onSubmit = (data) => {
     console.log("Form Submitted:", data);
-  };
-
-  const nextStep = async () => {
-    const isStepValid = await trigger(getFieldName(step));
-    if (isStepValid) {
-      setStep((prevStep) => prevStep + 1);
+    if (isVerified) {
+      router.push("/signin/add");
     }
   };
 
@@ -49,14 +52,47 @@ const SigninPage = () => {
     }
   };
 
-  const isStepValid = () => {
+  const isCurrentStepValid = () => {
     const currentField = getFieldName(step);
-    return !errors[currentField] && watch(currentField);
+    const fieldValue = watch(currentField);
+    return fieldValue && !errors[currentField];
+  };
+
+  const isButtonActive = () => {
+    if (isVerificationSent) {
+      return verificationCode.length === 6;
+    }
+    if (step === 4 && !isVerificationSent) {
+      return isCurrentStepValid();
+    }
+    return isCurrentStepValid();
+  };
+
+  const nextStep = async () => {
+    const isStepValid = await trigger(getFieldName(step));
+    if (isStepValid) {
+      setStep((prevStep) => prevStep + 1);
+    }
+  };
+
+  const handleSendVerificationCode = () => {
+    if (isCurrentStepValid()) {
+      setIsVerificationSent(true);
+      verificationRef.current?.focus();
+    }
+  };
+
+  const handleVerificationCodeChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
+    setVerificationCode(value);
+    if (value === "000000") {
+      setIsVerified(true);
+    }
   };
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === "Enter" && isStepValid()) {
+      if (event.key === "Enter" && isCurrentStepValid()) {
         event.preventDefault();
         nextStep();
       }
@@ -66,7 +102,7 @@ const SigninPage = () => {
     return () => {
       document.removeEventListener("keypress", handleKeyPress);
     };
-  }, [step, isStepValid]);
+  }, [step]);
 
   useEffect(() => {
     switch (step) {
@@ -223,6 +259,7 @@ const SigninPage = () => {
                     placeholder="이메일 (예: daengplace@gmail.com)"
                     type="email"
                     isValid={!fieldState.invalid}
+                    disabled={isVerificationSent}
                   />
                   {fieldState.error && (
                     <ErrorText>{fieldState.error.message}</ErrorText>
@@ -233,11 +270,36 @@ const SigninPage = () => {
           </InputBox>
         )}
 
+        {isVerificationSent && (
+          <InputBox>
+            <p>인증번호</p>
+            <Input
+              ref={verificationRef}
+              value={verificationCode}
+              onChange={handleVerificationCodeChange}
+              placeholder="인증번호 입력 (예: 000000)"
+              type="text"
+              isValid={verificationCode === "000000"}
+            />
+            {!isVerified &&
+              verificationCode &&
+              verificationCode.length === 6 && (
+                <ErrorText>인증번호가 올바르지 않습니다.</ErrorText>
+              )}
+          </InputBox>
+        )}
+
         <Button
-          isActive={isStepValid()}
-          onClick={step < 4 ? nextStep : handleSubmit(onSubmit)}
+          isActive={isButtonActive()}
+          onClick={
+            isVerificationSent
+              ? handleSubmit(onSubmit)
+              : step === 4
+              ? handleSendVerificationCode
+              : nextStep
+          }
           hasImage={true}
-          type={step === 4 ? "submit" : "button"}
+          type={isVerificationSent ? "submit" : "button"}
           style={{
             position: "absolute",
             bottom: "0",
@@ -245,7 +307,13 @@ const SigninPage = () => {
             width: "100%",
           }}
         >
-          {step < 4 ? "다음" : "인증번호 발송"}
+          {isVerificationSent
+            ? isVerified
+              ? "완료"
+              : "확인"
+            : step === 4
+            ? "인증번호 발송"
+            : "다음"}
         </Button>
       </Form>
     </Container>

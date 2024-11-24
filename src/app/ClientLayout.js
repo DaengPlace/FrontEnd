@@ -5,15 +5,46 @@ import { ThemeProvider } from "styled-components";
 import BottomNav from "@/components/common/NavBottom/NavBottom";
 import theme from "@/styles/theme";
 import "./globals.css";
+import styled from "styled-components";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const noBottomNavPaths = ["/login"];
+  const noHeaderNavPaths = [];
+
+  const showBottomNav = !noBottomNavPaths.includes(pathname);
+  const showHeaderNav = !noHeaderNavPaths.includes(pathname);
 
   return (
     <ThemeProvider theme={theme}>
-      {children}
-      {!noBottomNavPaths.includes(pathname) && <BottomNav />}
+      <LayoutContainer>
+        <Content noHeader={!showHeaderNav} noBottom={!showBottomNav}>
+          {children}
+        </Content>
+        {showBottomNav && <BottomNav />}
+      </LayoutContainer>
     </ThemeProvider>
   );
 }
+
+const LayoutContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+`;
+
+const Content = styled.main`
+  flex: 1;
+  margin-top: ${({ noHeader }) => (noHeader ? "0" : "60px")};
+  margin-bottom: ${({ noBottom }) => (noBottom ? "0" : "75px")};
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+  
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+`;

@@ -18,9 +18,9 @@ export default function ClientLayout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <LayoutContainer>
-        <Content noHeader={!showHeaderNav} noBottom={!showBottomNav}>
-          {children}
-        </Content>
+      <Content $noHeader={!showHeaderNav} $noBottom={!showBottomNav}>
+        {children}
+      </Content>
         {showBottomNav && <BottomNav />}
       </LayoutContainer>
     </ThemeProvider>
@@ -36,15 +36,15 @@ const LayoutContainer = styled.div`
 
 const Content = styled.main`
   flex: 1;
-  margin-top: ${({ noHeader }) => (noHeader ? "0" : "60px")};
-  margin-bottom: ${({ noBottom }) => (noBottom ? "0" : "75px")};
+  margin-top: ${({ $noHeader }) => ($noHeader ? "0" : "60px")};
+  margin-bottom: ${({ $noBottom }) => ($noBottom ? "0" : "75px")};
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
   
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none;
   }
 `;

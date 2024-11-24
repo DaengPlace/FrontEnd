@@ -1,10 +1,12 @@
 "use client";
 
-import FacilityCard from "@/components/main/FacilityCard/FacilityCard";
-import Link from "next/link";
 import { useState } from "react";
 import styled from "styled-components";
 import theme from '../../styles/theme.js';
+
+import Banner from "@/components/main/Banner/Banner.jsx";
+import Menu from "@/components/main/Menu/Menu.jsx";
+import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection.jsx";
 
 const images = [
     "/assets/mainpage/banner1.png",
@@ -25,63 +27,11 @@ const MainPage = () => {
     return (
         <Container>
 
-            <Banner>
-                <BannerImage
-                    src="/assets/mainpage/banner1.png" alt="banner image"
-                />
-            </Banner>
-
-            <Menu>
-                <MenuItem>
-                    <Link href='/recommend'>
-                        <MenuImage src='/assets/mainpage/recommendIcon.png' /><MenuDescription>성향별 추천</MenuDescription>
-                    </Link>
-                </MenuItem>
-
-                <MenuItem>
-                    <Link href='/search'>
-                        <MenuImage src='/assets/mainpage/daengplaceIcon.png' /><MenuDescription>댕플</MenuDescription>
-                    </Link>
-                </MenuItem>
-
-                <MenuItem>
-                    <Link href='/user'>
-                        <MenuImage src='/assets/mainpage/bookmarkIcon.png' /><MenuDescription>즐겨찾기</MenuDescription>
-                    </Link>
-                </MenuItem>
-            </Menu>
-
-            <PopularFacilities>
-                <SectionTitle>최근 <span style={{color: theme.colors.primary}}>인기 시설 🔥</span></SectionTitle>
-                <CardContainer>
-                    {facilities.slice(0, 5).map((fac) => (
-                        <FacilityCard
-                            key={fac.id}
-                            image={fac.image}
-                            category={fac.category}
-                            name={fac.name}
-                            rating={fac.rating}
-                        />
-                    ))}
-                </CardContainer>
-            </PopularFacilities>
-
-            <AgeGenderFacilities>
-                <SectionTitle><span style={{color: theme.colors.primary}}>{age}대 {gender===1? '여성' :'남성'}</span>들이 많이 찾는 👩🏻</SectionTitle>
-                <CardContainer>
-                    {facilities.slice(0, 5).map((fac) => (
-                        <FacilityCard
-                            key={fac.id}
-                            image={fac.image}
-                            category={fac.category}
-                            name={fac.name}
-                            rating={fac.rating}
-                        />
-                    ))}
-                </CardContainer>
-
-            </AgeGenderFacilities>
-
+            <Banner />
+            <Menu />
+            <FacilitiesSection sectionTitle={<>최근 <span>인기 시설 🔥</span></>} facilities={facilities} />
+            <Divider />
+            <FacilitiesSection sectionTitle={<><span>{age}대 {gender===1 ? "여성" : "남성"}</span>들이 많이 찾는 👩🏻</>} facilities={facilities} />
             <Divider />
 
         </Container>
@@ -98,82 +48,9 @@ const Container = styled.div`
     align-items: center;
 `;
 
-const Banner = styled.div`
-    text-align: center;
-`;
-
-const BannerImage = styled.img`
-    width: 100%;
-`;
-
-const Menu = styled.div`
-    display: flex;
-    border: 1px solid ${({ theme }) => theme.colors.divider};
-    border-radius: 20px;
-    justify-content: space-around;
-    align-items: center;
-    margin: 10px 0;
-    padding: 20px 30px;
-    background-color: white;
-    width: 550px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-`;
-
-const MenuItem = styled.div`
-    display: flex-col;
-    text-align: center;
-    font-size: 14px;
-    cursor: pointer;
-`;
-
-const MenuImage = styled.img`
-    width: 80px;
-    height: 80px;
-`;
-
-const MenuDescription = styled.div`
-    padding-top: 10px;
-`;
-
-const Facility = styled.div`
-    width: 100%;
-    text-align: left;
-    margin: 2px 12px;
-    padding-left: 20px;
-`;
-
-const PopularFacilities = styled(Facility)``;
-const AgeGenderFacilities = styled(Facility)``;
-
-const SectionTitle = styled.div`
-    font-size: 18px;
-    font-weight: bold;
-`;
-
-const CardContainer = styled.div`
-    display: flex;
-    gap: 16px;
-    margin: 10px 0;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 5px 25px 10px 5px;
-
-    &::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: ${({theme}) => theme.colors.divider};
-        border-radius: 10px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background-color: ${({ theme }) => theme.colors.defaultBackground}; /* 스크롤바 배경 */
-    }
-`;
-
 const Divider = styled.div`
-    border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
+    width: 560px;
+    height: 1px;
+    background-color: ${({ theme }) => theme.colors.divider};
+    margin: 20px 0;
 `;
-
-

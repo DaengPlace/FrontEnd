@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import styled from "styled-components";
-import theme from '../../styles/theme.js';
 
 import Banner from "@/components/main/Banner/Banner.jsx";
 import Menu from "@/components/main/Menu/Menu.jsx";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection.jsx";
+import Footer from "@/components/common/Footer/Footer.jsx";
+import Divider from "@/components/common/Divider/Divider.jsx";
 
 const images = [
     "/assets/mainpage/banner1.png",
@@ -33,6 +34,7 @@ const MainPage = () => {
             <Divider />
             <FacilitiesSection sectionTitle={<><span>{age}대 {gender===1 ? "여성" : "남성"}</span>들이 많이 찾는 👩🏻</>} facilities={facilities} />
             <Divider />
+            <Footer />
 
         </Container>
     );
@@ -48,9 +50,3 @@ const Container = styled.div`
     align-items: center;
 `;
 
-const Divider = styled.div`
-    width: 560px;
-    height: 1px;
-    background-color: ${({ theme }) => theme.colors.divider};
-    margin: 20px 0;
-`;

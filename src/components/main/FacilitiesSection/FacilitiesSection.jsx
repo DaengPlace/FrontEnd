@@ -34,6 +34,7 @@ const SectionContainer = styled.div`
 const SectionTitle = styled.div`
     font-size: 18px;
     font-weight: bold;
+    margin-top: 5px;
     span {
       color: ${theme.colors.primary};
     }

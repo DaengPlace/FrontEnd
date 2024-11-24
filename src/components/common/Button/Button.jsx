@@ -16,7 +16,7 @@ const Button = ({ isActive, onClick, children, hasImage, style }) => {
           height={70}
         />
       )}
-      <StyledButton isActive={isActive} onClick={onClick} disabled={!isActive}>
+      <StyledButton $isActive={isActive} onClick={onClick} disabled={!isActive}>
         {children}
       </StyledButton>
     </Wrapper>

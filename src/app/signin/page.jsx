@@ -23,11 +23,6 @@ const SigninPage = () => {
   const phoneRef = useRef(null);
   const emailRef = useRef(null);
 
-  const name = watch("name");
-  const birthdate = watch("birthdate");
-  const phone = watch("phone");
-  const email = watch("email");
-
   const onSubmit = (data) => {
     console.log("Form Submitted:", data);
   };
@@ -74,7 +69,6 @@ const SigninPage = () => {
   }, [step, isStepValid]);
 
   useEffect(() => {
-    // Focus on the current input when step changes
     switch (step) {
       case 1:
         nameRef.current?.focus();
@@ -114,6 +108,7 @@ const SigninPage = () => {
               <>
                 <Input
                   {...field}
+                  value={field.value || ""}
                   ref={(e) => {
                     field.ref(e);
                     nameRef.current = e;
@@ -148,6 +143,7 @@ const SigninPage = () => {
                 <>
                   <Input
                     {...field}
+                    value={field.value || ""}
                     ref={(e) => {
                       field.ref(e);
                       birthdateRef.current = e;
@@ -183,6 +179,7 @@ const SigninPage = () => {
                 <>
                   <Input
                     {...field}
+                    value={field.value || ""}
                     ref={(e) => {
                       field.ref(e);
                       phoneRef.current = e;
@@ -218,6 +215,7 @@ const SigninPage = () => {
                 <>
                   <Input
                     {...field}
+                    value={field.value || ""}
                     ref={(e) => {
                       field.ref(e);
                       emailRef.current = e;
@@ -238,7 +236,7 @@ const SigninPage = () => {
         <Button
           isActive={isStepValid()}
           onClick={step < 4 ? nextStep : handleSubmit(onSubmit)}
-          hasImage="true"
+          hasImage={true}
           type={step === 4 ? "submit" : "button"}
           style={{
             position: "absolute",
@@ -247,7 +245,7 @@ const SigninPage = () => {
             width: "100%",
           }}
         >
-          {step < 4 ? "다음" : "제출"}
+          {step < 4 ? "다음" : "인증번호 발송"}
         </Button>
       </Form>
     </Container>

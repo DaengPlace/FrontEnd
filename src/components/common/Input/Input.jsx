@@ -2,7 +2,6 @@ import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-// eslint-disable-next-line react/display-name
 export const Input = forwardRef(
   ({ placeholder, type, isValid, ...rest }, ref) => {
     return (

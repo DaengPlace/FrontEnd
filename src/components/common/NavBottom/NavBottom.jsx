@@ -6,9 +6,9 @@ import { Home, Search, Map, Star, User } from "styled-icons/boxicons-regular";
 const tabs = [
   { label: "댕플", path: "/place", icon: Map },
   { label: "검색", path: "/search", icon: Search },
-  { label: "홈", path: "/", icon: Home },
+  { label: "홈", path: "/main", icon: Home },
   { label: "추천", path: "/recommend", icon: Star },
-  { label: "마이페이지", path: "/user", icon: User },
+  { label: "마이페이지", path: "/mypage", icon: User },
 ];
 
 const BottomNav = () => {

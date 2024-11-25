@@ -13,6 +13,9 @@ const SigninPage = () => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+  const [timer, setTimer] = useState(180);
+  const [timeExpired, setTimeExpired] = useState(false);
+  const [verificationError, setVerificationError] = useState(false);
 
   const {
     control,
@@ -31,9 +34,10 @@ const SigninPage = () => {
   const verificationRef = useRef(null);
 
   const onSubmit = (data) => {
-    console.log("Form Submitted:", data);
     if (isVerified) {
       router.push("/signin/info");
+    } else if (step === 4 && isVerificationSent) {
+      verifyCode();
     }
   };
 
@@ -78,6 +82,10 @@ const SigninPage = () => {
   const handleSendVerificationCode = () => {
     if (isCurrentStepValid()) {
       setIsVerificationSent(true);
+      setTimer(180);
+      setTimeExpired(false);
+      setVerificationCode("");
+      setVerificationError(false);
       verificationRef.current?.focus();
     }
   };
@@ -85,16 +93,28 @@ const SigninPage = () => {
   const handleVerificationCodeChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
     setVerificationCode(value);
-    if (value === "000000") {
+    setVerificationError(false);
+  };
+
+  const verifyCode = () => {
+    if (verificationCode === "000000") {
       setIsVerified(true);
+    } else {
+      setVerificationError(true);
     }
   };
 
   useEffect(() => {
-    const handleKeyPress = (event) => {
+    const handleKeyPress = async (event) => {
       if (event.key === "Enter" && isCurrentStepValid()) {
         event.preventDefault();
-        nextStep();
+        if (step === 4 && !isVerificationSent) {
+          handleSendVerificationCode();
+        } else if (isVerificationSent && verificationCode.length === 6) {
+          verifyCode();
+        } else {
+          await nextStep();
+        }
       }
     };
 
@@ -102,7 +122,7 @@ const SigninPage = () => {
     return () => {
       document.removeEventListener("keypress", handleKeyPress);
     };
-  }, [step]);
+  }, [step, isVerificationSent, verificationCode]);
 
   useEffect(() => {
     switch (step) {
@@ -120,6 +140,25 @@ const SigninPage = () => {
         break;
     }
   }, [step]);
+
+  useEffect(() => {
+    let countdown;
+    if (isVerificationSent && timer > 0) {
+      countdown = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setTimeExpired(true);
+      clearInterval(countdown);
+    }
+    return () => clearInterval(countdown);
+  }, [isVerificationSent, timer]);
+
+  const formatTime = (seconds) => {
+    const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+    return `${minutes}:${secs}`;
+  };
 
   return (
     <Container>
@@ -273,19 +312,37 @@ const SigninPage = () => {
         {isVerificationSent && (
           <InputBox>
             <p>인증번호</p>
-            <Input
-              ref={verificationRef}
-              value={verificationCode}
-              onChange={handleVerificationCodeChange}
-              placeholder="인증번호 입력 (예: 000000)"
-              type="text"
-              isValid={verificationCode === "000000"}
-            />
-            {!isVerified &&
-              verificationCode &&
-              verificationCode.length === 6 && (
+            <BoxContainer>
+              <Input
+                ref={verificationRef}
+                value={verificationCode}
+                onChange={handleVerificationCodeChange}
+                placeholder="인증번호 입력 (예: 000000)"
+                type="text"
+                isValid={!verificationError}
+              />
+
+              <Button
+                isActive
+                onClick={() => {
+                  handleSendVerificationCode();
+                }}
+              >
+                재발송
+              </Button>
+            </BoxContainer>
+            <PlusContent>
+              {verificationError && verificationCode.length === 6 && (
                 <ErrorText>인증번호가 올바르지 않습니다.</ErrorText>
               )}
+              {timeExpired && (
+                <ErrorText>
+                  입력 시간이 초과되었습니다. 재발송 버튼을 눌러 다시
+                  입력해주세요.
+                </ErrorText>
+              )}
+              <TimerDivider>{formatTime(timer)}</TimerDivider>
+            </PlusContent>
           </InputBox>
         )}
 
@@ -359,4 +416,30 @@ const ErrorText = styled.span`
   color: red;
   margin-top: 5px;
   display: block;
+`;
+
+const BoxContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+
+  & > input {
+    flex: 7 7 70%;
+  }
+  & > div {
+    flex: 3 3 30%;
+  }
+`;
+
+const TimerDivider = styled.div`
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.divider};
+  font-weight: semibold;
+`;
+
+const PlusContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;

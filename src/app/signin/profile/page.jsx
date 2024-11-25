@@ -105,7 +105,7 @@ const SigninProfilePage = () => {
           }
           cancelText="나중에 등록하기"
           confirmText="이어 등록"
-          onClose={() => router.push("/home")}
+          onClose={() => router.push("/main")}
           onConfirm={handleConfirm}
         />
       )}

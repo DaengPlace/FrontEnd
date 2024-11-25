@@ -9,7 +9,7 @@ import styled from "styled-components";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const noBottomNavPaths = ["/login"];
+  const noBottomNavPaths = ["/login", "/mypage/bookmark"];
   const noHeaderNavPaths = [];
 
   const showBottomNav = !noBottomNavPaths.includes(pathname);

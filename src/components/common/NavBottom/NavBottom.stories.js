@@ -11,7 +11,7 @@ const Template = (args) => <NavBottom {...args} />;
 
 export const HomeSelected = Template.bind({});
 HomeSelected.args = {
-  pathname: "/",
+  pathname: "/main",
 };
 
 export const SearchSelected = Template.bind({});

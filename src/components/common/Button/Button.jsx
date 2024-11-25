@@ -64,7 +64,9 @@ const Wrapper = styled.div`
   }
 `;
 
-const StyledButton = styled.button`
+const StyledButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})`
   width: 100%;
   display: flex;
   justify-content: center;

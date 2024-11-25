@@ -38,6 +38,7 @@ const PlacePage = () => {
       review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
       category: "반려동물용품점",
       image: "/assets/image.png",
+      rating: 4.8,
     },
     {
       id: 2,
@@ -47,6 +48,7 @@ const PlacePage = () => {
       review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
       category: "반려동물용품점",
       image: "/assets/image.png",
+      rating: 5.0,
     },
     {
       id: 3,
@@ -56,6 +58,7 @@ const PlacePage = () => {
       review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
       category: "반려동물용품점",
       image: "/assets/image.png",
+      rating: 5.0,
     },
   ];
 
@@ -98,18 +101,20 @@ const PlacePage = () => {
       </ImagesSection>
 
       <CategorySection>
-        <h2>카테고리별 인기 리뷰 🔥</h2>
+        <h2>카테고리별 <span>인기 리뷰</span> 🔥</h2>
         <CategorySelector
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           hoveredCategory={hoveredCategory}
           setHoveredCategory={setHoveredCategory}
         />
-        <hr style={{width: "100%", marginLeft:"8px", marginTop:"15px"}}></hr>
+        <hr style={{ width: "100%", marginLeft: "8px", marginBottom: "10px", color: "#ABABAB" }}></hr>
         <ReviewList reviews={reviews} />
       </CategorySection>
-      <Divider />
-      <Footer />
+      <hr style={{ color: "#ABABAB", marginTop: "25px" }}></hr>
+      <FooterWrapper>
+        <Footer />
+      </FooterWrapper>
       {isBottomSheetOpen && (
         <BottomSheet
           title={Permission.args.title}
@@ -118,7 +123,6 @@ const PlacePage = () => {
           confirmText={Permission.args.confirmText}
           onClose={() => setIsBottomSheetOpen(false)}
           onConfirm={() => {
-            alert("위치 정보 사용에 동의하셨습니다.");
             setIsBottomSheetOpen(false);
             router.push("/placesearch");
           }}
@@ -132,7 +136,10 @@ export default PlacePage;
 
 // Styled-components
 const Container = styled.div`
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 화면 전체 높이 */
+  margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
 `;
@@ -150,7 +157,7 @@ const ImageWrapper = styled.div`
 `;
 
 const OverlayText = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "dark", 
+  shouldForwardProp: (prop) => prop !== "dark",
 })`
   position: absolute;
   top: 10px;
@@ -167,8 +174,18 @@ const CategorySection = styled.section`
   padding: 20px;
   border-radius: 20px;
   border: 1px solid #ababab;
-
   h2 {
     margin-bottom: 20px;
+    font-size: 20px;
   }
+  h2 span {
+    color: #0019f4;
+  }
+`;
+
+const FooterWrapper = styled.div`
+  margin-top: auto;
+  width: 100%;
+  margin-left: -20px;
+  padding: 10px 0;
 `;

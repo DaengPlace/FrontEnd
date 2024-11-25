@@ -1,0 +1,32 @@
+export const reviews = [
+    {
+      id: 1,
+      author: "뽀삐엄마",
+      date: "2024.11.01",
+      title: "간식곳간",
+      review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
+      category: "반려동물용품점",
+      image: "/assets/image.png",
+      rating: 4.8,
+    },
+    {
+      id: 2,
+      author: "뽀삐엄마",
+      date: "2024.11.01",
+      title: "간식곳간",
+      review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
+      category: "반려동물용품점",
+      image: "/assets/image.png",
+      rating: 5.0,
+    },
+    {
+      id: 3,
+      author: "뽀삐엄마",
+      date: "2024.11.01",
+      title: "간식곳간",
+      review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
+      category: "반려동물용품점",
+      image: "/assets/image.png",
+      rating: 5.0,
+    },
+  ];

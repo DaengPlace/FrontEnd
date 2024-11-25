@@ -10,7 +10,7 @@ import "./globals.css";
 export default function ClientLayout({ children }) {
   const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
-  const noBottomNavPaths = ["/", "/signin"];
+  const noBottomNavPaths = ["/", "/signin", "/signin/info"];
 
   useEffect(() => {
     setIsClient(true);

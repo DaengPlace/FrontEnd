@@ -1,80 +1,134 @@
 import React from "react";
 import Image from "next/image";
+import styled from "styled-components";
 
 const ReviewList = ({ reviews }) => {
-  const reviewCardStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "15px",
-    padding: "15px",
-    marginTop : "10px",
-  };
-
-  const categoryBadgeStyle = {
-    display: "inline-block",
-    padding: "3px",
-    fontSize: "12px",
-    fontWeight: "bold",
-    color: "#fff",
-    background: "#01003F",
-    borderRadius: "20px",
-    marginRight: "10px",
-    textAlign: "center",
-    width: 114,
-    height: 24,
-  };
-
-  const imageStyle = {
-    borderRadius: "10px",
-    objectFit: "cover",
-  };
-
-  const reviewNumberStyle = {
-    position: "absolute",
-    top: "50px",
-    left: "10px",
-    color: "#0019F4",
-    fontSize: "20px",
-    fontWeight: "bold",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  };
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-      {reviews.map((review) => (
-        <div key={review.id} style={reviewCardStyle}>
-          <div style={reviewNumberStyle}>{review.id}</div>
-          <div style={{marginLeft:"20px"}}>
-            <span style={categoryBadgeStyle}>{review.category}</span>
-            <span style={{ fontWeight: "bold" }}>{review.title}</span>
-            <p style={{ fontSize: "16px", color: "#ABABAB", marginTop: "5px" }}>
+    <Container>
+      {reviews.map((review, index) => (
+        <ReviewCard key={review.id}>
+          <ReviewNumber>{review.id}</ReviewNumber>
+          <ReviewContent>
+            <CategoryBadge>{review.category}</CategoryBadge>
+            <ReviewTitle>{review.title}</ReviewTitle>
+            <ReviewInfo>
               {review.author} | {review.date} 작성
-            </p>
-            <p
-              style={{
-                fontSize: "16px",
-                color: "#000000",
-                fontWeight: "bold",
-                marginTop: "10px",
-              }}
-            >
-              {review.review}
-            </p>
-            <hr style={{ marginTop: "20px", width: "150%", marginLeft:"-37px" }}></hr>
-          </div>
-          <Image
-            src={review.image}
-            alt={`리뷰 이미지 ${review.id}`}
-            width={80}
-            height={80}
-            style={imageStyle}
-          />
-        </div>
+              <Rating>
+                {Array.from({ length: Math.round(review.rating) }, (_, i) => (
+                  <Star key={i}>⭐</Star>
+                ))}
+              </Rating> 
+            </ReviewInfo>
+            <ReviewText>{review.review}</ReviewText>
+            {index !== reviews.length - 1 && (
+              <hr
+                style={{
+                  width: "138%",
+                  marginLeft: "-30px",
+                  marginTop: "15px",
+                  color: "#ABABAB",
+                }}
+              />
+            )}
+          </ReviewContent>
+          <ReviewImageWrapper>
+            <StyledImage
+              src={review.image}
+              alt={`리뷰 이미지 ${review.id}`}
+              width={80}
+              height={80}
+            />
+          </ReviewImageWrapper>
+        </ReviewCard>
       ))}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+`;
+
+const ReviewCard = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 5px 15px;
+  position: relative;
+`;
+
+const ReviewNumber = styled.div`
+  position: absolute;
+  top: 35px;
+  left: 10px;
+  color: #0019f4;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ReviewContent = styled.div`
+  margin-left: 20px;
+  flex: 1;
+  min-width: 0;
+  gap: 5px;
+`;
+
+const CategoryBadge = styled.span`
+  display: inline-block;
+  padding: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  background: #01003f;
+  border-radius: 20px;
+  margin-right: 10px;
+  text-align: center;
+  width: 114px;
+  height: 24px;
+`;
+
+const ReviewTitle = styled.span`
+  font-weight: bold;
+`;
+
+const ReviewInfo = styled.p`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #ababab;
+  margin-top: 5px;
+`;
+
+const ReviewText = styled.p`
+  font-size: 16px;
+  color: #000;
+  font-weight: bold;
+  margin-top: 10px;
+`;
+
+const ReviewImageWrapper = styled.div`
+  border-radius: 10px;
+  overflow: hidden;
+`;
+
+const StyledImage = styled(Image)`
+  object-fit: cover;
+`;
+const Rating = styled.span`
+  margin-left: 10px;
+  display: flex;
+`;
+
+const Star = styled.span`
+  color: #f4c542; 
+  font-size: 10px;
+`;
 
 export default ReviewList;

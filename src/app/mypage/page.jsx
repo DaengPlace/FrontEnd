@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import defaultProfileImage from "../../../public/assets/mypage/defaultProfileImage.png";
-
+import theme from "@/styles/theme.js";
 
 import SectionHeader from '@/components/mypage/SectionHeader/SectionHeader';
 import UserProfile from '@/components/mypage/UserProfile/UserProfile';

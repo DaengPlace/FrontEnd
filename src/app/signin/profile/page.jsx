@@ -9,9 +9,23 @@ import Image from "next/image";
 const SigninProfilePage = () => {
   const [nickname, setNickname] = useState("");
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [profileImage, setProfileImage] = useState(
+    "/assets/profile/default_profile.svg"
+  );
 
   const handleCheckDuplicate = () => {
     setIsDuplicate(nickname === "사용중인닉네임");
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -22,17 +36,20 @@ const SigninProfilePage = () => {
       </Title>
 
       <ProfileBox>
-        <Image
-          src="/assets/profile/default_profile.svg"
-          alt="default_profile"
-          width={150}
-          height={150}
-        />
-        <Image
-          src="/assets/profile/camera.svg"
-          alt="edit"
-          width={50}
-          height={50}
+        <Image src={profileImage} alt="profile" width={150} height={150} />
+        <ImageUpload htmlFor="upload-image">
+          <Image
+            src="/assets/profile/camera.svg"
+            alt="edit"
+            width={50}
+            height={50}
+          />
+        </ImageUpload>
+        <HiddenFileInput
+          id="upload-image"
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
         />
       </ProfileBox>
 
@@ -108,17 +125,23 @@ const ProfileBox = styled.div`
   img:first-child {
     position: relative;
     z-index: 1;
+    border-radius: 50%;
+    object-fit: cover;
   }
+`;
 
-  img:last-child {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    z-index: 2;
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-  }
+const ImageUpload = styled.label`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
 `;
 
 const InputBox = styled.div`

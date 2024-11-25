@@ -11,6 +11,9 @@ import ReviewList from "@/components/place/ReviewList/ReviewList";
 import { Permission } from "@/components/common/BottomSheet/BottomSheet.stories";
 import Divider from "@/components/common/Divider/Divider.jsx";
 import Image from "next/image";
+import { reviews } from "@/data/reviewData";
+import Hr from "@/components/place/Hr/Hr";
+import Hr2 from "@/components/place/Hr2/Hr2";
 
 const BottomSheet = dynamic(() => import("@/components/common/BottomSheet/BottomSheet"), { ssr: false });
 
@@ -28,39 +31,6 @@ const PlacePage = () => {
   if (!hasMounted) {
     return null;
   }
-
-  const reviews = [
-    {
-      id: 1,
-      author: "뽀삐엄마",
-      date: "2024.11.01",
-      title: "간식곳간",
-      review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
-      category: "반려동물용품점",
-      image: "/assets/image.png",
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      author: "뽀삐엄마",
-      date: "2024.11.01",
-      title: "간식곳간",
-      review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
-      category: "반려동물용품점",
-      image: "/assets/image.png",
-      rating: 5.0,
-    },
-    {
-      id: 3,
-      author: "뽀삐엄마",
-      date: "2024.11.01",
-      title: "간식곳간",
-      review: "야외 공간이 넓어서 뛰어놀기 참 좋네요! 재방문...",
-      category: "반려동물용품점",
-      image: "/assets/image.png",
-      rating: 5.0,
-    },
-  ];
 
   return (
     <Container>
@@ -108,10 +78,10 @@ const PlacePage = () => {
           hoveredCategory={hoveredCategory}
           setHoveredCategory={setHoveredCategory}
         />
-        <hr style={{ width: "100%", marginLeft: "8px", marginBottom: "10px", color: "#ABABAB" }}></hr>
+        <Hr />
         <ReviewList reviews={reviews} />
       </CategorySection>
-      <hr style={{ color: "#ABABAB", marginTop: "25px" }}></hr>
+      <Hr2 />
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
@@ -134,11 +104,10 @@ const PlacePage = () => {
 
 export default PlacePage;
 
-// Styled-components
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* 화면 전체 높이 */
+  min-height: 100vh;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;

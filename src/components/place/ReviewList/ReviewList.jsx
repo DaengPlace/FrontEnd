@@ -45,7 +45,6 @@ const ReviewList = ({ reviews }) => {
   );
 };
 
-// 스타일 정의
 const Container = styled.div`
   max-width: 600px;
   display: flex;

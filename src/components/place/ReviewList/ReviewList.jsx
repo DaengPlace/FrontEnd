@@ -64,7 +64,7 @@ const ReviewCard = styled.div`
 
 const ReviewNumber = styled.div`
   position: absolute;
-  top: 50px;
+  top: 35px;
   left: 10px;
   color: #0019f4;
   font-size: 20px;

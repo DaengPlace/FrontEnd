@@ -33,8 +33,9 @@ const CategoryContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   padding: 10px 0;
-  margin-bottom: 20px;
-  gap: 10px;
+  margin-bottom: 10px;
+  margin-top: -15px;
+  gap: 5px;
   color: black;
 `;
 

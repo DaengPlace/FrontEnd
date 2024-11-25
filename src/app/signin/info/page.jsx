@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Button from "@/components/common/Button/Button";
 import SelectBox from "@/components/common/Selectbox/Selectbox";
 
 const SigninInfoPage = () => {
+  const router = useRouter();
   const [selectedGender, setSelectedGender] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState({
     city: null,
@@ -84,8 +86,7 @@ const SigninInfoPage = () => {
               selectedRegion.city &&
               selectedRegion.district
             ) {
-              console.log("성별:", selectedGender);
-              console.log("활동 지역:", selectedRegion);
+              router.push("/signin/profile");
             }
           }}
           hasImage={true}
@@ -122,14 +123,15 @@ const Title = styled.h1`
 `;
 
 const InputBox = styled.div`
-  p {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-  font-weight: 500;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  font-size: 1.1rem;
+
+  p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.primary};
+  }
 `;
 
 const BoxContainer = styled.div`

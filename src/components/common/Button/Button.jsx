@@ -65,11 +65,10 @@ const Wrapper = styled.div`
 
 const StyledButton = styled.button`
   width: 100%;
-  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 20px;
+  padding: 12px;
   font-size: 16px;
   font-weight: bold;
   color: ${({ $isActive }) => ($isActive ? "#ffffff" : "#999999")};
@@ -77,18 +76,16 @@ const StyledButton = styled.button`
     $isActive ? theme.colors.primary : "#f2f2f2"};
   border: none;
   border-radius: 8px;
-  cursor: ${({ $isActive }) => ($isActive ? "pointer" : "not-allowed")};
+  cursor: ${({ $isActive }) => ($isActive ? "pointer" : undefined)};
   transition: all 0.3s ease;
 
   &:hover {
     background-color: ${({ $isActive, theme }) =>
       $isActive ? theme.colors.primaryHover : "#f2f2f2"};
   }
-
   &:disabled {
     background-color: #f2f2f2;
     color: #999999;
-    cursor: not-allowed;
   }
 `;
 

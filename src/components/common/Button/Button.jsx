@@ -11,6 +11,7 @@ const Button = ({
   children,
   hasImage,
   style,
+  className,
   type = "button",
 }) => {
   return (
@@ -26,8 +27,8 @@ const Button = ({
       <StyledButton
         $isActive={isActive}
         onClick={onClick}
-        disabled={!isActive}
         type={type}
+        className={className}
       >
         {children}
       </StyledButton>
@@ -76,7 +77,8 @@ const StyledButton = styled.button`
     $isActive ? theme.colors.primary : "#f2f2f2"};
   border: none;
   border-radius: 8px;
-  cursor: ${({ $isActive }) => ($isActive ? "pointer" : undefined)};
+  cursor: ${({ $isActive, className }) =>
+    $isActive || className === "cancel" ? "pointer" : undefined};
   transition: all 0.3s ease;
 
   &:hover {

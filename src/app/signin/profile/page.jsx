@@ -2,19 +2,26 @@
 
 import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/common/Input/Input";
+import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import { useState } from "react";
 import Image from "next/image";
 
 const SigninProfilePage = () => {
+  const router = useRouter();
   const [nickname, setNickname] = useState("");
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [profileImage, setProfileImage] = useState(
     "/assets/profile/default_profile.svg"
   );
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
   const handleCheckDuplicate = () => {
-    setIsDuplicate(nickname === "사용중인닉네임");
+    const isNameDuplicate = nickname === "사용중인닉네임";
+    setIsDuplicate(isNameDuplicate);
+    setIsChecked(true);
   };
 
   const handleImageUpload = (event) => {
@@ -26,6 +33,10 @@ const SigninProfilePage = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleConfirm = () => {
+    setIsBottomSheetVisible(false);
   };
 
   return (
@@ -59,7 +70,10 @@ const SigninProfilePage = () => {
           <Input
             placeholder="닉네임 입력"
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e) => {
+              setNickname(e.target.value);
+              setIsChecked(false);
+            }}
           />
           <Button isActive={nickname.length > 0} onClick={handleCheckDuplicate}>
             중복확인
@@ -71,14 +85,30 @@ const SigninProfilePage = () => {
 
       <ButtonContainer>
         <Button
-          isActive={!isDuplicate && nickname.length > 0}
-          onClick={() => console.log("닉네임 등록:", nickname)}
+          isActive={isChecked && !isDuplicate && nickname.length > 0}
+          onClick={() => setIsBottomSheetVisible(true)}
           hasImage={false}
           type="button"
         >
           확인
         </Button>
       </ButtonContainer>
+
+      {isBottomSheetVisible && (
+        <BottomSheet
+          title="보호자님의 정보가 성공적으로 등록되었습니다."
+          content={
+            <p>
+              반려견 정보도
+              <br /> 이어서 등록하시겠습니까?
+            </p>
+          }
+          cancelText="나중에 등록하기"
+          confirmText="이어 등록"
+          onClose={() => router.push("/home")}
+          onConfirm={handleConfirm}
+        />
+      )}
     </Container>
   );
 };

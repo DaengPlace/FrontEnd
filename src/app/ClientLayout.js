@@ -36,7 +36,7 @@ const LayoutContainer = styled.div`
 
 const Content = styled.main`
   flex: 1;
-  margin-top: ${({ $noHeader }) => ($noHeader ? "0" : "60px")};
+  margin-top: ${({ $noHeader }) => ($noHeader ? "0" : "50px")};
   margin-bottom: ${({ $noBottom }) => ($noBottom ? "0" : "75px")};
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;

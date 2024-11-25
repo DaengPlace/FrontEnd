@@ -33,7 +33,7 @@ export default Menu;
 
 const MenuContainer = styled.div`
     display: flex;
-    border: 1px solid ${({ theme }) => theme.colors.divider};
+    border: 1px solid ${({ theme }) => theme.colors.defaultBackground};
     border-radius: 20px;
     justify-content: space-around;
     align-items: center;

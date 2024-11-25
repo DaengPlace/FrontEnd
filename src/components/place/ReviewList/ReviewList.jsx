@@ -5,7 +5,7 @@ import styled from "styled-components";
 const ReviewList = ({ reviews }) => {
   return (
     <Container>
-      {reviews.map((review) => (
+      {reviews.map((review, index) => (
         <ReviewCard key={review.id}>
           <ReviewNumber>{review.id}</ReviewNumber>
           <ReviewContent>
@@ -13,12 +13,26 @@ const ReviewList = ({ reviews }) => {
             <ReviewTitle>{review.title}</ReviewTitle>
             <ReviewInfo>
               {review.author} | {review.date} 작성
+              <Rating>
+                {Array.from({ length: Math.round(review.rating) }, (_, i) => (
+                  <Star key={i}>⭐</Star>
+                ))}
+              </Rating> 
             </ReviewInfo>
             <ReviewText>{review.review}</ReviewText>
-            <hr style={{width: "140%", marginLeft:"-30px", marginTop:"15px"}}></hr>
+            {index !== reviews.length - 1 && (
+              <hr
+                style={{
+                  width: "138%",
+                  marginLeft: "-30px",
+                  marginTop: "15px",
+                  color: "#ABABAB",
+                }}
+              />
+            )}
           </ReviewContent>
           <ReviewImageWrapper>
-            <StyledImage 
+            <StyledImage
               src={review.image}
               alt={`리뷰 이미지 ${review.id}`}
               width={80}
@@ -43,8 +57,8 @@ const ReviewCard = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 15px;
-  padding: 15px;
+  gap: 10px;
+  padding: 5px 15px;
   position: relative;
 `;
 
@@ -64,7 +78,7 @@ const ReviewContent = styled.div`
   margin-left: 20px;
   flex: 1;
   min-width: 0;
-  gap: 10px;
+  gap: 5px;
 `;
 
 const CategoryBadge = styled.span`
@@ -86,6 +100,8 @@ const ReviewTitle = styled.span`
 `;
 
 const ReviewInfo = styled.p`
+  display: flex;
+  align-items: center;
   font-size: 16px;
   color: #ababab;
   margin-top: 5px;
@@ -105,6 +121,15 @@ const ReviewImageWrapper = styled.div`
 
 const StyledImage = styled(Image)`
   object-fit: cover;
+`;
+const Rating = styled.span`
+  margin-left: 10px;
+  display: flex;
+`;
+
+const Star = styled.span`
+  color: #f4c542; 
+  font-size: 10px;
 `;
 
 export default ReviewList;

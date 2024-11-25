@@ -33,7 +33,7 @@ const SigninPage = () => {
   const onSubmit = (data) => {
     console.log("Form Submitted:", data);
     if (isVerified) {
-      router.push("/signin/add");
+      router.push("/signin/info");
     }
   };
 

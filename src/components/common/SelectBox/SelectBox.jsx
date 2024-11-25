@@ -62,6 +62,7 @@ export default SelectBox;
 
 const SelectWrapper = styled.div`
   width: 100%;
+  height: 64px;
   max-width: 300px;
   position: relative;
   cursor: pointer;
@@ -71,6 +72,7 @@ const SelectedItem = styled.div`
   padding: 12px;
   font-size: 16px;
   font-weight: 500;
+  color: #040404;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   border-radius: 15px;
   background-color: #f2f2f2;

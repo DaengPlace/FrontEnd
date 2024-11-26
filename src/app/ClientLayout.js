@@ -17,7 +17,8 @@ export default function ClientLayout({ children }) {
     "/dog/info",
     "/dog/confirm",
     "/placesearch",
-    "/placemap"
+    "/placemap",
+    "/placedetail"
   ];
   const noHeaderNavPaths = [
     "/",

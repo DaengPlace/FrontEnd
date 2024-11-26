@@ -267,25 +267,43 @@ const SigninPage = () => {
                   message: "010-0000-0000 형식이어야 합니다.",
                 },
               }}
-              render={({ field, fieldState }) => (
-                <>
-                  <Input
-                    {...field}
-                    value={field.value || ""}
-                    ref={(e) => {
-                      field.ref(e);
-                      phoneRef.current = e;
-                    }}
-                    placeholder="휴대폰 번호 (예: 010-0000-0000)"
-                    type="text"
-                    isValid={!fieldState.invalid}
-                    disabled={step > 3}
-                  />
-                  {fieldState.error && (
-                    <ErrorText>{fieldState.error.message}</ErrorText>
-                  )}
-                </>
-              )}
+              render={({ field, fieldState }) => {
+                const handlePhoneChange = (e) => {
+                  let value = e.target.value.replace(/[^0-9]/g, "");
+                  if (value.length <= 3) {
+                    value = value;
+                  } else if (value.length <= 7) {
+                    value = `${value.slice(0, 3)}-${value.slice(3)}`;
+                  } else {
+                    value = `${value.slice(0, 3)}-${value.slice(
+                      3,
+                      7
+                    )}-${value.slice(7, 11)}`;
+                  }
+                  field.onChange(value);
+                };
+
+                return (
+                  <>
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      onChange={handlePhoneChange}
+                      ref={(e) => {
+                        field.ref(e);
+                        phoneRef.current = e;
+                      }}
+                      placeholder="휴대폰 번호 (예: 010-0000-0000)"
+                      type="text"
+                      isValid={!fieldState.invalid}
+                      disabled={step > 3}
+                    />
+                    {fieldState.error && (
+                      <ErrorText>{fieldState.error.message}</ErrorText>
+                    )}
+                  </>
+                );
+              }}
             />
           </InputBox>
         )}

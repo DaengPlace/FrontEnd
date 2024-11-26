@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/common/Input/Input";
-import Header from "@/components/signin/Header";
+import Header from "@/components/signin/Header/Header";
 import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import { useState } from "react";
 import Image from "next/image";

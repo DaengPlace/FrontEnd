@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
-import Header from "@/components/signin/Header";
+import Header from "@/components/signin/Header/Header";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -387,12 +387,6 @@ const Container = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-`;
-
-const Title = styled.h1`
-  color: ${({ theme }) => theme.colors.black};
-  font-size: 1.4rem;
-  margin-bottom: 3rem;
 `;
 
 const Form = styled.form`

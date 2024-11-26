@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Button from "@/components/common/Button/Button";
 import SelectBox from "@/components/common/Selectbox/Selectbox";
-import Header from "@/components/signin/Header";
+import Header from "@/components/signin/Header/Header";
 
 const SigninInfoPage = () => {
   const router = useRouter();

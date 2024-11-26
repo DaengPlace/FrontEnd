@@ -66,7 +66,8 @@ const PlaceDetailPage = () => {
 export default PlaceDetailPage;
 
 const ScrollContainer = styled.div`
-  height: auto;
+  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -78,10 +79,14 @@ const ScrollContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  padding-bottom: 0; 
+  margin-bottom: 0; 
 `;
 
 const PageContainer = styled.div`
   flex: 1;
-  padding: 20px;
+  padding: 20px 20px 0 20px;
   background-color: ${({ theme }) => theme.colors.defaultBackground};
+  display: flex;
+  flex-direction: column;
 `;

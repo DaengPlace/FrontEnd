@@ -169,7 +169,7 @@ const PlaceSearchPage = () => {
       <div ref={bottomRef} style={{ height: "1px" }}></div>
       <MapButton bottom={buttonBottom} onClick={handleMapView}>
         <MapIcon />
-        지도보기
+        지도 보기
       </MapButton>
       {showScrollToTop && (
         <ScrollToTopButton onClick={scrollToTop}>

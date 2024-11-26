@@ -25,4 +25,5 @@ const Button = styled.button`
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
   }
+  margin-bottom: 0;
 `;

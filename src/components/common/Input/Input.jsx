@@ -3,9 +3,11 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 export const Input = forwardRef(
-  ({ placeholder, type, isValid, ...rest }, ref) => {
+  ({ value, onChange, placeholder, type, isValid, ...rest }, ref) => {
     return (
       <StyledInput
+        value={value}
+        onChange={onChange}
         ref={ref}
         placeholder={placeholder}
         type={type}

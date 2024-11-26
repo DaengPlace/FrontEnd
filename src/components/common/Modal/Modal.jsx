@@ -14,13 +14,13 @@ const Modal = ({
   return (
     <ModalOverlay>
       <ModalContent>
-        {title && <ModalTitle hasMessage={!!message}>{title}</ModalTitle>}
+        {title && <ModalTitle $hasMessage={!!message}>{title}</ModalTitle>}
         {message && <ModalMessage>{message}</ModalMessage>}
         <ModalActions>
-          <Button className="cancel" onClick={onCancel} isPrimary={!isDanger}>
+          <Button className="cancel" onClick={onCancel} $isPrimary={!isDanger}>
             {cancelText}
           </Button>
-          <Button className="confirm" isDanger={isDanger} onClick={onConfirm}>
+          <Button className="confirm" $isDanger={isDanger} onClick={onConfirm}>
             {confirmText}
           </Button>
         </ModalActions>
@@ -31,7 +31,7 @@ const Modal = ({
 
 Modal.propTypes = {
   title: PropTypes.string,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.node,
   onCancel: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
   cancelText: PropTypes.string,
@@ -74,7 +74,7 @@ const ModalTitle = styled.h2`
   font-size: 18px;
   font-weight: bold;
   color: #404040;
-  margin-bottom: ${(props) => (props.hasMessage ? "10px" : "40px")};
+  margin-bottom: ${({$hasMessage}) => ($hasMessage ? "10px" : "40px")};
 `;
 
 const ModalMessage = styled.p`
@@ -101,24 +101,24 @@ const Button = styled.button`
 
   &.cancel {
     background-color: ${(props) =>
-      props.isPrimary
+      props.$isPrimary
         ? props.theme.colors.secondary
         : props.theme.colors.deactivate};
-    color: ${(props) => (props.isPrimary ? "#9FA9FF" : "white")};
+    color: ${(props) => (props.$isPrimary ? "#9FA9FF" : "white")};
   }
 
   &.cancel:hover {
     background-color: ${(props) =>
-      props.isPrimary ? props.theme.colors.secondaryHover : "#e0e0e0"};
+      props.$isPrimary ? props.theme.colors.secondaryHover : "#e0e0e0"};
   }
 
   background-color: ${(props) =>
-    props.isDanger ? props.theme.colors.caution : props.theme.colors.primary};
+    props.$isDanger ? props.theme.colors.caution : props.theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
 
   &.confirm:hover {
     background-color: ${(props) =>
-      props.isDanger
+      props.$isDanger
         ? props.theme.colors.cautionHover
         : props.theme.colors.primaryHover};
   }

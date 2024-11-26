@@ -9,8 +9,23 @@ import styled from "styled-components";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const noBottomNavPaths = ["/login", "/mypage/bookmark"];
-  const noHeaderNavPaths = [];
+  const noBottomNavPaths = [
+    "/",
+    "/signin",
+    "/signin/info",
+    "/signin/profile",
+    "/dog/info",
+    "/dog/confirm",
+    "/mypage/bookmark"
+  ];
+  const noHeaderNavPaths = [
+    "/",
+    "/signin",
+    "/signin/info",
+    "/signin/profile",
+    "/dog/info",
+    "/dog/confirm",
+  ];
 
   const showBottomNav = !noBottomNavPaths.includes(pathname);
   const showHeaderNav = !noHeaderNavPaths.includes(pathname);
@@ -18,9 +33,9 @@ export default function ClientLayout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <LayoutContainer>
-      <Content $noHeader={!showHeaderNav} $noBottom={!showBottomNav}>
-        {children}
-      </Content>
+        <Content $noHeader={!showHeaderNav} $noBottom={!showBottomNav}>
+          {children}
+        </Content>
         {showBottomNav && <BottomNav />}
       </LayoutContainer>
     </ThemeProvider>
@@ -41,9 +56,9 @@ const Content = styled.main`
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
-  
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
   &::-webkit-scrollbar {
     display: none;
   }

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
@@ -69,10 +67,9 @@ const Overlay = styled.div`
 
 const Sheet = styled.div`
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   background: white;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  border-radius: 16px 16px 0 0;
   padding: 25px;
   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -92,13 +89,13 @@ const CloseButton = styled.button`
 const Title = styled.h2`
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 12px;
   text-align: center;
 `;
 
 const Content = styled.div`
   font-size: 14px;
   color: #333;
+  margin: 15px 0 20px 0;
   text-align: center;
 `;
 

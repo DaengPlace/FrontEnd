@@ -3,9 +3,9 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import Image from "next/image";
 
-const Checkbox = ({ isChecked, onChange, label }) => {
+const Checkbox = ({ isChecked, onClick, label }) => {
   return (
-    <CheckboxWrapper isChecked={isChecked} onClick={onChange}>
+    <CheckboxWrapper $isChecked={isChecked} onClick={onClick}>
       <ImageWrapper>
         <Image
           src={
@@ -18,14 +18,14 @@ const Checkbox = ({ isChecked, onChange, label }) => {
           height={16}
         />
       </ImageWrapper>
-      <Label>{label}</Label>
+      <Label $isChecked={isChecked}>{label}</Label>
     </CheckboxWrapper>
   );
 };
 
 Checkbox.propTypes = {
   isChecked: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
   label: PropTypes.string,
 };
 
@@ -44,22 +44,21 @@ const CheckboxWrapper = styled.div`
   justify-content: center;
 
   gap: 8px;
-  padding: 10px 20px;
+  padding: 13px 20px;
 
   border: 1px solid
-    ${({ isChecked, theme }) =>
-      isChecked ? theme.colors.primary : theme.colors.divider};
+    ${({ $isChecked, theme }) =>
+      $isChecked ? theme.colors.primary : theme.colors.divider};
   border-radius: 15px;
-  background-color: ${({ isChecked, theme }) =>
-    isChecked ? "#ECEFFF" : "#f9f9f9"};
-  color: ${({ isChecked, theme }) =>
-    isChecked ? theme.colors.primary : theme.colors.textSecondary};
+  background-color: ${({ $isChecked }) => ($isChecked ? "#ECEFFF" : "#f9f9f9")};
+  color: ${({ $isChecked, theme }) =>
+    $isChecked ? theme.colors.primary : theme.colors.divider};
   cursor: pointer;
   transition: all 0.3s;
 
   &:hover {
-    background-color: ${({ isChecked, theme }) =>
-      isChecked ? theme.colors.primaryHover : "#ececec"};
+    background-color: ${({ $isChecked, theme }) =>
+      $isChecked ? theme.colors.primaryHover : "#ececec"};
   }
 `;
 
@@ -72,6 +71,6 @@ const ImageWrapper = styled.div`
 const Label = styled.span`
   font-size: 14px;
   font-weight: 500;
-  color: ${({ isChecked, theme }) =>
-    isChecked ? theme.colors.primary : theme.colors.textSecondary};
+  color: ${({ $isChecked, theme }) =>
+    $isChecked ? theme.colors.primary : theme.colors.textSecondary};
 `;

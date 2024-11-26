@@ -72,7 +72,7 @@ const Divider = styled.div`
   span {
     font-size: 0.9rem;
     color: ${({ theme }) => theme.colors.white};
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    white-space: nowrap;
   }
 `;
 
@@ -89,9 +89,17 @@ const ButtonBox = styled.div`
 const SubTitle = styled.h2`
   text-align: center;
   font-size: 1.4rem;
+  font-family: "Do Hyeon", sans-serif !important;
+
+  p {
+    margin: 0;
+    font-family: "Do Hyeon", sans-serif;
+  }
 `;
 
 const Title = styled.h1`
   text-align: center;
   font-size: 3.3rem;
+  font-family: "Gugi", sans-serif;
+  font-weight: 400;
 `;

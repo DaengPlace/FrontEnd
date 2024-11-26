@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
+import Header from "@/components/signin/Header";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -162,10 +163,11 @@ const SigninPage = () => {
 
   return (
     <Container>
-      <Title>
-        <p>보호자님의</p>
-        <p>정보를 입력해주세요</p>
-      </Title>
+      <Header
+        titleLines={["보호자님의", "정보를 입력해주세요"]}
+        onBack={() => router.push("/")}
+        onClose={() => router.push("/")}
+      />
       <Form onSubmit={handleSubmit(onSubmit)}>
         <InputBox>
           <p>이름</p>

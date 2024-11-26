@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Button from "@/components/common/Button/Button";
 import SelectBox from "@/components/common/Selectbox/Selectbox";
+import Header from "@/components/signin/Header";
 
 const SigninInfoPage = () => {
   const router = useRouter();
@@ -25,10 +26,11 @@ const SigninInfoPage = () => {
 
   return (
     <Container>
-      <Title>
-        <p>원활한 서비스 이용을 위해</p>
-        <p>추가 정보를 입력해주세요</p>
-      </Title>
+      <Header
+        titleLines={["원활한 서비스 이용을 위해", "추가 정보를 입력해주세요"]}
+        onBack={() => router.push("/signin")}
+        onClose={() => router.push("/")}
+      />
       <InputContainer>
         <InputBox>
           <p>성별</p>
@@ -114,12 +116,6 @@ const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`;
-
-const Title = styled.h1`
-  color: ${({ theme }) => theme.colors.black};
-  font-size: 1.4rem;
-  margin-bottom: 3rem;
 `;
 
 const InputBox = styled.div`

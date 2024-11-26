@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/common/Input/Input";
+import Header from "@/components/signin/Header";
 import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import { useState } from "react";
 import Image from "next/image";
@@ -35,16 +36,13 @@ const SigninProfilePage = () => {
     }
   };
 
-  const handleConfirm = () => {
-    setIsBottomSheetVisible(false);
-  };
-
   return (
     <Container>
-      <Title>
-        <p>댕댕플레이스에서 활동할</p>
-        <p>프로필을 등록해 주세요</p>
-      </Title>
+      <Header
+        titleLines={["댕댕플레이스에서 활동할", "프로필을 등록해 주세요"]}
+        onBack={() => router.push("/signin")}
+        onClose={() => router.push("/")}
+      />
 
       <ProfileBox>
         <Image src={profileImage} alt="profile" width={150} height={150} />
@@ -106,7 +104,7 @@ const SigninProfilePage = () => {
           cancelText="나중에 등록하기"
           confirmText="이어 등록"
           onClose={() => router.push("/main")}
-          onConfirm={handleConfirm}
+          onConfirm={() => router.push("/dog/info")}
         />
       )}
     </Container>
@@ -122,12 +120,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-`;
-
-const Title = styled.h1`
-  color: ${({ theme }) => theme.colors.black};
-  font-size: 1.4rem;
-  margin-bottom: 3rem;
 `;
 
 const BoxContainer = styled.div`

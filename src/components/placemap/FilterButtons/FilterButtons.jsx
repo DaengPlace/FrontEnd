@@ -1,0 +1,45 @@
+"use client";
+import React from "react";
+import styled from "styled-components";
+
+const FilterButtons = ({ filters, selectedFilters, onFilterClick, hoveredFilter, setHoveredFilter }) => (
+  <FilterButtonsContainer>
+    {filters.map((filter) => (
+      <FilterButton
+        key={filter}
+        onClick={() => onFilterClick(filter)}
+        onMouseEnter={() => setHoveredFilter(filter)}
+        onMouseLeave={() => setHoveredFilter(null)}
+        selected={selectedFilters.includes(filter)}
+        hovered={filter === hoveredFilter}
+      >
+        {filter}
+      </FilterButton>
+    ))}
+  </FilterButtonsContainer>
+);
+
+export default FilterButtons;
+
+const FilterButtonsContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  margin-top: 10px;
+  margin-left: 30px;
+`;
+
+const FilterButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !["hovered", "selected"].includes(prop),
+})`
+  padding: 6px 10px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: ${({ selected, hovered }) =>
+    selected ? "#0019F4" : hovered ? "#e0e0e0" : "white"};
+  color: ${({ selected }) => (selected ? "white" : "black")};
+  border: 1px solid ${({ selected }) => (selected ? "#4caf50" : "lightgray")};
+`;

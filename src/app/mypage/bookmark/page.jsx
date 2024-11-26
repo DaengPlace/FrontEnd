@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
-import { Heart } from 'styled-icons/bootstrap';
+import { SuitHeartFill } from '@styled-icons/bootstrap/SuitHeartFill';
 import theme from "@/styles/theme.js";
 
 const facilities = [
@@ -19,7 +19,7 @@ const BookmarkPage = () => {
         <BigFacilityCard key={fac.id}>
           <ImageWrapper>
             <FacilityImage src={fac.image} alt={fac.name} width={510} height={300} />
-            <FavoriteButton><Heart /></FavoriteButton>
+            <FavoriteButton><FavoriteIcon /></FavoriteButton>
           </ImageWrapper>
 
           <FacilityInfo>
@@ -66,7 +66,7 @@ const BigFacilityCard = styled.div`
   width: 540px;
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   overflow: hidden;
 `;
 
@@ -88,7 +88,14 @@ const FavoriteButton = styled.button`
   height: 30px;
   border: none;
   cursor: pointer;
+  background-color: transparent;
+`;
+
+const FavoriteIcon = styled(SuitHeartFill)`
+  width: 24px;
+  height: 24px;
   color: white;
+  transition: color 0.3s;
 `;
 
 const FacilityInfo = styled.div`

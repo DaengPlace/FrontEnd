@@ -7,6 +7,7 @@ import Input from "@/components/common/Input/Input";
 import Header from "@/components/signin/Header/Header";
 import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 
 const SigninProfilePage = () => {
@@ -18,9 +19,17 @@ const SigninProfilePage = () => {
     "/assets/profile/default_profile.svg"
   );
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors },
+  } = useForm();
 
   const handleCheckDuplicate = () => {
-    const isNameDuplicate = nickname === "사용중인닉네임";
+    const currentNickname = watch("nickname");
+    const isNameDuplicate = currentNickname === "사용중인닉네임";
     setIsDuplicate(isNameDuplicate);
     setIsChecked(true);
   };
@@ -65,18 +74,49 @@ const SigninProfilePage = () => {
       <InputBox>
         <p>닉네임</p>
         <BoxContainer>
-          <Input
-            placeholder="닉네임 입력"
-            value={nickname}
-            onChange={(e) => {
-              setNickname(e.target.value);
-              setIsChecked(false);
+          <Controller
+            name="nickname"
+            control={control}
+            rules={{
+              required: "닉네임은 필수 입력입니다.",
+              pattern: {
+                value: /^(?!.*[!@#$%^&*(),.?":{}|<>])[가-힣a-zA-Z0-9]{2,10}$/,
+                message: `닉네임은 특수문자를 포함할 수 없으며, 한글/영문/숫자 2~10자리여야 합니다.`,
+              },
+              validate: (value) => {
+                const hasVowelsOrConsonantsOnly = /^[ㄱ-ㅎㅏ-ㅣ]+$/.test(value);
+                if (hasVowelsOrConsonantsOnly) {
+                  return "닉네임은 자음이나 모음만으로 구성될 수 없습니다.";
+                }
+                return true;
+              },
             }}
+            render={({ field, fieldState }) => (
+              <>
+                <Input
+                  placeholder="닉네임 입력"
+                  {...field}
+                  value={field.value || ""}
+                  onChange={async (e) => {
+                    field.onChange(e.target.value);
+                    setIsChecked(false);
+                    await trigger("nickname");
+                  }}
+                  isValid={!fieldState.invalid}
+                />
+              </>
+            )}
           />
-          <Button isActive={nickname.length > 0} onClick={handleCheckDuplicate}>
+          <Button
+            isActive={!errors.nickname && watch("nickname")?.length > 0}
+            onClick={handleCheckDuplicate}
+          >
             중복확인
           </Button>
         </BoxContainer>
+        {errors.nickname && (
+          <ErrorMessage>{errors.nickname.message}</ErrorMessage>
+        )}
       </InputBox>
 
       {isChecked && (
@@ -192,7 +232,7 @@ const SuccessMessage = styled.p`
   margin-top: 10px;
 `;
 
-const ErrorMessage = styled.p`
+const ErrorMessage = styled.div`
   color: red;
   font-size: 0.9rem;
   margin-top: 10px;

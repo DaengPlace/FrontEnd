@@ -79,7 +79,15 @@ const SigninProfilePage = () => {
         </BoxContainer>
       </InputBox>
 
-      {isDuplicate && <ErrorMessage>이미 사용 중인 닉네임입니다.</ErrorMessage>}
+      {isChecked && (
+        <>
+          {isDuplicate ? (
+            <ErrorMessage>이미 사용 중인 닉네임입니다.</ErrorMessage>
+          ) : (
+            <SuccessMessage>사용 가능한 닉네임입니다.</SuccessMessage>
+          )}
+        </>
+      )}
 
       <ButtonContainer>
         <Button
@@ -176,6 +184,12 @@ const InputBox = styled.div`
     font-weight: 500;
     color: ${({ theme }) => theme.colors.primary};
   }
+`;
+
+const SuccessMessage = styled.p`
+  color: green;
+  font-size: 0.9rem;
+  margin-top: 10px;
 `;
 
 const ErrorMessage = styled.p`

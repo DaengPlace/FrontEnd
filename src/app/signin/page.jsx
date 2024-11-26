@@ -161,10 +161,25 @@ const SigninPage = () => {
     return `${minutes}:${secs}`;
   };
 
+  const getTitleLines = () => {
+    switch (step) {
+      case 1:
+        return ["보호자님의", "이름을 입력해주세요"];
+      case 2:
+        return ["보호자님의", "생년월일을 입력해주세요"];
+      case 3:
+        return ["보호자님의", "휴대폰 번호를 입력해주세요"];
+      case 4:
+        return ["보호자님의", "이메일을 입력해주세요"];
+      default:
+        return ["보호자님의", "정보를 입력해주세요"];
+    }
+  };
+
   return (
     <Container>
       <Header
-        titleLines={["보호자님의", "정보를 입력해주세요"]}
+        titleLines={getTitleLines()}
         onBack={() => router.push("/")}
         onClose={() => router.push("/")}
       />

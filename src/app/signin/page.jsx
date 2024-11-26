@@ -350,7 +350,7 @@ const SigninPage = () => {
                 onChange={handleVerificationCodeChange}
                 placeholder="인증번호 입력 (예: 000000)"
                 type="text"
-                isValid={!verificationError}
+                isValid={!verificationError || timeExpired}
               />
 
               <Button
@@ -363,12 +363,12 @@ const SigninPage = () => {
               </Button>
             </BoxContainer>
             <PlusContent>
-              {verificationError && verificationCode.length === 6 && (
+              {!timeExpired && verificationError && (
                 <ErrorText>인증번호가 올바르지 않습니다.</ErrorText>
               )}
               {timeExpired && (
                 <ErrorText>
-                  입력 시간이 초과되었습니다. 재발송 버튼을 눌러 다시
+                  입력 시간이 초과되었습니다. <br /> 재발송 버튼을 눌러 다시
                   입력해주세요.
                 </ErrorText>
               )}

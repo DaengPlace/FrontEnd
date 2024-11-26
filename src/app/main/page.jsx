@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styled from "styled-components";
+import theme from "../../styles/theme.js";
 
 import Banner from "@/components/main/Banner/Banner.jsx";
 import Menu from "@/components/main/Menu/Menu.jsx";

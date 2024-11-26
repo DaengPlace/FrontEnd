@@ -9,8 +9,22 @@ import styled from "styled-components";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const noBottomNavPaths = ["/login"];
-  const noHeaderNavPaths = [];
+  const noBottomNavPaths = [
+    "/",
+    "/signin",
+    "/signin/info",
+    "/signin/profile",
+    "/dog/info",
+    "/dog/confirm",
+  ];
+  const noHeaderNavPaths = [
+    "/",
+    "/signin",
+    "/signin/info",
+    "/signin/profile",
+    "/dog/info",
+    "/dog/confirm",
+  ];
 
   const showBottomNav = !noBottomNavPaths.includes(pathname);
   const showHeaderNav = !noHeaderNavPaths.includes(pathname);
@@ -18,9 +32,9 @@ export default function ClientLayout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <LayoutContainer>
-      <Content $noHeader={!showHeaderNav} $noBottom={!showBottomNav}>
-        {children}
-      </Content>
+        <Content $noHeader={!showHeaderNav} $noBottom={!showBottomNav}>
+          {children}
+        </Content>
         {showBottomNav && <BottomNav />}
       </LayoutContainer>
     </ThemeProvider>
@@ -36,14 +50,14 @@ const LayoutContainer = styled.div`
 
 const Content = styled.main`
   flex: 1;
-  margin-top: ${({ $noHeader }) => ($noHeader ? "0" : "60px")};
+  margin-top: ${({ $noHeader }) => ($noHeader ? "0" : "50px")};
   margin-bottom: ${({ $noBottom }) => ($noBottom ? "0" : "75px")};
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
-  
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
   &::-webkit-scrollbar {
     display: none;
   }

@@ -1,10 +1,14 @@
 "use client";
 import React from "react";
 import styled from "styled-components";
+import ListAltIcon from "@mui/icons-material/ListAlt"; 
 
 const FloatingButton = ({ onClick }) => (
   <FloatingButtonContainer>
-    <ListButton onClick={onClick}>목록 보기</ListButton>
+    <ListButton onClick={onClick}>
+      <StyledIcon />
+      목록 보기
+    </ListButton>
   </FloatingButtonContainer>
 );
 
@@ -34,10 +38,13 @@ const ListButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 121.5px;
-  height: 40px;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.secondary};
   }
+`;
+
+const StyledIcon = styled(ListAltIcon)`
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 20px;
 `;

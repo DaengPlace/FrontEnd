@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Button from "@/components/common/Button/Button";
-import { Input } from "@/components/common/Input/Input";
+import Input from "@/components/common/Input/Input";
+import Header from "@/components/signin/Header/Header";
 
 const DogInfoPage = () => {
   const router = useRouter();
@@ -61,7 +62,6 @@ const DogInfoPage = () => {
     }
   };
 
-  // 포커스 이동 처리
   useEffect(() => {
     const currentRef = inputRefs.current[step];
     if (currentRef) {
@@ -71,10 +71,11 @@ const DogInfoPage = () => {
 
   return (
     <Container onKeyDown={handleKeyDown} tabIndex={0}>
-      <Title>
-        <p>우리 댕댕이의 정보를</p>
-        <p>알려주세요</p>
-      </Title>
+      <Header
+        titleLines={["우리 댕댕이의 정보를", "알려주세요"]}
+        onBack={() => router.push("/")}
+        onClose={() => router.push("/")}
+      />
 
       <InputContainer>
         {step >= 0 && (
@@ -83,7 +84,7 @@ const DogInfoPage = () => {
             <Input
               ref={(el) => (inputRefs.current[0] = el)}
               type="text"
-              placeholder="강아지 이름을 입력하세요"
+              placeholder="강아지 이름 입력"
               value={dogInfo.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
             />
@@ -108,8 +109,9 @@ const DogInfoPage = () => {
             <p>생년월일</p>
             <Input
               ref={(el) => (inputRefs.current[2] = el)}
-              type="date"
+              type="text"
               value={dogInfo.birthDate}
+              placeholder="생년월일 ex) 000101"
               onChange={(e) => handleInputChange("birthDate", e.target.value)}
             />
           </InputBox>

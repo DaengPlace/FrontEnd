@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-export const Input = forwardRef(
+const Input = forwardRef(
   ({ value, onChange, placeholder, type, isValid, ...rest }, ref) => {
     return (
       <StyledInput
@@ -17,6 +17,8 @@ export const Input = forwardRef(
     );
   }
 );
+
+export default Input;
 
 Input.propTypes = {
   placeholder: PropTypes.string,

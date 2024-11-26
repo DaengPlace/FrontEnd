@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/common/Input/Input";
+import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 

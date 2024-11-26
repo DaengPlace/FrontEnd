@@ -208,7 +208,6 @@ const SigninPage = () => {
                   placeholder="이름 입력"
                   type="text"
                   isValid={!fieldState.invalid}
-                  disabled={step > 1}
                 />
                 {fieldState.error && (
                   <ErrorText>{fieldState.error.message}</ErrorText>
@@ -243,7 +242,6 @@ const SigninPage = () => {
                     placeholder="생년월일 (예: 000101)"
                     type="text"
                     isValid={!fieldState.invalid}
-                    disabled={step > 2}
                   />
                   {fieldState.error && (
                     <ErrorText>{fieldState.error.message}</ErrorText>
@@ -296,7 +294,6 @@ const SigninPage = () => {
                       placeholder="휴대폰 번호 (예: 010-0000-0000)"
                       type="text"
                       isValid={!fieldState.invalid}
-                      disabled={step > 3}
                     />
                     {fieldState.error && (
                       <ErrorText>{fieldState.error.message}</ErrorText>
@@ -333,7 +330,6 @@ const SigninPage = () => {
                     placeholder="이메일 (예: daengplace@gmail.com)"
                     type="email"
                     isValid={!fieldState.invalid}
-                    disabled={isVerificationSent}
                   />
                   {fieldState.error && (
                     <ErrorText>{fieldState.error.message}</ErrorText>

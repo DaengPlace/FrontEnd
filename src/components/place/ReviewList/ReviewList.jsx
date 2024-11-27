@@ -82,16 +82,16 @@ const ReviewContent = styled.div`
 
 const CategoryBadge = styled.span`
   display: inline-block;
-  padding: 3px;
+  padding: 5px 10px; 
   font-size: 12px;
   font-weight: bold;
   color: #fff;
   background: #01003f;
   border-radius: 20px;
-  margin-right: 10px;
   text-align: center;
-  width: 114px;
-  height: 24px;
+  line-height: 1; 
+  white-space: nowrap; 
+  margin-right: 10px;
 `;
 
 const ReviewTitle = styled.span`

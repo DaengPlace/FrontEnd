@@ -22,6 +22,7 @@ const PlacePage = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [isLocationPermissionGranted, setIsLocationPermissionGranted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -93,9 +94,11 @@ const PlacePage = () => {
           confirmText={Permission.args.confirmText}
           onClose={() => setIsBottomSheetOpen(false)}
           onConfirm={() => {
+            setIsLocationPermissionGranted(true);
             setIsBottomSheetOpen(false);
-            router.push("/placesearch");
+            router.push(`/placesearch?permissionGranted=true`);
           }}
+          
         />
       )}
     </Container>

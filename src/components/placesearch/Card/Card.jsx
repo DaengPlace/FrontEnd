@@ -103,7 +103,7 @@ const RatingContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 2px; 
-    margin-left: auto;
+    margin-right: 15px;
 `;
 
 const Rating = styled.span`

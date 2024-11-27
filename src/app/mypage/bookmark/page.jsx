@@ -1,13 +1,15 @@
 "use client";
 
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SuitHeartFill } from '@styled-icons/bootstrap/SuitHeartFill';
 import theme from "@/styles/theme.js";
 
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import Header from '@/components/common/Header/Header';
+import Space from '@/components/common/Space/Space';
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 const facilities = [
   {id:1, image: "/assets/mypage/facilityImage.png", name: "간식곳간", category: "반려동물용품점", rating: 5.0, reviewCnt: 14, address: "경기도 고양시 일산동구 백마로 195", startTime: "11:00", endTime: "20:00", dayoff: "Mon", is_parking: true, weather_type: 1, weight_limit: 0, pet_fee: 0 },
@@ -15,16 +17,22 @@ const facilities = [
 ]
 
 const BookmarkPage = () => {
+
+  const [isLiked, setIsLiked] = useState(true);
+
   return (
     <Container>
 
       <Header title="즐겨찾기" showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
-      
+      <Space />
+
       {facilities.map((fac) => (
         <BigFacilityCard key={fac.id}>
           <ImageWrapper>
             <FacilityImage src={fac.image} alt={fac.name} width={510} height={300} />
-            <FavoriteButton><FavoriteIcon /></FavoriteButton>
+            <FavoriteButton onClick={() => setIsLiked(!isLiked)} isLiked={isLiked}>
+              {isLiked ? (<Favorite />) : (<FavoriteBorder />)}
+            </FavoriteButton>
           </ImageWrapper>
 
           <FacilityInfo>
@@ -85,7 +93,9 @@ const FacilityImage = styled(Image)`
   object-fit: cover;
 `;
 
-const FavoriteButton = styled.button`
+const FavoriteButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isLiked', // isLiked prop을 DOM에 전달하지 않음
+})`
   position: absolute;
   top: 10px;
   right: 10px;
@@ -94,13 +104,16 @@ const FavoriteButton = styled.button`
   border: none;
   cursor: pointer;
   background-color: transparent;
-`;
 
-const FavoriteIcon = styled(SuitHeartFill)`
-  width: 24px;
-  height: 24px;
-  color: white;
-  transition: color 0.3s;
+  svg {
+    font-size: 30px;
+    color: ${({isLiked}) => (isLiked ? 'red' : 'white')};
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  &:hover svg {
+    transform: scale(1.2);
+  }
 `;
 
 const FacilityInfo = styled.div`

@@ -11,6 +11,8 @@ import Map from "@/components/placemap/Map/Map";
 import BottomSheet from "@/components/placemap/BottomSheet/BottomSheet";
 import FloatingButton from "@/components/placemap/FloatingButton/FloatingButton";
 import { CircularProgress } from "@mui/material";
+import Header from "@/components/common/Header/Header";
+import { WithMapIcon } from "@/components/common/Header/Header.stories";
 
 const PlaceMap = () => {
   const searchParams = useSearchParams();
@@ -66,6 +68,12 @@ const PlaceMap = () => {
   }
 
   return (
+    <>
+    <Header
+        title="동반가능시설 검색"
+        showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
+        showMapIcon={WithMapIcon.args.showMapIcon}
+      />
     <MapContainerWrapper>
       <SearchBar onClick={() => setIsBottomSheetOpen(true)} />
       <Tabs
@@ -100,6 +108,7 @@ const PlaceMap = () => {
         onGunguChange={handleGunguChange}
       />
     </MapContainerWrapper>
+    </>
   );
 };
 
@@ -122,5 +131,6 @@ const MapContainerWrapper = styled.div`
   height: 100vh;
   margin: 0;
   padding: 0;
+  margin-top: 20px;
 `;
 export default PlaceMap;

@@ -11,7 +11,6 @@ const Banner = () => {
         width={600}
         height={400}
       />
-      <BannerText>댕플</BannerText>
     </Section>
   );
 };
@@ -27,12 +26,3 @@ const StyledImage = styled(Image)`
   right: 20px;
 `;
 
-const BannerText = styled.div`
-  position: absolute;
-  top: 5px;
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  font-family: Gugi, sans-serif
-`;

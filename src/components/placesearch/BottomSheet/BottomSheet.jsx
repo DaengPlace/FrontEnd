@@ -37,6 +37,9 @@ const BottomSheet = ({
   };
 
   const handleSearch = async () => {
+    console.log("Selected Sido:", selectedSido);
+    console.log("Selected Gungu:", selectedGungu);
+
     if (useCurrentLocation) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -56,9 +59,9 @@ const BottomSheet = ({
             inputValue
           )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
         );
-
+  
         const data = await response.json();
-
+  
         if (data.status === "OK" && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
           router.push(`/placemap?lat=${lat}&lng=${lng}`);
@@ -71,18 +74,19 @@ const BottomSheet = ({
       }
     } else if (selectedSido || selectedGungu) {
       const location = `${selectedSido} ${selectedGungu || ""}`.trim();
-
+  
       try {
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
             location
           )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
         );
-
+  
         const data = await response.json();
-
+  
         if (data.status === "OK" && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
+          // 선택한 시/군/구 좌표로 페이지 이동
           router.push(`/placemap?lat=${lat}&lng=${lng}`);
         } else {
           alert("선택한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchBar from "@/components/placesearch/SearchBar/SearchBar";
@@ -195,7 +196,13 @@ const PlaceSearchPage = () => {
       </MapButton>
       {showScrollToTop && (
         <ScrollToTopButton bottom={buttonBottom} onClick={scrollToTop}>
-          <ArrowUpIcon />
+          <Image
+            src="/assets/arrow.png"
+            alt="맨위로 아이콘"
+            width={40} 
+            height={32} 
+            priority 
+          />
           <span>맨위로</span>
         </ScrollToTopButton>
       )}
@@ -284,17 +291,18 @@ const ScrollToTopButton = styled.button`
     background-color: ${({ theme }) => theme.colors.primary};
     color: white;
   }
+  
+  span {
+    margin-bottom: 10px;
+  }
 
-  svg {
-    width: 15px;
-    height: 15px;
-    margin-bottom: 4px;
+  img {
+    margin-bottom: -8px;
   }
 `;
 
-const ArrowUpIcon = styled(ArrowUp)`
-  width: 20px;
-  height: 20px;
-`;
+
+
+
 
 export default PlaceSearchPage;

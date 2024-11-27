@@ -36,11 +36,12 @@ const CategoryBadge = styled.div`
   border-radius: 10px;
   font-weight: bold;
   margin-bottom: 12px;
-  height: 24px;
   font-size: 12px;
-  width: 114px;
   text-align: center;
-  padding: 4px 0px;
+  padding: 5px 10px; 
+  white-space: nowrap; 
+  margin-bottom: 8px; 
+  align-self: flex-start;
 `;
 
 const PlaceName = styled.h2`

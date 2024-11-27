@@ -86,17 +86,16 @@ const Category = styled.div`
 
 const CategoryBadge = styled.div`
   display: inline-block;
-  padding: 3px 12px;
-  font-size: 14px;
+  padding: 5px 10px; 
+  font-size: 12px;
   font-weight: bold;
   color: #fff;
-  background: ${({ theme }) => theme.colors.tertiary};
-  border-radius: 10px;
+  background: #01003f;
+  border-radius: 20px;
   text-align: center;
-  height: 24px;
+  line-height: 1; 
+  white-space: nowrap; 
   margin-left: 10px;
-  white-space: nowrap;
-  text-align: center;
 `;
 
 const RatingContainer = styled.div`

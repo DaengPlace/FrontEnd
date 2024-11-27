@@ -7,7 +7,7 @@ import {Home} from "@styled-icons/feather/Home";
 import { useRouter } from 'next/navigation';
 import theme from "@/styles/theme.js";
 import Image from 'next/image';
-import Logo from "@/../../public/assets/mainpage/logoPlace.png";
+import Logo from "@/../../public/assets/mainpage/Logo.png";
 
 const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
 
@@ -19,7 +19,7 @@ const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
 
         {showLogo ? (
           <LogoWrapper onClick={() => router.push("/main")}>
-            <LogoImage src={Logo} width={36} height={36} />
+            <LogoImage src={Logo} width={36} height={36} alt="logo" />
             <LogoTitle>댕댕플레이스</LogoTitle>
           </LogoWrapper>
         ) : (

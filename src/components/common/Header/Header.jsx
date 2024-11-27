@@ -19,7 +19,7 @@ const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
 
         {showLogo ? (
           <LogoWrapper onClick={() => router.push("/main")}>
-            <LogoImage src={Logo} width={36} height={36} alt="logo" />
+            <LogoImage src={Logo} width={30} height={30} alt="logo" />
             <LogoTitle>댕댕플레이스</LogoTitle>
           </LogoWrapper>
         ) : (
@@ -62,7 +62,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  border-bottom: 1px solid ${theme.colors.divider};
+  border-bottom: 1px solid #d1d1d1;
 `;
 
 const SmallContainer = styled.div`
@@ -82,12 +82,12 @@ const LogoWrapper = styled.div`
 `;
 
 const LogoImage = styled(Image)`
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
 `;
 
 const LogoTitle = styled.div`
-  padding-left: 12px;
+  padding-left: 8px;
   font-size: 20px;
   font-family: 'Gugi', sans-serif;
 `;

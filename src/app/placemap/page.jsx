@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { sidoOptions, gunguOptions } from "@/data/data";
@@ -9,6 +10,7 @@ import FilterButtons from "@/components/placemap/FilterButtons/FilterButtons";
 import Map from "@/components/placemap/Map/Map";
 import BottomSheet from "@/components/placemap/BottomSheet/BottomSheet";
 import FloatingButton from "@/components/placemap/FloatingButton/FloatingButton";
+import { CircularProgress } from "@mui/material";
 
 const PlaceMap = () => {
   const searchParams = useSearchParams();
@@ -54,7 +56,14 @@ const PlaceMap = () => {
     router.push("/placesearch"); 
   };
 
-  if (!isLoaded) return <div>Loading...</div>;
+  if (!isLoaded) {
+    return (
+      <LoadingContainer>
+        <CircularProgress />
+        <LoadingText>지도를 불러오는 중입니다...</LoadingText>
+      </LoadingContainer>
+    );
+  }
 
   return (
     <>
@@ -94,4 +103,17 @@ const PlaceMap = () => {
   );
 };
 
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+`;
+
+const LoadingText = styled.p`
+  margin-top: 10px;
+  font-size: 16px;
+  color: #666;
+`;
 export default PlaceMap;

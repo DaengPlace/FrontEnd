@@ -17,7 +17,10 @@ export default function ClientLayout({ children }) {
     "/signin/profile",
     "/dog/info",
     "/dog/confirm",
-    "/mypage/bookmark"
+    "/mypage/bookmark",
+    "/placesearch",
+    "/placemap",
+    "/placedetail"
   ];
   const noHeaderNavPaths = [
     "/",

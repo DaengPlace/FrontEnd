@@ -53,7 +53,7 @@ const PlaceMap = () => {
   const handleGunguChange = (event) => setSelectedGungu(event.target.value);
 
   const handleBackToList = () => {
-    router.push("/placesearch"); 
+    router.push("/placesearch?permissionGranted=true"); 
   };
 
   if (!isLoaded) {
@@ -66,7 +66,7 @@ const PlaceMap = () => {
   }
 
   return (
-    <>
+    <MapContainerWrapper>
       <SearchBar onClick={() => setIsBottomSheetOpen(true)} />
       <Tabs
         selectedCategory={selectedCategory}
@@ -99,7 +99,7 @@ const PlaceMap = () => {
         onSidoChange={handleSidoChange}
         onGunguChange={handleGunguChange}
       />
-    </>
+    </MapContainerWrapper>
   );
 };
 
@@ -115,5 +115,12 @@ const LoadingText = styled.p`
   margin-top: 10px;
   font-size: 16px;
   color: #666;
+`;
+const MapContainerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 `;
 export default PlaceMap;

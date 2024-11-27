@@ -25,6 +25,7 @@ const Card = ({ card, onCardClick, toggleLike }) => (
         <RatingContainer>
           <Image src="/assets/star.png" alt="별" width={15} height={15} />
           <Rating>{card.rating}</Rating>
+          <ReviewsCount>({card.reviewsCount})</ReviewsCount>
         </RatingContainer>
       </Category>
       <PlaceName>{card.title}</PlaceName>
@@ -50,7 +51,9 @@ const CardContainer = styled.div`
   cursor: pointer;
 `;
 
-const HeartIconContainer = styled.div`
+const HeartIconContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => !["hovered", "isliked"].includes(prop),
+})`
   position: absolute;
   top: 30px;
   right: 30px;
@@ -82,20 +85,24 @@ const Category = styled.div`
 
 const CategoryBadge = styled.div`
   display: inline-block;
-  padding: 3px;
-  font-size: 12px;
+  padding: 3px 12px;
+  font-size: 14px;
   font-weight: bold;
   color: #fff;
   background: ${({ theme }) => theme.colors.tertiary};
   border-radius: 10px;
   text-align: center;
-  width: 54px;
   height: 24px;
   margin-left: 10px;
+  white-space: nowrap;
+  text-align: center;
 `;
 
 const RatingContainer = styled.div`
-    margin-left: 400px;
+    margin-left: 360px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
 `;
 
 const Rating = styled.span`
@@ -129,5 +136,8 @@ const Bottom = styled.div`
   color: ${({ theme }) => theme.colors.divider};
   margin-left: 17px;
 `;
-
+const ReviewsCount = styled.span`
+  font-size: 17px;
+  color: ${({ theme }) => theme.colors.divider};
+`;
 export default Card;

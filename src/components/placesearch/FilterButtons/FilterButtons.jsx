@@ -33,7 +33,9 @@ const FilterButtonsContainer = styled.div`
   margin-left: 30px;
 `;
 
-const FilterButton = styled.button`
+const FilterButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !["hovered", "selected"].includes(prop),
+})`
   padding: 6px 10px;
   border-radius: 30px;
   font-size: 14px;

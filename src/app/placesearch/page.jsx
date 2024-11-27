@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import SearchBar from "@/components/placesearch/SearchBar/SearchBar";
 import Tabs from "@/components/placesearch/Tabs/Tabs";
 import FilterButtons from "@/components/placesearch/FilterButtons/FilterButtons";
@@ -23,10 +23,13 @@ const PlaceSearchPage = () => {
   const [hoveredFilter, setHoveredFilter] = useState(null);
   const [cards, setCards] = useState(initialCards || []);
   const [userLocation, setUserLocation] = useState(null);
+  const [isLocationPermissionGranted, setIsLocationPermissionGranted] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [buttonBottom, setButtonBottom] = useState(30);
   const bottomRef = useRef(null);
   const scrollableRef = useRef(null);
+  const searchParams = useSearchParams();
+  const permissionGranted = searchParams.get("permissionGranted") === "true";
 
   const handleOpenBottomSheet = () => setIsBottomSheetOpen(true);
   const handleCloseBottomSheet = () => setIsBottomSheetOpen(false);
@@ -71,19 +74,25 @@ const PlaceSearchPage = () => {
     );
   };
 
-  const handleMapView = () => {
-    if (navigator.geolocation) {
+  useEffect(() => {
+    if (permissionGranted && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          router.push(
-            `/placemap?lat=${latitude.toString()}&lng=${longitude.toString()}`
-          );
+          setUserLocation({ lat: latitude, lng: longitude });
         },
-        (error) => alert("현재 위치를 가져올 수 없습니다.")
+        () => {
+          alert("현재 위치를 가져올 수 없습니다.");
+        }
       );
+    }
+  }, [permissionGranted]);
+
+  const handleMapView = () => {
+    if (userLocation) {
+      router.push(`/placemap?lat=${userLocation.lat}&lng=${userLocation.lng}`);
     } else {
-      alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
+      alert("위치를 가져올 수 없습니다.");
     }
   };
 
@@ -172,7 +181,7 @@ const PlaceSearchPage = () => {
         지도 보기
       </MapButton>
       {showScrollToTop && (
-        <ScrollToTopButton onClick={scrollToTop}>
+        <ScrollToTopButton bottom={buttonBottom} onClick={scrollToTop}>
           <ArrowUpIcon />
           <span>맨위로</span>
         </ScrollToTopButton>
@@ -222,9 +231,11 @@ const MapButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.secondary};
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -236,8 +247,8 @@ const MapIcon = styled(Map)`
 
 const ScrollToTopButton = styled.button`
   position: fixed;
-  bottom: 10px;
-  right: 570px;
+  bottom: ${({ bottom }) => `${bottom}px`}; 
+  right: calc(50% - 280px); 
   width: 60px;
   height: 60px;
   border-radius: 50%;

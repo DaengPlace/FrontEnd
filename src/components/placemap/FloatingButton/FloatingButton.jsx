@@ -17,14 +17,17 @@ export default FloatingButton;
 const FloatingButtonContainer = styled.div`
   position: fixed;
   bottom: 30px;
-  margin-left: 220px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   gap: 12px;
   z-index: 1000;
 `;
 
-const ListButton = styled.button`
+const ListButton = styled.button.withConfig({
+    shouldForwardProp: (prop) => !["hovered", "selected"].includes(prop),
+  })`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,9 +41,11 @@ const ListButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.secondary};
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
   }
 `;
 

@@ -29,8 +29,9 @@ const MapContainer = styled.div`
   flex: 1;
   background: #f2f2f2;
   border: 1px solid ${({ theme }) => theme.colors.divider};
-  border-radius: 20px;
   margin-top: 16px;
-  height: 630px;
+  height: 650px;
   position: relative;
+  padding: 0;
+  overflow: hidden;
 `;

@@ -23,6 +23,11 @@ export default SearchBar;
 const SearchBarWrapper = styled.div`
   margin-bottom: 16px;
   margin-left: 20px;
+    &:hover div {
+    background-color: ${({ theme }) => theme.colors.divider}; /* 호버 시 배경색 변경 */
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+  }
+  cursor : pointer;
 `;
 
 const SearchWrapper = styled.div`

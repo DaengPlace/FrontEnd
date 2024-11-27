@@ -1,31 +1,118 @@
 "use client";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { sidoOptions, gunguOptions } from "@/data/data"; 
 
 const BottomSheet = ({
   isOpen,
   onClose,
-  sidoOptions,
-  gunguOptions,
-  selectedSido,
-  selectedGungu,
-  showGunguDropdown,
   onSidoChange,
   onGunguChange,
+  selectedSido,
+  selectedGungu,
+  setSelectedSido, 
+  setSelectedGungu, 
+  showGunguDropdown,
+  sidoOptions,
+  gunguOptions,
 }) => {
-  if (!isOpen) return null;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
+  useEffect(() => {
+    if (isOpen) {
+      onClose();
+    }
+  }, [searchParams.toString()]);
+
+  if (!isOpen) return null;
+  
+  const handleReset = () => {
+    setSelectedSido("");
+    setSelectedGungu("");
+    setUseCurrentLocation(false);
+    setInputValue("");; 
+  };
+
+  const handleLocationClick = () => {
+    setUseCurrentLocation(true);
+  };
+
+  const handleSearch = async () => {
+    if (useCurrentLocation) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            router.push(`/placemap?lat=${latitude}&lng=${longitude}`);
+          },
+          () => alert("현재 위치를 가져올 수 없습니다.")
+        );
+      } else {
+        alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
+      }
+    } else if (inputValue) {
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            inputValue
+          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+        );
+
+        const data = await response.json();
+
+        if (data.status === "OK" && data.results.length > 0) {
+          const { lat, lng } = data.results[0].geometry.location;
+          router.push(`/placemap?lat=${lat}&lng=${lng}`);
+        } else {
+          alert("입력한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");
+        }
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
+        alert("위치를 검색하는 중 오류가 발생했습니다.");
+      }
+    } else if (selectedSido || selectedGungu) {
+      const location = `${selectedSido} ${selectedGungu || ""}`.trim();
+
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            location
+          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+        );
+
+        const data = await response.json();
+
+        if (data.status === "OK" && data.results.length > 0) {
+          const { lat, lng } = data.results[0].geometry.location;
+          router.push(`/placemap?lat=${lat}&lng=${lng}`);
+        } else {
+          alert("선택한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");
+        }
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
+        alert("위치를 검색하는 중 오류가 발생했습니다.");
+      }
+    } else {
+      alert("지역 또는 사업장명을 입력하거나 시/도를 선택해주세요.");
+    }
+  };
+  
+  
   return (
     <>
       <Overlay onClick={onClose} />
-      <SheetContainer>
-        <Header>
+      <Sheet>
+        <BottomSheetHeader>
           <Title>검색</Title>
           <CloseButton onClick={onClose}>X</CloseButton>
-        </Header>
-        <Separator />
-        <Content>
+        </BottomSheetHeader>
+        <hr style={{ marginTop: "20px", color: "#ABABAB" }} />
+        <BottomSheetContent>
           <FilterOption>
             <LabelWrapper>
               <Image
@@ -37,20 +124,34 @@ const BottomSheet = ({
               <Label>어디로 떠나볼까요?</Label>
             </LabelWrapper>
             <FilterInputContainer>
-              <FilterInput placeholder="지역 또는 사업장명 입력" />
-              <LocationButton>
+              <FilterWrapper>
+              <SearchIcon>
                 <Image
-                  src="/assets/image 22.png"
-                  alt="아이콘"
-                  width={24}
-                  height={24}
+                  src="/assets/image 14.png"
+                  alt="돋보기"
+                  width={30}
+                  height={30}
                 />
+              </SearchIcon>
+              <FilterInput
+                placeholder="지역 또는 사업장명 입력"
+                value={inputValue || ""}
+                onChange={(e) => setInputValue(e.target.value)}
+                disabled={useCurrentLocation}
+              />
+              </FilterWrapper>
+              <LocationButton onClick={handleLocationClick}>
+                <img src="/assets/image 22.png" alt="위치 아이콘" />
                 <span>내주변</span>
               </LocationButton>
             </FilterInputContainer>
           </FilterOption>
           <DropdownWrapper>
-            <Dropdown onChange={onSidoChange} value={selectedSido}>
+            <Dropdown
+              onChange={onSidoChange}
+              value={selectedSido}
+              disabled={useCurrentLocation}
+            >
               <option value="">시/도 선택</option>
               {sidoOptions.map((sido) => (
                 <option key={sido} value={sido}>
@@ -58,7 +159,7 @@ const BottomSheet = ({
                 </option>
               ))}
             </Dropdown>
-            {showGunguDropdown && (
+            {showGunguDropdown && !useCurrentLocation && (
               <Dropdown onChange={onGunguChange} value={selectedGungu}>
                 <option value="">시/군/구 선택</option>
                 {gunguOptions[selectedSido]?.map((gungu) => (
@@ -69,18 +170,34 @@ const BottomSheet = ({
               </Dropdown>
             )}
           </DropdownWrapper>
-        </Content>
-        <Buttons>
-          <ResetButton>초기화</ResetButton>
-          <SearchButton>검색하기</SearchButton>
-        </Buttons>
-      </SheetContainer>
+        </BottomSheetContent>
+        <BottomSheetButtons>
+          <ResetButton onClick={handleReset}>초기화</ResetButton>
+          <SearchButton onClick={handleSearch}>검색하기</SearchButton>
+        </BottomSheetButtons>
+      </Sheet>
     </>
   );
 };
 
-export default BottomSheet;
-
+const FilterWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative; 
+  width: 100%;
+`
+const SearchIcon = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 30px;
+  transform: translateY(-50%);
+  width: 24px;
+  z-index: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -91,7 +208,7 @@ const Overlay = styled.div`
   z-index: 999;
 `;
 
-const SheetContainer = styled.div`
+const Sheet = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -116,10 +233,11 @@ const SheetContainer = styled.div`
   }
 `;
 
-const Header = styled.div`
+const BottomSheetHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 `;
 
 const Title = styled.h2`
@@ -136,13 +254,8 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const Separator = styled.hr`
+const BottomSheetContent = styled.div`
   margin-top: 20px;
-  color: #ababab;
-`;
-
-const Content = styled.div`
-  margin-top: 16px;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   padding: 10px;
   border-radius: 10px;
@@ -173,11 +286,12 @@ const FilterInputContainer = styled.div`
   align-items: center;
   gap: 8px;
   margin-top: 8px;
+  position: relative;
 `;
 
 const FilterInput = styled.input`
   flex-grow: 1;
-  padding: 8px;
+  padding: 8px 16px 8px 60px;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   border-radius: 20px;
   width: 440px;
@@ -223,15 +337,20 @@ const DropdownWrapper = styled.div`
 
 const Dropdown = styled.select`
   width: 230px;
-  height: 64px;
+  height: 64px; 
+  overflow-y: auto; 
   background-color: #f2f2f2;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   border-radius: 20px;
   font-size: 16px;
-  padding: 5px;
+  padding: 10px;
+
+  option {
+    padding: 10px;
+  }
 `;
 
-const Buttons = styled.div`
+const BottomSheetButtons = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 16px;
@@ -244,13 +363,14 @@ const ResetButton = styled.button`
   color: ${({ theme }) => theme.colors.primary};
   border-radius: 10px;
   width: 219px;
-  height: 73px;
+  height: 60px;
   cursor: pointer;
-  position: fixed;
-  bottom: 10px;
-  margin-left: 10px;
+  position : fixed;
+  bottom:10px;
+  margin-left : 10px;
   font-size: 24px;
   font-weight: bold;
+
 `;
 
 const SearchButton = styled.button`
@@ -261,10 +381,17 @@ const SearchButton = styled.button`
   border-radius: 10px;
   cursor: pointer;
   width: 326px;
-  height: 73px;
-  position: fixed;
+  height: 60px;
+  position : fixed;
   bottom: 10px;
   left: 260px;
   font-size: 24px;
   font-weight: bold;
 `;
+const ImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 10px; 
+`;
+
+export default BottomSheet;

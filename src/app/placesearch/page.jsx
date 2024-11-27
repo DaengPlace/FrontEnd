@@ -10,6 +10,9 @@ import BottomSheet from "@/components/placesearch/BottomSheet/BottomSheet";
 import { sidoOptions, gunguOptions } from "@/data/data";
 import { Map, ArrowUp } from "@styled-icons/bootstrap";
 import { cards as initialCards } from "@/data/cardsData";
+import Header from "@/components/common/Header/Header";
+import { WithMapIcon } from "@/components/common/Header/Header.stories";
+
 
 const PlaceSearchPage = () => {
   const router = useRouter();
@@ -61,8 +64,8 @@ const PlaceSearchPage = () => {
 
   const handleHover2 = (filter) => setHoveredFilter(filter);
 
-  const handleCardClick = () => {
-    router.push("/placedetail");
+  const handleCardClick = (id) => {
+    router.push(`/placedetail?id=${id}`);
   };
 
   const toggleLike = (e, id) => {
@@ -150,6 +153,13 @@ const PlaceSearchPage = () => {
   }, [cards]);
 
   return (
+    <>
+    <Header
+        title="동반가능시설 검색"
+        showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
+        showMapIcon={WithMapIcon.args.showMapIcon}
+      />
+    
     <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
       <SearchBar onClick={handleOpenBottomSheet} />
       <Tabs
@@ -173,7 +183,7 @@ const PlaceSearchPage = () => {
         onFilterClick={handleFilterClick}
         onHover={handleHover2}
       />
-      <CardList cards={cards} onCardClick={handleCardClick} toggleLike={toggleLike} />
+      <CardList cards={cards} onCardClick={(id) => handleCardClick(id)} toggleLike={toggleLike} />
       {/* 리스트 마지막 감지용 */}
       <div ref={bottomRef} style={{ height: "1px" }}></div>
       <MapButton bottom={buttonBottom} onClick={handleMapView}>
@@ -202,6 +212,7 @@ const PlaceSearchPage = () => {
         showGunguDropdown={showGunguDropdown}
       />
     </ScrollableContainer>
+    </>
   );
 };
 
@@ -211,7 +222,7 @@ const ScrollableContainer = styled.div`
   padding-bottom: 70px;
   -ms-overflow-style: none;
   scrollbar-width: none;
-
+  margin-top: 20px;
   &::-webkit-scrollbar {
     display: none;
   }

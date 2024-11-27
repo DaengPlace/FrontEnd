@@ -80,6 +80,7 @@ const CardDetails = styled.div`
 const Category = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
 `;
 
@@ -99,10 +100,10 @@ const CategoryBadge = styled.div`
 `;
 
 const RatingContainer = styled.div`
-    margin-left: 360px;
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 2px; 
+    margin-left: auto;
 `;
 
 const Rating = styled.span`

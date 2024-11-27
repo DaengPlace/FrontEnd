@@ -2,19 +2,26 @@ import React from "react";
 import styled from "styled-components";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
-const PlaceInfo = ({ isLiked, toggleLike, address, handleAddressClick }) => {
+const PlaceInfo = ({
+    isLiked,
+    toggleLike,
+    address,
+    handleAddressClick,
+    category,
+    placeName,
+    openingHours,
+    features,
+  }) => {
   return (
     <>
-      <CategoryBadge>반려동물용품점</CategoryBadge>
-      <PlaceName>간식곳간</PlaceName>
+      <CategoryBadge>{category}</CategoryBadge>
+      <PlaceName>{placeName}</PlaceName>
       <HeartIconContainer onClick={toggleLike}>
         {isLiked ? <Favorite /> : <FavoriteBorder />}
       </HeartIconContainer>
       <Address onClick={handleAddressClick}>{address}</Address>
-      <OpeningHours>운영시간 11:00 ~ 20:00 | 월요일 휴무</OpeningHours>
-      <Features>
-        주차 가능 | 실내공간 | 무게 제한 없음 | 애견 동반 요금 없음
-      </Features>
+      <OpeningHours>{openingHours}</OpeningHours>
+      <Features>{features}</Features>
       <hr style={{ marginBottom: "10px" }} />
     </>
   );

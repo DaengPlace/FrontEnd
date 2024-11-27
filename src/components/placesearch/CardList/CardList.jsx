@@ -8,7 +8,7 @@ const CardList = ({ cards, onCardClick, toggleLike }) => (
       <Card
         key={card.id}
         card={card}
-        onCardClick={onCardClick}
+        onCardClick={() => onCardClick(card.id)}
         toggleLike={toggleLike}
       />
     ))}

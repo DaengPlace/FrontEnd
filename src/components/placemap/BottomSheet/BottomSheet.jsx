@@ -3,7 +3,8 @@ import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { sidoOptions, gunguOptions } from "@/data/data"; 
+import { sidoOptions, gunguOptions } from "@/data/data";
+import SelectBox from "@/components/common/SelectBox/SelectBox"; 
 
 const BottomSheet = ({
   isOpen,
@@ -147,28 +148,36 @@ const BottomSheet = ({
             </FilterInputContainer>
           </FilterOption>
           <DropdownWrapper>
-            <Dropdown
-              onChange={onSidoChange}
-              value={selectedSido}
-              disabled={useCurrentLocation}
-            >
-              <option value="">시/도 선택</option>
-              {sidoOptions.map((sido) => (
-                <option key={sido} value={sido}>
-                  {sido}
-                </option>
-              ))}
-            </Dropdown>
-            {showGunguDropdown && !useCurrentLocation && (
-              <Dropdown onChange={onGunguChange} value={selectedGungu}>
-                <option value="">시/군/구 선택</option>
-                {gunguOptions[selectedSido]?.map((gungu) => (
-                  <option key={gungu} value={gungu}>
-                    {gungu}
-                  </option>
-                ))}
-              </Dropdown>
-            )}
+          <SelectBoxWrapper>
+          <SelectBox
+            options={sidoOptions.map((sido) => ({
+              value: sido,
+              label: sido,
+            }))}
+            selectedValue={selectedSido}
+            onChange={(value) => {
+              setSelectedSido(value);
+              if (value === "전국") {
+                setSelectedGungu(""); 
+              }
+            }}
+            placeholder="시/도 선택"
+            disabled={useCurrentLocation}
+          />
+          </SelectBoxWrapper>
+          {selectedSido && selectedSido !== "전국" && !useCurrentLocation && (
+            <SelectBoxWrapper>
+            <SelectBox
+              options={(gunguOptions[selectedSido] || []).map((gungu) => ({
+                value: gungu,
+                label: gungu,
+              }))}
+              selectedValue={selectedGungu}
+              onChange={setSelectedGungu}
+              placeholder="시/군/구 선택"
+            />
+            </SelectBoxWrapper>
+          )}
           </DropdownWrapper>
         </BottomSheetContent>
         <BottomSheetButtons>
@@ -274,6 +283,7 @@ const LabelWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 10px 10px;
 `;
 
 const Label = styled.span`
@@ -322,6 +332,10 @@ const LocationButton = styled.button`
     filter: invert(17%) sepia(90%) saturate(5950%) hue-rotate(209deg) brightness(95%) contrast(101%);
   }
 
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+    
   span {
     font-size: 12px;
   }
@@ -332,7 +346,8 @@ const DropdownWrapper = styled.div`
   flex-direction: row;
   gap: 40px;
   margin-top: 20px;
-  margin-left: 10px;
+  align-items: center;
+  margin-left: 36px;
 `;
 
 const Dropdown = styled.select`
@@ -368,7 +383,7 @@ const ResetButton = styled.button`
   position : fixed;
   bottom:10px;
   margin-left : 10px;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
 
 `;
@@ -385,7 +400,7 @@ const SearchButton = styled.button`
   position : fixed;
   bottom: 10px;
   left: 260px;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
 `;
 const ImageWrapper = styled.div`
@@ -393,5 +408,11 @@ const ImageWrapper = styled.div`
   align-items: center;
   margin-right: 10px; 
 `;
+const SelectBoxWrapper = styled.div`
+  flex: 1;
+  max-width: 210px;
+  min-width: 210px;
+`;
+
 
 export default BottomSheet;

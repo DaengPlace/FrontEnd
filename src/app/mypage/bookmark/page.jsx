@@ -6,6 +6,9 @@ import styled from 'styled-components';
 import { SuitHeartFill } from '@styled-icons/bootstrap/SuitHeartFill';
 import theme from "@/styles/theme.js";
 
+import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
+import Header from '@/components/common/Header/Header';
+
 const facilities = [
   {id:1, image: "/assets/mypage/facilityImage.png", name: "간식곳간", category: "반려동물용품점", rating: 5.0, reviewCnt: 14, address: "경기도 고양시 일산동구 백마로 195", startTime: "11:00", endTime: "20:00", dayoff: "Mon", is_parking: true, weather_type: 1, weight_limit: 0, pet_fee: 0 },
   {id:2, image: "/assets/mypage/facilityImage.png", name: "강아지 고양이 편의점 백석점", category: "반려동물용품점", rating: 5.0, reviewCnt: 12, address: "경기도 고양시 일산동구 백마로 195", startTime: "11:00", endTime: "20:00", dayoff: "Mon", is_parking: true, weather_type: 0, weight_limit: 0, pet_fee: 0 }
@@ -14,6 +17,8 @@ const facilities = [
 const BookmarkPage = () => {
   return (
     <Container>
+
+      <Header title="즐겨찾기" showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
       
       {facilities.map((fac) => (
         <BigFacilityCard key={fac.id}>

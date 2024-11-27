@@ -13,7 +13,7 @@ import { Map, ArrowUp } from "@styled-icons/bootstrap";
 import { cards as initialCards } from "@/data/cardsData";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
-
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const PlaceSearchPage = () => {
   const router = useRouter();
@@ -34,7 +34,7 @@ const PlaceSearchPage = () => {
   const scrollableRef = useRef(null);
   const searchParams = useSearchParams();
   const permissionGranted = searchParams.get("permissionGranted") === "true";
-
+  
   const handleOpenBottomSheet = () => setIsBottomSheetOpen(true);
   const handleCloseBottomSheet = () => setIsBottomSheetOpen(false);
   const handleSidoChange = (event) => {
@@ -158,12 +158,11 @@ const PlaceSearchPage = () => {
 
   return (
     <>
-    <Header
+      <Header
         title="동반가능시설 검색"
         showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
-    
     <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
       <SearchBar onClick={handleOpenBottomSheet} />
       <Tabs
@@ -196,13 +195,7 @@ const PlaceSearchPage = () => {
       </MapButton>
       {showScrollToTop && (
         <ScrollToTopButton bottom={buttonBottom} onClick={scrollToTop}>
-          <Image
-            src="/assets/arrow.png"
-            alt="맨위로 아이콘"
-            width={40} 
-            height={32} 
-            priority 
-          />
+          <KeyboardArrowUpIcon sx={{ fontSize: 36, marginBottom:"-10px"}} />
           <span>맨위로</span>
         </ScrollToTopButton>
       )}
@@ -296,9 +289,6 @@ const ScrollToTopButton = styled.button`
     margin-bottom: 10px;
   }
 
-  img {
-    margin-bottom: -8px;
-  }
 `;
 
 

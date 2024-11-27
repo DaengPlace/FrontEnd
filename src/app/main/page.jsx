@@ -9,6 +9,8 @@ import Menu from "@/components/main/Menu/Menu.jsx";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection.jsx";
 import Footer from "@/components/common/Footer/Footer.jsx";
 import Divider from "@/components/common/Divider/Divider.jsx";
+import Header from "@/components/common/Header/Header.jsx";
+import { DefaultHeader } from "@/components/common/Header/Header.stories.js";
 
 const images = [
     "/assets/mainpage/banner1.png",
@@ -28,7 +30,7 @@ const MainPage = () => {
 
     return (
         <Container>
-
+            <Header showLogo={DefaultHeader.args.showLogo} showFavoriteIcon={DefaultHeader.args.showFavoriteIcon} />
             <Banner />
             <Menu />
             <FacilitiesSection sectionTitle={<>최근 <span>인기 시설 🔥</span></>} facilities={facilities} />

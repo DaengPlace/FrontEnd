@@ -6,6 +6,7 @@ import BottomNav from "@/components/common/NavBottom/NavBottom";
 import theme from "@/styles/theme";
 import "./globals.css";
 import styled from "styled-components";
+import Header from "@/components/common/Header/Header";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
@@ -51,7 +52,6 @@ const LayoutContainer = styled.div`
 
 const Content = styled.main`
   flex: 1;
-  margin-top: ${({ $noHeader }) => ($noHeader ? "0" : "50px")};
   margin-bottom: ${({ $noBottom }) => ($noBottom ? "0" : "75px")};
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;

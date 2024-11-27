@@ -9,6 +9,8 @@ import UserProfile from '@/components/mypage/UserProfile/UserProfile';
 import PetProfile from '@/components/mypage/PetProfile/PetProfile';
 import Activities from '@/components/mypage/Activities/Activities';
 import AccountManagement from '@/components/mypage/AccountManagement/AccountManagement';
+import Header from '@/components/common/Header/Header';
+import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 
 const pets = [
   {id:1, image: "/assets/mypage/defaultPetImage.png", name: "뽀삐", breed: "말티즈", birth: "11개월", gender: 1, weight: 5.3, isNeutered: true},
@@ -18,6 +20,9 @@ const pets = [
 const MyPage = () => {
   return (
     <Container>
+      <Header title="마이페이지" showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
+      <Space />
+      
       <SectionHeader header={"내 프로필"} />
       <UserProfile imagePath={defaultProfileImage} name={"뽀삐엄마"} />
       <br />
@@ -47,3 +52,6 @@ const Container = styled.div`
   align-items: center;
 `;
 
+const Space = styled.div`
+  height: 20px;
+`;

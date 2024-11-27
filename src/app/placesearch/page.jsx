@@ -51,7 +51,10 @@ const PlaceSearchPage = () => {
     setSelectedGungu(event.target.value);
   };
 
-  const handleCategoryClick = (category) => setSelectedCategory(category);
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setSelectedFilters([]);
+  };
   const handleHover = (category) => setHoveredCategory(category);
 
   const handleFilterClick = (filter) => {

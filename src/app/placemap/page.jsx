@@ -58,6 +58,11 @@ const PlaceMap = () => {
     router.push("/placesearch?permissionGranted=true"); 
   };
 
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setSelectedFilters([]); 
+  };
+
   if (!isLoaded) {
     return (
       <LoadingContainer>
@@ -78,7 +83,7 @@ const PlaceMap = () => {
       <SearchBar onClick={() => setIsBottomSheetOpen(true)} />
       <Tabs
         selectedCategory={selectedCategory}
-        onCategoryClick={setSelectedCategory}
+        onCategoryClick={handleCategoryClick}
         hoveredCategory={hoveredCategory}
         setHoveredCategory={setHoveredCategory}
       />
@@ -103,6 +108,8 @@ const PlaceMap = () => {
         gunguOptions={gunguOptions}
         selectedSido={selectedSido}
         selectedGungu={selectedGungu}
+        setSelectedSido={setSelectedSido}
+        setSelectedGungu={setSelectedGungu} 
         showGunguDropdown={showGunguDropdown}
         onSidoChange={handleSidoChange}
         onGunguChange={handleGunguChange}

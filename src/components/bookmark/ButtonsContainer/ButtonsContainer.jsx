@@ -15,9 +15,15 @@ import { useRouter } from "next/navigation";
     }
   };
 
+  const userId = 1;
+
+  const handleMapView = () => {
+    router.push(`/mypage/bookmark/map?id=${userId}`);
+  }
+
   return (
     <Container>
-      <MapButton bottom={buttonBottom}>
+      <MapButton bottom={buttonBottom} onClick={handleMapView}>
         <MapIcon />지도 보기
       </MapButton>
       {showScrollToTop && (

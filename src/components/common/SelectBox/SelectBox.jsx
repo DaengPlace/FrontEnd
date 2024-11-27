@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-const SelectBox = ({ options, selectedValue, onChange, placeholder }) => {
+const SelectBox = ({ options, selectedValue, onChange, placeholder, disabled }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelectChange = (value) => {
@@ -12,18 +12,21 @@ const SelectBox = ({ options, selectedValue, onChange, placeholder }) => {
   };
 
   return (
-    <SelectWrapper onClick={() => setIsOpen((prev) => !prev)}>
-      <SelectedItem>
+    <SelectWrapper 
+    onClick={() => setIsOpen((prev) => !prev)}
+    disabled={disabled}
+    >
+      <SelectedItem disabled={disabled}>
         <SelectText>
           {selectedValue
             ? options.find((option) => option.value === selectedValue)?.label
             : placeholder}
         </SelectText>
         <IconWrapper>
-          {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+          {!disabled && isOpen ? <FaChevronUp /> : <FaChevronDown />}
         </IconWrapper>
       </SelectedItem>
-      {isOpen && (
+      {isOpen && !disabled && (
         <OptionsContainer>
           {options.map((option) => (
             <OptionItem

@@ -156,6 +156,8 @@ const BottomSheet = ({
               setSelectedSido(value);
               if (value === "전국") {
                 setSelectedGungu(""); 
+              } else {
+                setSelectedGungu(""); 
               }
             }}
             placeholder="시/도 선택"

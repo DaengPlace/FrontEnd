@@ -159,6 +159,8 @@ const BottomSheet = ({
               setSelectedSido(value);
               if (value === "전국") {
                 setSelectedGungu(""); 
+              } else {
+                setSelectedGungu(""); 
               }
             }}
             placeholder="시/도 선택"
@@ -172,8 +174,10 @@ const BottomSheet = ({
                 value: gungu,
                 label: gungu,
               }))}
-              selectedValue={selectedGungu}
-              onChange={setSelectedGungu}
+              selectedValue={selectedGungu || ""}
+              onChange={(value) => {
+                setSelectedGungu(value);
+              }}
               placeholder="시/군/구 선택"
             />
             </SelectBoxWrapper>
@@ -335,7 +339,7 @@ const LocationButton = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
-    
+
   span {
     font-size: 12px;
   }
@@ -411,7 +415,8 @@ const ImageWrapper = styled.div`
 const SelectBoxWrapper = styled.div`
   flex: 1;
   max-width: 210px;
-  min-width: 210px;
+  min-width: 210px; /* 최소 너비 */
+  min-height: 64px; /* 최소 높이 */
 `;
 
 

@@ -30,8 +30,21 @@ const DogConfirmPage = () => {
       />
       <DogInfo dog={DOG[0]} />
       <ButtonBox>
-        <Button></Button>
-        <Button></Button>
+        <Button
+          onClick={() => router.push("/edit")}
+          variant="outlined"
+          className="edit"
+          fullWidth
+        >
+          수정
+        </Button>
+        <Button
+          onClick={() => router.push("/submit")}
+          isActive={true}
+          fullWidth
+        >
+          등록
+        </Button>
       </ButtonBox>
     </Container>
   );
@@ -50,7 +63,12 @@ const Container = styled.div`
 `;
 
 const ButtonBox = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  padding: 0 2rem;
 `;

@@ -106,7 +106,7 @@ export default PlaceDetailPage;
 
 const ScrollContainer = styled.div`
   flex: 1;
-  height: 100%;
+  height: calc(100vh - 65px);
   display: flex;
   flex-direction: column;
   overflow-x: hidden;

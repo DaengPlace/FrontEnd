@@ -8,7 +8,7 @@ const Hr2 = () => {
 export default Hr2;
 
 const Hr = styled.hr`
-  color: #ababab;
+  color: #ABABAB;
   margin-top: 25px;
   border: none;
   border-top: 1px solid #ababab;

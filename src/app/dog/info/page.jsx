@@ -68,7 +68,9 @@ const DogInfoPage = () => {
       case 6:
         return (
           dogInfo.weightWhole.trim() !== "" &&
-          dogInfo.weightDecimal.trim() !== ""
+          dogInfo.weightDecimal.trim() !== "" &&
+          parseFloat(dogInfo.weightWhole) >= 0 &&
+          parseFloat(dogInfo.weightDecimal) >= 0
         );
       default:
         return false;
@@ -78,10 +80,14 @@ const DogInfoPage = () => {
   const handleNextStep = async () => {
     const isValid = await isCurrentStepValid();
     if (isValid) {
-      setStep((prevStep) => prevStep + 1);
-      const nextRef = inputRefs.current[step];
-      if (nextRef) {
-        nextRef.focus();
+      if (step < 6) {
+        setStep((prevStep) => prevStep + 1);
+        const nextRef = inputRefs.current[step];
+        if (nextRef) {
+          nextRef.focus();
+        }
+      } else {
+        router.push("/dog/confirm");
       }
     }
   };
@@ -219,6 +225,7 @@ const DogInfoPage = () => {
                 onChange={(e) =>
                   handleInputChange("weightWhole", e.target.value)
                 }
+                min="0"
               />
               <span> . </span>
               <Input
@@ -228,6 +235,7 @@ const DogInfoPage = () => {
                 onChange={(e) =>
                   handleInputChange("weightDecimal", e.target.value)
                 }
+                min="0"
               />
             </BoxContainer>
           </InputBox>

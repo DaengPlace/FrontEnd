@@ -34,7 +34,7 @@ const Container = styled.div`
   height: 170px;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   margin-left: 10px;
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 20px;
   margin-right: 10px;
 `;

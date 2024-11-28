@@ -89,13 +89,17 @@ const PolicyButton = styled.button`
 `;
 
 
-const CategoryBadge = styled.span`
+const CategoryBadge = styled.div`
   display: inline-block;
-  padding: 5px 10px;
+  padding: 5px 10px; 
   font-size: 12px;
-  color: white;
+  font-weight: bold;
+  color: #fff;
   background: #01003f;
   border-radius: 20px;
+  text-align: center;
+  line-height: 1; 
+  white-space: nowrap; 
   margin-left: 10px;
 `;
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { reviews } from "@/data/reviewData";
 import Header from "@/components/common/Header/Header";
@@ -16,44 +16,44 @@ const ReviewPage = () => {
     reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
 
   const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const containerRef = useRef(null);
 
   const scrollToTop = () => {
-    const container = document.getElementById("scrollable-container");
-    if (container) {
-      container.scrollTo({ top: 0, behavior: "smooth" });
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
   
   useEffect(() => {
-    const container = document.getElementById("scrollable-container");
     const handleScroll = () => {
-      if (container) {
-        const scrollTop = container.scrollTop;
-        if (scrollTop > 10) {
-          setShowScrollToTop(true);
-        } else {
-          setShowScrollToTop(false);
-        }
+      if (containerRef.current) {
+        const scrollTop = containerRef.current.scrollTop;
+        setShowScrollToTop(scrollTop > 10);
       }
     };
 
-    container?.addEventListener("scroll", handleScroll);
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
 
     return () => {
-      container?.removeEventListener("scroll", handleScroll);
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
     };
   }, []);
 
   return (
     <>
-      <FixedHeader>
+      <HeaderWrapper>
         <Header
           title="리뷰 전체보기"
           showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
           showMapIcon={WithMapIcon.args.showMapIcon}
         />
-      </FixedHeader>
-      <Container id="scrollable-container">
+      </HeaderWrapper>
+      <Container ref={containerRef}>
         <PageHeader title="92버터샵" reviewCount={reviews.length} />
         <ReviewSummary
           averageRating={averageRating}
@@ -75,30 +75,28 @@ const ReviewPage = () => {
 
 export default ReviewPage;
 
-const FixedHeader = styled.div`
-  position: sticky;
+const HeaderWrapper = styled.div`
+  position: fixed;
   top: 0;
-  left: 0;
   z-index: 1000;
   background-color: white;
-  width: 100%;
 `;
 
 const Container = styled.div`
+  padding: 16px;
+  padding-top: 70px;
+  height: calc(100vh - 70px); 
   overflow-y: auto;
-  height: calc(100vh - 70px);
-  padding-bottom: 70px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
   &::-webkit-scrollbar {
     display: none;
   }
-  padding : 16px;
 `;
 
 const ScrollToTopButton = styled.button`
   position: fixed;
-  bottom: 80px;
+  bottom: 90px;
   right: calc(50% - 280px); 
   width: 60px;
   height: 60px;

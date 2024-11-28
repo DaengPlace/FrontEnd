@@ -1,13 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const PhotoReviewContainer = ({ reviews }) => {
+    const router = useRouter();
+    const handleClick = () => {
+        router.push("/reviews/PhotoReview")
+    }
   return (
     <Container>
       <SectionHeader>
         <h3>포토/비디오 리뷰 모아보기</h3>
-        <ViewMore>더보기 &gt;</ViewMore>
+        <ViewMore onClick={handleClick}>더보기 &gt;</ViewMore>
       </SectionHeader>
       <PhotoList>
         {reviews.slice(0, 5).map((review) => (

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import Header from '@/components/common/Header/Header';
-import Space from '@/components/common/Space/Space';
 import { initialFacilities } from "@/data/facilities";
 import ScrollableContainer from '@/components/bookmark/ScrollableContainer/ScrollableContainer';
 import ButtonsContainer from '@/components/bookmark/ButtonsContainer/ButtonsContainer';
@@ -63,4 +62,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const Space = styled.div`
+  height: 20px;
 `;

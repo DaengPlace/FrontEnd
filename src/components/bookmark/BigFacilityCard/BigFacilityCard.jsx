@@ -10,7 +10,7 @@ const BigFacilityCard = ({fac, toggleLike}) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/placedetail?id=${id}`);
+    router.push(`/placedetail?id=${fac.id}`);
   };
 
   return (
@@ -121,12 +121,13 @@ const Category = styled.div`
 
 const Rating = styled.div`
   font-size: 14px;
-  color: ${theme.colors.primary};
+  color: ${theme.colors.tertiary};
   margin-bottom: 10px;
   font-weight: bold;
 
   span {
     color: ${theme.colors.divider};
+    font-weight: 400;
   }
 `;
 

@@ -2,8 +2,11 @@
 
 import styled from "styled-components";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <Container>
       <TextBox>
@@ -26,12 +29,14 @@ export default function Home() {
           width={300}
           height={50}
           alt="kakao_login_btn"
+          onClick={() => router.push("/signin")} // 임시
         />
         <Image
           src="/assets/common/google_login_btn.svg"
           width={300}
           height={50}
           alt="google_login_btn"
+          onClick={() => router.push("/signin")} // 임시
         />
       </ButtonBox>
     </Container>

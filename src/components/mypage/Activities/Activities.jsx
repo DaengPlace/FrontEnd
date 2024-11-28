@@ -11,16 +11,16 @@ const Activities = () => {
   return (
     <Container>
       <ActivityBox>
-          <ActivityItem>
+          <ActivityItem onClick={() => router.push("/mypage/bookmark")}>
             <span>🏢</span> <p>즐겨찾는 시설 목록</p>
             <ActivityArrow>
-              <StyledChevronRight onClick={() => router.push("/mypage/bookmark")} />
+              <StyledChevronRight />
             </ActivityArrow>
           </ActivityItem>
-          <ActivityItem>
+          <ActivityItem onClick={() => router.push("/mypage/myreviews")}>
             <span>📝</span> <p>내가 쓴 리뷰 목록</p>
             <ActivityArrow>
-              <StyledChevronRight onClick={() => router.push("/mypage/myreviews")} />
+              <StyledChevronRight />
             </ActivityArrow>
           </ActivityItem>
         </ActivityBox>
@@ -55,23 +55,26 @@ const ActivityItem = styled.div`
   span {
     padding-left: 10px;
     font-size: 20px;
+    
   }
 
   p {
     margin-right: auto;
     padding-left: 20px;
   }
+
 `;
 
 const ActivityArrow = styled.div`
   padding-right: 20px;
+
+  
 `;
 
 const StyledChevronRight = styled(ChevronRight)`
   width: 20px;
   height: 20px;
   color: ${theme.colors.divider};
-
   &:hover {
     color: ${theme.colors.primary};
   }

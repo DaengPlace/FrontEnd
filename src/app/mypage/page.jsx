@@ -11,6 +11,8 @@ import Activities from '@/components/mypage/Activities/Activities';
 import AccountManagement from '@/components/mypage/AccountManagement/AccountManagement';
 import Header from '@/components/common/Header/Header';
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
+import { ChevronRight } from 'styled-icons/bootstrap';
+import theme from "@/styles/theme.js";
 
 const pets = [
   {id:1, image: "/assets/mypage/defaultPetImage.png", name: "뽀삐", breed: "말티즈", birth: "11개월", gender: 1, weight: 5.3, isNeutered: true},
@@ -27,7 +29,10 @@ const MyPage = () => {
       <UserProfile imagePath={defaultProfileImage} name={"뽀삐엄마"} />
       <br />
 
-      <SectionHeader header={"우리집 댕댕이들"} />
+      <MyPetsHeader>
+        <SectionHeader header={"우리집 댕댕이들"} />
+        <AddPet>추가하기<StyledChevronRight /> </AddPet>
+      </MyPetsHeader>
       <PetProfile pets={pets} />
       <br/>
 
@@ -54,4 +59,24 @@ const Container = styled.div`
 
 const Space = styled.div`
   height: 20px;
+`;
+
+const MyPetsHeader = styled.div`
+  width: 540px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const AddPet = styled.div`
+  font-size: 12px;
+  display: flex;
+  width: 80px;
+`;
+
+const StyledChevronRight = styled(ChevronRight)`
+  width: 12px;
+  height: 12px;
+  color: ${theme.colors.black};
+  margin-left: 8px;
 `;

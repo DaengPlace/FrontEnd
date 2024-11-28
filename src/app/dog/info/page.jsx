@@ -156,7 +156,7 @@ const DogInfoPage = () => {
               type="text"
               placeholder="견종을 입력하세요"
               value={dogInfo.breed}
-              onFocus={() => setIsBottomSheetOpen(true)}
+              onClick={() => setIsBottomSheetOpen(true)}
               readOnly
             />
           </InputBox>

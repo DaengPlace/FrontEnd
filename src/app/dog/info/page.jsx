@@ -9,6 +9,7 @@ import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Modal from "@/components/common/Modal/Modal";
+import DogBottomSheet from "@/components/dog/DogBottomSheet";
 
 const DogInfoPage = () => {
   const router = useRouter();
@@ -31,6 +32,7 @@ const DogInfoPage = () => {
     weightDecimal: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const handleInputChange = (key, value) => {
     setDogInfo((prev) => ({ ...prev, [key]: value }));
@@ -154,7 +156,8 @@ const DogInfoPage = () => {
               type="text"
               placeholder="견종을 입력하세요"
               value={dogInfo.breed}
-              onChange={(e) => handleInputChange("breed", e.target.value)}
+              onFocus={() => setIsBottomSheetOpen(true)}
+              readOnly
             />
           </InputBox>
         )}
@@ -278,6 +281,16 @@ const DogInfoPage = () => {
           onConfirm={confirmModal}
           cancelText="계속 작성"
           confirmText="나가기"
+        />
+      )}
+
+      {isBottomSheetOpen && (
+        <DogBottomSheet
+          onClose={() => setIsBottomSheetOpen(false)}
+          onSelect={(breed) => {
+            handleInputChange("breed", breed);
+            setIsBottomSheetOpen(false);
+          }}
         />
       )}
     </Container>

@@ -24,22 +24,12 @@ const DogInfo = ({ dog }) => {
           ))}
         </DogDetailBox>
       </InfoContainer>
-      <ImageContainer>
-        <ProfileImageWrapper>
-          <StyledImage
-            src="/assets/dog/default_profile.svg"
-            alt="강아지 프로필"
-            width={120}
-            height={120}
-          />
-          <EditIcon
-            src="/assets/common/camera.svg"
-            alt="수정"
-            width={34}
-            height={34}
-          />
-        </ProfileImageWrapper>
-      </ImageContainer>
+      <StyledImage
+        src="/assets/dog/default_profile.svg"
+        alt="강아지 프로필"
+        width={120}
+        height={120}
+      />
     </Container>
   );
 };
@@ -88,28 +78,6 @@ const DetailTitle = styled.span`
   width: 80px;
 `;
 
-const ImageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-`;
-
-const ProfileImageWrapper = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
 const StyledImage = styled(Image)`
   border-radius: 8px;
-`;
-
-const EditIcon = styled(Image)`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  border-radius: 50%;
-  background: white;
-  padding: 2px;
-  cursor: pointer;
 `;

@@ -1,9 +1,56 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import styled from "styled-components";
+import Button from "@/components/common/Button/Button";
+import Header from "@/components/signin/Header/Header";
+import DogInfo from "@/components/dog/DogInfo";
+
+const DOG = [
+  {
+    id: 1,
+    name: "초코",
+    type: "말티즈",
+    age: "11개월",
+    gender: "여아",
+    neutralization: "수술 완료",
+    weight: "2.5kg",
+  },
+];
+
 const DogConfirmPage = () => {
+  const router = useRouter();
+
   return (
-    <div>
-      <h1>Confirm Dog</h1>
-    </div>
+    <Container>
+      <Header
+        titleLines={["입력하신 정보를", "확인해주세요"]}
+        onBack={() => router.push("/")}
+        onClose={() => router.push("/")}
+      />
+      <DogInfo dog={DOG[0]} />
+      <ButtonBox>
+        <Button></Button>
+        <Button></Button>
+      </ButtonBox>
+    </Container>
   );
 };
 
 export default DogConfirmPage;
+
+const Container = styled.div`
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  outline: none;
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+`;

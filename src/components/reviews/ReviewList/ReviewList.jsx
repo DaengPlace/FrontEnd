@@ -5,10 +5,15 @@ import Hr2 from "@/components/place/Hr2/Hr2";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useRouter } from "next/navigation";
 
 const ReviewList = ({ reviews }) => {
+    const router = useRouter();
     const [likedReviews, setLikedReviews] = useState({});
 
+    const handleCardClick = () => {
+        router.push("/reviews/ReviewDetail")
+    }
     const toggleLike = (id) => {
         setLikedReviews((prev) => ({
         ...prev,
@@ -26,7 +31,7 @@ const ReviewList = ({ reviews }) => {
       <Title>리뷰 ({reviews.length})</Title>
       <Hr2/> 
       {reviews.map((review) => (
-        <ReviewCard key={review.id}>
+        <ReviewCard key={review.id} onClick={handleCardClick} >
           <CardHeader>
             <Avatar />
             <Author>{review.author}</Author>
@@ -95,6 +100,7 @@ const ReviewCard = styled.div`
   padding-bottom: 5px;
   margin-top: 15px;
   margin-left: 10px;
+  cursor: pointer;
 `;
 
 const CardHeader = styled.div`

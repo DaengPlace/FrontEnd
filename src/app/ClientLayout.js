@@ -17,6 +17,8 @@ export default function ClientLayout({ children }) {
     "/signin/profile",
     "/dog/info",
     "/dog/confirm",
+    "/mypage/bookmark",
+    "/mypage/bookmark/map",
     "/placesearch",
     "/placemap",
     "/placedetail"

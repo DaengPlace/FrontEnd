@@ -1,13 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
 
 const ReviewSummary = ({ averageRating, reviewCount }) => {
+    const router = useRouter();
+    const handleWriteReviewClick = () => {
+        router.push("reviews/reviewsInput"); 
+      };
   return (
     <SummaryContainer>
       <Rating>
         ⭐ {averageRating.toFixed(1)}
       </Rating>
-      <WriteReviewButton>리뷰 작성하기</WriteReviewButton>
+      <WriteReviewButton onClick={handleWriteReviewClick}>리뷰 작성하기</WriteReviewButton>
     </SummaryContainer>
   );
 };

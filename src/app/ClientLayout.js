@@ -6,7 +6,6 @@ import BottomNav from "@/components/common/NavBottom/NavBottom";
 import theme from "@/styles/theme";
 import "./globals.css";
 import styled from "styled-components";
-import Header from "@/components/common/Header/Header";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
@@ -17,11 +16,12 @@ export default function ClientLayout({ children }) {
     "/signin/profile",
     "/dog/info",
     "/dog/confirm",
+    "/dog/edit",
     "/mypage/bookmark",
     "/mypage/bookmark/map",
     "/placesearch",
     "/placemap",
-    "/placedetail"
+    "/placedetail",
   ];
   const noHeaderNavPaths = [
     "/",
@@ -30,6 +30,7 @@ export default function ClientLayout({ children }) {
     "/signin/profile",
     "/dog/info",
     "/dog/confirm",
+    "/dog/edit",
   ];
 
   const showBottomNav = !noBottomNavPaths.includes(pathname);

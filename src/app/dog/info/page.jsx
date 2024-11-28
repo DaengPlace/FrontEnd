@@ -261,6 +261,7 @@ const Container = styled.div`
   flex-direction: column;
   position: relative;
   outline: none;
+  margin-bottom: 5rem;
 `;
 
 const InputContainer = styled.div`
@@ -292,13 +293,17 @@ const BoxContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  position: absolute;
-  bottom: 2rem;
-  left: 0;
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+
   width: 100%;
+  max-width: 600px;
+  padding: 0 2rem;
   display: flex;
   justify-content: center;
-  padding: 0 2rem;
+  box-sizing: border-box;
 `;
 
 const ErrorText = styled.span`

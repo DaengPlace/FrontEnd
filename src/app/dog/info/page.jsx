@@ -34,22 +34,22 @@ const DogInfoPage = () => {
     setDogInfo((prev) => ({ ...prev, [key]: value }));
   };
 
-  const getFieldName = (currentStep) => {
-    switch (currentStep) {
+  const getTitleLines = () => {
+    switch (step) {
       case 1:
-        return "name";
+        return ["우리 댕댕이의", "이름을 알려주세요"];
       case 2:
-        return "breed";
+        return ["우리 댕댕이의", "견종을 알려주세요"];
       case 3:
-        return "birthDate";
+        return ["우리 댕댕이의", "생년월일을 알려주세요"];
       case 4:
-        return "gender";
+        return ["우리 댕댕이의", "성별을 알려주세요"];
       case 5:
-        return "neutered";
+        return ["우리 댕댕이의", "중성화 수술 여부를 알려주세요"];
       case 6:
-        return "weight";
+        return ["우리 댕댕이의", "몸무게를 알려주세요"];
       default:
-        return "";
+        return ["우리 댕댕이의", "정보를 알려주세요"];
     }
   };
 
@@ -109,7 +109,7 @@ const DogInfoPage = () => {
       }}
     >
       <Header
-        titleLines={["우리 댕댕이의 정보를", "알려주세요"]}
+        titleLines={getTitleLines()}
         onBack={() => (step > 1 ? setStep(step - 1) : router.push("/"))}
         onClose={() => router.push("/")}
       />

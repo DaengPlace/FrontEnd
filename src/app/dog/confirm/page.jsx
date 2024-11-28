@@ -5,18 +5,7 @@ import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import DogInfo from "@/components/dog/DogInfo";
-
-const DOG = [
-  {
-    id: 1,
-    name: "초코",
-    type: "말티즈",
-    age: "11개월",
-    gender: "여아",
-    neutralization: "수술 완료",
-    weight: "2.5kg",
-  },
-];
+import { DOG } from "@/data/dogData";
 
 const DogConfirmPage = () => {
   const router = useRouter();
@@ -31,18 +20,14 @@ const DogConfirmPage = () => {
       <DogInfo dog={DOG[0]} />
       <ButtonBox>
         <Button
-          onClick={() => router.push("/edit")}
+          onClick={() => router.push("/dog/edit")}
           variant="outlined"
           className="edit"
           fullWidth
         >
           수정
         </Button>
-        <Button
-          onClick={() => router.push("/submit")}
-          isActive={true}
-          fullWidth
-        >
+        <Button onClick={() => router.push("/main")} isActive={true} fullWidth>
           등록
         </Button>
       </ButtonBox>

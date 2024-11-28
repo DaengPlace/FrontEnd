@@ -8,6 +8,7 @@ import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
+import Modal from "@/components/common/Modal/Modal";
 
 const DogInfoPage = () => {
   const router = useRouter();
@@ -29,6 +30,7 @@ const DogInfoPage = () => {
     weightWhole: "",
     weightDecimal: "",
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleInputChange = (key, value) => {
     setDogInfo((prev) => ({ ...prev, [key]: value }));
@@ -92,6 +94,22 @@ const DogInfoPage = () => {
     }
   };
 
+  const handleBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const confirmModal = () => {
+    router.push("/main");
+  };
+
   useEffect(() => {
     const currentRef = inputRefs.current[step - 1];
     if (currentRef) {
@@ -110,7 +128,7 @@ const DogInfoPage = () => {
     >
       <Header
         titleLines={getTitleLines()}
-        onBack={() => (step > 1 ? setStep(step - 1) : router.push("/"))}
+        onBack={handleBack}
         onClose={() => router.push("/")}
       />
 
@@ -247,6 +265,21 @@ const DogInfoPage = () => {
           {step < 6 ? "다음" : "확인"}
         </Button>
       </ButtonContainer>
+
+      {isModalOpen && (
+        <Modal
+          title="강아지 정보 등록을 중단하시겠습니까?"
+          message={
+            <>
+              지금까지 작성된 정보는 <br /> 저장되지 않습니다
+            </>
+          }
+          onCancel={closeModal}
+          onConfirm={confirmModal}
+          cancelText="계속 작성"
+          confirmText="나가기"
+        />
+      )}
     </Container>
   );
 };

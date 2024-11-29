@@ -6,6 +6,7 @@ import ImageContainer from "@/components/place/placedetail/ImageContainer/ImageC
 import PlaceInfo from "@/components/place/placedetail/PlaceInfo/PlaceInfo";
 import ReviewSection from "@/components/place/placedetail/ReviewSection/ReviewSection";
 import MapBottomSheet from "@/components/place/placedetail/MapBottomSheet/MapBottomSheet";
+import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import WriteReviewButton from "@/components/place/placedetail/WriteReviewButton/WriteReviewButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
@@ -17,15 +18,18 @@ const PlaceDetailPage = () => {
   const id = parseInt(searchParams.get("id"), 10);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isMapBottomSheetOpen, setIsMapBottomSheetOpen] = useState(false);
+  const [isReviewBottomSheetOpen, setIsReviewBottomSheetOpen] = useState(false);
   const [center, setCenter] = useState(null);
   const [address, setAddress] = useState("");
   const [isLiked, setIsLiked] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null); // 파일 상태 관리
 
-  const selectedCard = cards.find((card) => card.id === id)
+  const selectedCard = cards.find((card) => card.id === id);
   if (!selectedCard) {
     return <NotFound>선택한 장소의 정보를 찾을 수 없습니다.</NotFound>;
   }
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
@@ -48,56 +52,112 @@ const PlaceDetailPage = () => {
       console.error("Error fetching coordinates:", error);
     }
   };
+
   useEffect(() => {
     setIsClient(true);
-    setAddress(selectedCard.address); 
+    setAddress(selectedCard.address);
     fetchCoordinates(selectedCard.address);
   }, []);
 
   if (!isClient || !isLoaded) {
     return null;
   }
+
   const toggleLike = () => setIsLiked((prev) => !prev);
 
   const handleAddressClick = () => {
     fetchCoordinates(selectedCard.address);
-    setIsBottomSheetOpen(true);
+    setIsMapBottomSheetOpen(true);
   };
 
   const handleWriteReviewButtonClick = () => {
-    router.push("/reviews/reviewsInput");
-  }
+    setIsReviewBottomSheetOpen(true);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+      alert(`파일이 업로드되었습니다: ${file.name}`);
+    }
+  };
+
+  const handleCancel = () => {
+    const fileInput = document.getElementById("file-upload");
+    if (fileInput) {
+      fileInput.click();
+    }
+  };
+
   return (
     <>
-    <Header
+      <Header
         title={selectedCard.title}
         showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
-    <ScrollContainer>
-      <PageContainer>
-        <ImageContainer />
-        <PlaceInfo
-          isLiked={isLiked}
-          toggleLike={toggleLike}
-          address={selectedCard.address}
-          handleAddressClick={handleAddressClick}
-          category={selectedCard.category}
-          placeName={selectedCard.title}
-          openingHours={selectedCard.hours}
-          features={selectedCard.features}
-        />
-        <ReviewSection />
-        <WriteReviewButton onClick={handleWriteReviewButtonClick} />
-      </PageContainer>
-      {isBottomSheetOpen && (
-        <MapBottomSheet
-          center={center}
-          address={address}
-          closeBottomSheet={() => setIsBottomSheetOpen(false)}
-        />
-      )}
-    </ScrollContainer>
+      <ScrollContainer>
+        <PageContainer>
+          <ImageContainer />
+          <PlaceInfo
+            isLiked={isLiked}
+            toggleLike={toggleLike}
+            address={selectedCard.address}
+            handleAddressClick={handleAddressClick}
+            category={selectedCard.category}
+            placeName={selectedCard.title}
+            openingHours={selectedCard.hours}
+            features={selectedCard.features}
+          />
+          <ReviewSection />
+          <WriteReviewButton onClick={handleWriteReviewButtonClick} />
+        </PageContainer>
+        {isMapBottomSheetOpen && (
+          <MapBottomSheet
+            center={center}
+            address={address}
+            closeBottomSheet={() => setIsMapBottomSheetOpen(false)}
+          />
+        )}
+        {isReviewBottomSheetOpen && (
+          <>
+            <BottomSheet
+              title="리뷰 작성을 위해"
+              content={
+                <StyledContent>
+                  <p>해당 시설에서 발급받은 영수증을 스캔해주세요</p>
+                </StyledContent>
+              }
+              onClose={() => setIsReviewBottomSheetOpen(false)}
+              onConfirm={() => {
+                setIsReviewBottomSheetOpen(false);
+                router.push("/reviews/reviewScan");
+              }}
+              cancelText="사진 업로드"
+              confirmText="영수증 촬영"
+              cancelHandler={(e) => {
+                e.stopPropagation(); 
+                const fileInput = document.getElementById("file-upload");
+                if (fileInput) {
+                  fileInput.click(); 
+                }
+              }}
+            />
+            <HiddenFileInput
+              type="file"
+              id="file-upload"
+              accept="image/*"
+              onChange={(event) => {
+                const file = event.target.files[0];
+                if (file) {
+                  setUploadedFile(file);
+                  alert(`파일이 업로드되었습니다: ${file.name}`);
+                }
+              }}
+            />
+          </>
+        )}
+      </ScrollContainer>
     </>
   );
 };
@@ -118,8 +178,6 @@ const ScrollContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-  padding-bottom: 0; 
-  margin-bottom: 0; 
 `;
 
 const PageContainer = styled.div`
@@ -135,4 +193,19 @@ const NotFound = styled.div`
   font-size: 18px;
   color: ${({ theme }) => theme.colors.divider};
   margin-top: 50px;
+`;
+
+const StyledContent = styled.div`
+  margin: -10px 0 30px 0;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+
+  p {
+    line-height: 1.5;
+  }
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
 `;

@@ -158,11 +158,13 @@ const PlaceSearchPage = () => {
 
   return (
     <>
+    <HeaderWrapper>
       <Header
         title="동반가능시설 검색"
         showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
+      </HeaderWrapper>
     <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
       <SearchBar onClick={handleOpenBottomSheet} />
       <Tabs
@@ -221,16 +223,21 @@ const PlaceSearchPage = () => {
 
 const ScrollableContainer = styled.div`
   overflow-y: auto;
-  height: calc(100vh - 65px);
-  padding-bottom: 70px;
+  height: calc(100vh - 50px);
+  padding-bottom: 50px;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  margin-top: 20px;
+  padding-top: 70px;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-
+const HeaderWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+`;
 const MapButton = styled.button`
   position: fixed;
   bottom: ${({ bottom }) => `${bottom+60}px`};

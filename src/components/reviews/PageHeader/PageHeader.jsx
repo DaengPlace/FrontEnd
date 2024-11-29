@@ -68,7 +68,6 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
   margin-left: 10px;
 `;
 
@@ -91,16 +90,14 @@ const PolicyButton = styled.button`
 
 const CategoryBadge = styled.div`
   display: inline-block;
-  padding: 5px 10px; 
+  padding: 5px 10px;
   font-size: 12px;
   font-weight: bold;
   color: #fff;
   background: #01003f;
-  border-radius: 10px;
-  text-align: center;
-  line-height: 1; 
-  white-space: nowrap; 
+  border-radius: 20px;
   margin-left: 10px;
+  margin-bottom: 10px;
 `;
 
 const Overlay = styled.div`

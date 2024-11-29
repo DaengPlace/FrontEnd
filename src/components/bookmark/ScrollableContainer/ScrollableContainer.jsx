@@ -18,7 +18,8 @@ export default ScrollableContainer;
 const Container = styled.div`
   overflow-y: auto;
   height: calc(100vh - 65px);
-  padding-bottom: 70px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   -ms-overflow-style: none;
   scrollbar-width: none;
   &::-webkit-scrollbar {

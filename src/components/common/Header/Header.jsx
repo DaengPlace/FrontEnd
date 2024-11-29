@@ -40,7 +40,7 @@ const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
           </IconWrapper>
         )}
         {showFavoriteIcon && (
-          <IconWrapper onClick={() => router.push('/place')}>
+          <IconWrapper onClick={() => router.push('/mypage/bookmark')}>
             <StyledHeart size="28" />
           </IconWrapper>
         )}

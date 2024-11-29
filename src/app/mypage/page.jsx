@@ -59,6 +59,7 @@ const Container = styled.div`
 
 const Space = styled.div`
   height: 20px;
+  margin-top: 50px;
 `;
 
 const MyPetsHeader = styled.div`

@@ -9,8 +9,11 @@ import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSec
 import Divider from "@/components/common/Divider/Divider";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const RecommendPage = () => {
+
+  const router = useRouter();
 
   const [age, setAge] = useState(20);
   const [gender, setGender] = useState(1); // 0 : male, 1: female
@@ -22,7 +25,7 @@ const RecommendPage = () => {
       <ScrollableContent>
 
         <TestBanner>
-          <BannerButton>성향 테스트 하러가기</BannerButton>
+          <BannerButton onClick={() => router.push('/recommend/test')}>성향 테스트 하러가기</BannerButton>
         </TestBanner>
 
         <Section>
@@ -33,7 +36,7 @@ const RecommendPage = () => {
 
         <Banner>
           <BannerText>아직 <span>성향 테스트</span>를 하지 않으셨나요?</BannerText>
-          <BannerImage src="/assets/recommend/recommendBanner.png" alt="recommendBanner" width={560} height={373} />
+          <BannerImage onClick={() => router.push('/recommend/test')} src="/assets/recommend/recommendBanner.png" alt="recommendBanner" width={560} height={373} />
           <Divider />
         </Banner>
 
@@ -118,6 +121,7 @@ const Banner = styled.div`
 const BannerImage = styled(Image)`
   border-radius: 30px;
   padding-bottom :10px;
+  cursor: pointer;
 `;
 
 const BannerText = styled.div`

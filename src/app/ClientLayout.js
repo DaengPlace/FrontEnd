@@ -21,7 +21,8 @@ export default function ClientLayout({ children }) {
     "/mypage/bookmark/map",
     "/placesearch",
     "/placemap",
-    "/placedetail"
+    "/placedetail",
+    "/recommend"
   ];
   const noHeaderNavPaths = [
     "/",

@@ -3,11 +3,11 @@ import FacilityCard from '../FacilityCard/FacilityCard';
 import styled from 'styled-components';
 import theme from '../../../styles/theme.js';
 
-const FacilitiesSection = ({sectionTitle, facilities}) => {
+const FacilitiesSection = ({sectionTitle, facilities, isCompact = false}) => {
   return (
-    <SectionContainer>
+    <SectionContainer isCompact={isCompact}>
       <SectionTitle>{sectionTitle}</SectionTitle>
-        <CardContainer>
+        <CardContainer isCompact={isCompact}>
           {facilities.slice(0, 5).map((fac) => (
             <FacilityCard
               key={fac.id}
@@ -25,10 +25,10 @@ const FacilitiesSection = ({sectionTitle, facilities}) => {
 export default FacilitiesSection;
 
 const SectionContainer = styled.div`
-    width: 100%;
-    text-align: left;
-    margin: 2px 12px;
-    padding-left: 20px;
+  width: 100%;
+  text-align: left;
+  margin: ${({ isCompact }) => (isCompact ? "0" : "2px 12px")};
+  padding-left: ${({ isCompact }) => (isCompact ? "15px" : "20px")};
 `;
 
 const SectionTitle = styled.div`

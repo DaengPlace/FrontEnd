@@ -63,6 +63,13 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 10px 20px;
   border-bottom: 1px solid #d1d1d1;
+
+  position: fixed; /* Header를 고정 */
+  top: 0; /* 상단에 고정 */
+  left: 50%; /* 화면 가운데 정렬 */
+  transform: translateX(-50%); /* 가운데 정렬 보정 */
+  background-color: white; /* 배경색 지정 (투명 문제 방지) */
+  z-index: 1000; /* 다른 요소보다 위로 배치 */
 `;
 
 const SmallContainer = styled.div`

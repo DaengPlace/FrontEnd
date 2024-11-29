@@ -11,17 +11,11 @@ import Footer from "@/components/common/Footer/Footer.jsx";
 import Divider from "@/components/common/Divider/Divider.jsx";
 import Header from "@/components/common/Header/Header.jsx";
 import { DefaultHeader } from "@/components/common/Header/Header.stories.js";
+import { initialFacilities } from "@/data/facilities.js";
 
 const images = [
     "/assets/mainpage/banner1.png",
     "/assets/mainpage/banner2.png,"
-];
-
-const facilities = [
-    {id:1, image: "/assets/mainpage/facilityImage.png", name: "92버터샵", category: "카페", rating: 5.0},
-    {id:2, image: "/assets/mainpage/facilityImage.png", name: "92버터샵", category: "카페", rating: 5.0},
-    {id:3, image: "/assets/mainpage/facilityImage.png", name: "92버터샵", category: "카페", rating: 5.0},
-    {id:4, image: "/assets/mainpage/facilityImage.png", name: "92버터샵", category: "카페", rating: 5.0}
 ];
 
 const MainPage = () => {
@@ -33,9 +27,8 @@ const MainPage = () => {
             <Header showLogo={DefaultHeader.args.showLogo} showFavoriteIcon={DefaultHeader.args.showFavoriteIcon} />
             <Banner />
             <Menu />
-            <FacilitiesSection sectionTitle={<>최근 <span>인기 시설 🔥</span></>} facilities={facilities} />
-            <Divider />
-            <FacilitiesSection sectionTitle={<><span>{age}대 {gender===1 ? "여성" : "남성"}</span>들이 많이 찾는 👩🏻</>} facilities={facilities} />
+            <FacilitiesSection sectionTitle={<>최근 <span>인기 시설 🔥</span></>} facilities={initialFacilities} />
+            <FacilitiesSection sectionTitle={<><span>{age}대 {gender===1 ? "여성" : "남성"}</span>들이 많이 찾는 👩🏻</>} facilities={initialFacilities} />
             <Divider />
             <Footer />
 
@@ -51,5 +44,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 50px;
 `;
 

@@ -22,7 +22,8 @@ export default function ClientLayout({ children }) {
     "/placesearch",
     "/placemap",
     "/placedetail",
-    "/recommend"
+    "/recommend",
+    "/recommend/test",
   ];
   const noHeaderNavPaths = [
     "/",

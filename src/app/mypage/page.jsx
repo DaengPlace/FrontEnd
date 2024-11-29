@@ -22,7 +22,7 @@ const pets = [
 const MyPage = () => {
   return (
     <Container>
-      <Header title="마이페이지" showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
+      <Header title="마이페이지" showHomeIcon={OnlyHomeIcon.args.showHomeIcon} showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
       <Space />
       
       <SectionHeader header={"내 프로필"} />

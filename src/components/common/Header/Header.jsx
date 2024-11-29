@@ -4,12 +4,13 @@ import {ChevronLeft} from "@styled-icons/bootstrap/ChevronLeft";
 import {Place} from "@styled-icons/material-rounded/Place";
 import {HeartOutlined} from "@styled-icons/entypo/HeartOutlined";
 import {Home} from "@styled-icons/feather/Home";
+import {CloseOutline} from "@styled-icons/evaicons-outline/CloseOutline";
 import { useRouter } from 'next/navigation';
 import theme from "@/styles/theme.js";
 import Image from 'next/image';
 import Logo from "@/../../public/assets/mainpage/Logo.png";
 
-const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
+const Header = ({title, showLogo, showX, showHomeIcon, showFavoriteIcon, showMapIcon}) => {
 
   const router = useRouter();
 
@@ -44,9 +45,16 @@ const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
             <StyledHeart size="28" />
           </IconWrapper>
         )}
-        <IconWrapper onClick={() => router.push("/main")}>
-          <StyledHome size="28" color='black' />
-        </IconWrapper>
+        {showHomeIcon && (
+          <IconWrapper onClick={() => router.push("/main")}>
+            <StyledHome size="28" />
+          </IconWrapper>
+        )}
+        {showX && (
+          <IconWrapper>
+            <StyledCloseLine size="28" />
+          </IconWrapper>
+        )}
       </RightIcons>
 
     </Container>
@@ -130,4 +138,11 @@ const StyledHome = styled(Home)`
   height: 28px;
   stroke-width: 1.5; /* Adjust line thickness */
   color: black;
+`;
+
+const StyledCloseLine = styled(CloseOutline)`
+  width: 28px;
+  height: 28px;
+  color: black;
+  stroke-width: 1.5; /* Adjust line thickness */
 `;

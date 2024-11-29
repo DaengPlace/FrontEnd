@@ -9,7 +9,7 @@ const page = () => {
   return (
     <Container>
       
-      <Header title="즐겨찾기" showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
+      <Header title="즐겨찾기" showHomeIcon={OnlyHomeIcon.args.showHomeIcon} showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
       <MapArea>
         지도
       </MapArea>

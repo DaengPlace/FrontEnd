@@ -24,7 +24,7 @@ const MainPage = () => {
 
     return (
         <Container>
-            <Header showLogo={DefaultHeader.args.showLogo} showFavoriteIcon={DefaultHeader.args.showFavoriteIcon} />
+            <Header showLogo={DefaultHeader.args.showLogo} showHomeIcon={DefaultHeader.args.showHomeIcon} showFavoriteIcon={DefaultHeader.args.showFavoriteIcon} />
             <Banner />
             <Menu />
             <FacilitiesSection sectionTitle={<>최근 <span>인기 시설 🔥</span></>} facilities={initialFacilities} />

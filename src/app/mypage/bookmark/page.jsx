@@ -46,7 +46,7 @@ const BookmarkPage = () => {
 
   return (
     <Container>
-      <Header title="즐겨찾기" showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
+      <Header title="즐겨찾기" showHomeIcon={OnlyHomeIcon.args.showHomeIcon} showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
       <Space />
       <ScrollableContainer facilities={facilities} toggleLike={toggleLike} bottomRef={bottomRef} />
       <ButtonsContainer showScrollToTop={showScrollToTop} buttonBottom={buttonBottom} />

@@ -49,7 +49,7 @@ const BottomSheet = ({
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
-            router.push(`/placemap?lat=${latitude}&lng=${longitude}`);
+            router.push(`place/placemap?lat=${latitude}&lng=${longitude}`);
           },
           () => alert("현재 위치를 가져올 수 없습니다.")
         );
@@ -68,7 +68,7 @@ const BottomSheet = ({
 
         if (data.status === "OK" && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
-          router.push(`/placemap?lat=${lat}&lng=${lng}`);
+          router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
         } else {
           alert("입력한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");
         }
@@ -90,7 +90,7 @@ const BottomSheet = ({
 
         if (data.status === "OK" && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
-          router.push(`/placemap?lat=${lat}&lng=${lng}`);
+          router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
         } else {
           alert("선택한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");
         }

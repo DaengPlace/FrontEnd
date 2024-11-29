@@ -4,12 +4,12 @@ import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { sidoOptions, gunguOptions } from "@/data/data";
-import SearchBar from "@/components/placemap/SearchBar/SearchBar";
-import Tabs from "@/components/placemap/Tabs/Tabs";
-import FilterButtons from "@/components/placemap/FilterButtons/FilterButtons";
-import Map from "@/components/placemap/Map/Map";
-import BottomSheet from "@/components/placemap/BottomSheet/BottomSheet";
-import FloatingButton from "@/components/placemap/FloatingButton/FloatingButton";
+import SearchBar from "@/components/place/placemap/SearchBar/SearchBar";
+import Tabs from "@/components/place/placemap/Tabs/Tabs";
+import FilterButtons from "@/components/place/placemap/FilterButtons/FilterButtons";
+import Map from "@/components/place/placemap/Map/Map";
+import BottomSheet from "@/components/place/placemap/BottomSheet/BottomSheet";
+import FloatingButton from "@/components/place/placemap/FloatingButton/FloatingButton";
 import { CircularProgress } from "@mui/material";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
@@ -55,7 +55,7 @@ const PlaceMap = () => {
   const handleGunguChange = (event) => setSelectedGungu(event.target.value);
 
   const handleBackToList = () => {
-    router.push("/placesearch?permissionGranted=true"); 
+    router.push("/place/placesearch?permissionGranted=true"); 
   };
 
   const handleCategoryClick = (category) => {

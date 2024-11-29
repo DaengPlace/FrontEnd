@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useJsApiLoader } from "@react-google-maps/api";
-import ImageContainer from "@/components/placedetail/ImageContainer/ImageContainer";
-import PlaceInfo from "@/components/placedetail/PlaceInfo/PlaceInfo";
-import ReviewSection from "@/components/placedetail/ReviewSection/ReviewSection";
-import MapBottomSheet from "@/components/placedetail/MapBottomSheet/MapBottomSheet";
-import WriteReviewButton from "@/components/placedetail/WriteReviewButton/WriteReviewButton";
+import ImageContainer from "@/components/place/placedetail/ImageContainer/ImageContainer";
+import PlaceInfo from "@/components/place/placedetail/PlaceInfo/PlaceInfo";
+import ReviewSection from "@/components/place/placedetail/ReviewSection/ReviewSection";
+import MapBottomSheet from "@/components/place/placedetail/MapBottomSheet/MapBottomSheet";
+import WriteReviewButton from "@/components/place/placedetail/WriteReviewButton/WriteReviewButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
@@ -65,7 +65,7 @@ const PlaceDetailPage = () => {
   };
 
   const handleWriteReviewButtonClick = () => {
-    router.push("reviews/reviewsInput");
+    router.push("/reviews/reviewsInput");
   }
   return (
     <>

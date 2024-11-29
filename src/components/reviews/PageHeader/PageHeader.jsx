@@ -96,7 +96,7 @@ const CategoryBadge = styled.div`
   font-weight: bold;
   color: #fff;
   background: #01003f;
-  border-radius: 20px;
+  border-radius: 10px;
   text-align: center;
   line-height: 1; 
   white-space: nowrap; 

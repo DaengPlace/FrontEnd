@@ -33,7 +33,15 @@ const ReviewList = ({ reviews }) => {
       {reviews.map((review) => (
         <ReviewCard key={review.id} onClick={handleCardClick} >
           <CardHeader>
-            <Avatar />
+          <AvatarWrapper>
+              <Image
+                src="/assets/image (1).png"
+                alt="사용자 프로필"
+                width={40}
+                height={40}
+                style={{ borderRadius: "50%" }}
+              />
+            </AvatarWrapper>
             <Author>{review.author}</Author>
             <span style={{marginBottom:"20px"}}>|</span>
             <Date>{review.date}</Date>
@@ -109,7 +117,7 @@ const CardHeader = styled.div`
   margin-bottom: 8px;
   width: 100%;
 `;
-const Avatar = styled.div`
+const AvatarWrapper = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;

@@ -5,9 +5,9 @@ import theme from '../../../styles/theme.js';
 
 const FacilitiesSection = ({sectionTitle, facilities, isCompact = false}) => {
   return (
-    <SectionContainer isCompact={isCompact}>
+    <SectionContainer $isCompact={isCompact}>
       <SectionTitle>{sectionTitle}</SectionTitle>
-        <CardContainer isCompact={isCompact}>
+        <CardContainer $isCompact={isCompact}>
           {facilities.slice(0, 5).map((fac) => (
             <FacilityCard
               key={fac.id}
@@ -27,8 +27,8 @@ export default FacilitiesSection;
 const SectionContainer = styled.div`
   width: 100%;
   text-align: left;
-  margin: ${({ isCompact }) => (isCompact ? "0" : "2px 12px")};
-  padding-left: ${({ isCompact }) => (isCompact ? "15px" : "20px")};
+  margin: ${({ $isCompact }) => ($isCompact ? "0" : "2px 12px")};
+  padding-left: ${({ $isCompact }) => ($isCompact ? "15px" : "20px")};
 `;
 
 const SectionTitle = styled.div`

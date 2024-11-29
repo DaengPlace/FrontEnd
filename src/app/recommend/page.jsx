@@ -8,6 +8,7 @@ import theme from "@/styles/theme.js";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection";
 import Divider from "@/components/common/Divider/Divider";
 import { useState } from "react";
+import Image from "next/image";
 
 const RecommendPage = () => {
 
@@ -29,6 +30,18 @@ const RecommendPage = () => {
           <FacilitiesSection sectionTitle={<><span>{age}대 {gender===1 ? "여성" : "남성"}</span>들이 많이 찾는 👩🏻</>} facilities={initialFacilities} isCompact={true} />
           <Divider />
         </Section>
+
+        <Banner>
+          <BannerText>아직 <span>성향 테스트</span>를 하지 않으셨나요?</BannerText>
+          <BannerImage src="/assets/recommend/recommendBanner.png" alt="recommendBanner" width={560} height={373} />
+          <Divider />
+        </Banner>
+
+
+        <Section>
+        <FacilitiesSection sectionTitle={<><span>리뷰가 가장 많이 달린 </span>시설 🏢</>} facilities={initialFacilities} isCompact={true} />
+        </Section>
+
       </ScrollableContent>
     
     </Container>
@@ -51,9 +64,13 @@ const ScrollableContent = styled.div`
   margin-top: 50px;
   width: 100%;
   height: calc(100vh - 65px);
-  overflow-y: auto;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const TestBanner = styled.div`
@@ -86,4 +103,31 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const Banner = styled.div`
+  margin: 10px 0;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const BannerImage = styled(Image)`
+  border-radius: 30px;
+  padding-bottom :10px;
+`;
+
+const BannerText = styled.div`
+  width: 560px;
+  padding: 0 10px 10px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+
+  span {
+    color: ${theme.colors.primary}
+  }
 `;

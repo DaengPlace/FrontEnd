@@ -233,7 +233,7 @@ const ScrollableContainer = styled.div`
 
 const MapButton = styled.button`
   position: fixed;
-  bottom: ${({ bottom }) => `${bottom}px`};
+  bottom: ${({ bottom }) => `${bottom+60}px`};
   left: 50%;
   transform: translateX(-50%);
   background-color: ${({ theme }) => theme.colors.defaultBackground};
@@ -261,7 +261,7 @@ const MapIcon = styled(Map)`
 
 const ScrollToTopButton = styled.button`
   position: fixed;
-  bottom: ${({ bottom }) => `${bottom}px`}; 
+  bottom: ${({ bottom }) => `${bottom+60}px`}; 
   right: calc(50% - 280px); 
   width: 60px;
   height: 60px;

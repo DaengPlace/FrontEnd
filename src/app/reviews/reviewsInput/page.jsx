@@ -3,14 +3,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Header from "@/components/common/Header/Header";
-import CategorySection from "@/components/reviewsInput/CategorySection/CategorySection";
-import ProfileSection from "@/components/reviewsInput/ProfileSection/ProfileSection";
-import RatingSection from "@/components/reviewsInput/RatingSection/RatingSection";
-import AddMediaSection from "@/components/reviewsInput/AddMediaSection/AddMediaSection";
-import ReviewTextSection from "@/components/reviewsInput/ReviewTextSection/ReviewTextSection";
-import TagSection from "@/components/reviewsInput/TagSection/TagSection";
-import SubmitButton from "@/components/reviewsInput/SubmitButton/SubmitButton";
-import ScrollToTopButton from "@/components/reviewsInput/ScrollToTopButton/ScrollToTopButton";
+import CategorySection from "@/components/reviews/reviewsInput/CategorySection/CategorySection";
+import ProfileSection from "@/components/reviews/reviewsInput/ProfileSection/ProfileSection";
+import RatingSection from "@/components/reviews/reviewsInput/RatingSection/RatingSection";
+import AddMediaSection from "@/components/reviews/reviewsInput/AddMediaSection/AddMediaSection";
+import ReviewTextSection from "@/components/reviews/reviewsInput/ReviewTextSection/ReviewTextSection";
+import TagSection from "@/components/reviews/reviewsInput/TagSection/TagSection";
+import SubmitButton from "@/components/reviews/reviewsInput/SubmitButton/SubmitButton";
+import ScrollToTopButton from "@/components/reviews/reviewsInput/ScrollToTopButton/ScrollToTopButton";
 import Divider from "@/components/common/Divider/Divider";
 
 const ReviewsInputPage = () => {

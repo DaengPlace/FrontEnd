@@ -49,8 +49,7 @@ const ReviewPage = () => {
       <HeaderWrapper>
         <Header
           title="리뷰 전체보기"
-          showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
-          showMapIcon={WithMapIcon.args.showMapIcon}
+          showCloseButton={true}
         />
       </HeaderWrapper>
       <Container ref={containerRef}>
@@ -85,7 +84,7 @@ const HeaderWrapper = styled.div`
 const Container = styled.div`
   padding: 16px;
   padding-top: 70px;
-  height: calc(100vh - 70px); 
+  height: calc(100vh - 50px); 
   overflow-y: auto;
   -ms-overflow-style: none; 
   scrollbar-width: none; 

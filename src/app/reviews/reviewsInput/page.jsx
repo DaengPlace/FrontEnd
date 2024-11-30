@@ -24,7 +24,7 @@ const ReviewsInputPage = () => {
   const handleTagClick = (tag) => {
     if (tags.includes(tag)) {
       setTags(tags.filter((t) => t !== tag));
-    } else if (tags.length < 3) {
+    } else{
       setTags([...tags, tag]);
     }
   };
@@ -64,7 +64,8 @@ const ReviewsInputPage = () => {
   return (
     <>
       <HeaderWrapper>
-        <Header title="리뷰 작성" />
+        <Header title="리뷰 작성"
+        showCloseButton={true} />
       </HeaderWrapper>
       <MainContent ref={containerRef}>
         <CategorySection />

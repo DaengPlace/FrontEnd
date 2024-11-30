@@ -16,7 +16,7 @@ const PlaceInfo = ({
     <>
       <CategoryBadge>{category}</CategoryBadge>
       <PlaceName>{placeName}</PlaceName>
-      <HeartIconContainer onClick={toggleLike}>
+      <HeartIconContainer isLiked={isLiked} onClick={toggleLike}>
         {isLiked ? <Favorite /> : <FavoriteBorder />}
       </HeartIconContainer>
       <Address onClick={handleAddressClick}>{address}</Address>

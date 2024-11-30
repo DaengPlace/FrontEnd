@@ -1,14 +1,17 @@
 "use client";
 
 import Header from '@/components/common/Header/Header';
-import { NoTitleHeader } from '@/components/common/Header/Header.stories';
+import { NoTitleHeader, WithBookmarkIcon } from '@/components/common/Header/Header.stories';
 import React from 'react';
 import styled from 'styled-components';
 
 const RecommendTest = () => {
   return (
     <Container>
-      <Header showX={NoTitleHeader.args.showX} />
+      <Header title="성향테스트 조회" showFavoriteIcon={WithBookmarkIcon.args.showFavoriteIcon} showHomeIcon={WithBookmarkIcon.args.showHomeIcon} />
+    
+      
+    
     </Container>
   );
 };

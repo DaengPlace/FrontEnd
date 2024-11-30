@@ -6,7 +6,7 @@ const Banner = () => {
   return (
     <Section>
       <StyledImage
-        src="/assets/place/banner1.png"
+        src="/assets/place/banner1.svg"
         alt="야외 공간 있는 카페"
         width={600}
         height={400}

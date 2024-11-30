@@ -36,7 +36,7 @@ const RecommendPage = () => {
 
         <Banner>
           <BannerText>아직 <span>성향 테스트</span>를 하지 않으셨나요?</BannerText>
-          <BannerImage onClick={() => router.push('/recommend/test')} src="/assets/recommend/recommendBanner.png" alt="recommendBanner" width={560} height={373} />
+          <BannerImage onClick={() => router.push('/recommend/test')} src="/assets/recommend/recommendBanner.svg" alt="recommendBanner" width={560} height={373} />
           <Divider />
         </Banner>
 

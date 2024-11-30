@@ -39,7 +39,7 @@ const PlacePage = () => {
       <ImagesSection>
         <ImageWrapper onClick={() => setIsBottomSheetOpen(true)}>
           <Image
-            src="/assets/place/banner3.png"
+            src="/assets/place/banner3.svg"
             alt="내 주변 동반가능시설"
             width={270}
             height={119}
@@ -55,7 +55,7 @@ const PlacePage = () => {
         </ImageWrapper>
         <ImageWrapper>
           <Image
-            src="/assets/place/banner2.png"
+            src="/assets/place/banner2.svg"
             alt="성향별 추천 시설"
             width={270}
             height={119}

@@ -167,7 +167,7 @@ const ReviewDate = styled.span`
 `;
 
 const ReviewText = styled.p`
-  font-size: 15px;
+  font-size: 13px;
   color: #000000;
 `;
 

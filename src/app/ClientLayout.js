@@ -19,11 +19,13 @@ export default function ClientLayout({ children }) {
     "/dog/confirm",
     "/mypage/bookmark",
     "/mypage/bookmark/map",
-    "/placesearch",
-    "/placemap",
-    "/placedetail",
+    "/place/placesearch",
+    "/place/placemap",
+    "/place/placedetail",
     "/recommend",
     "/recommend/test",
+    "/reviews/reviewScan",
+    "/reviews/reviewsInput",
   ];
   const noHeaderNavPaths = [
     "/",

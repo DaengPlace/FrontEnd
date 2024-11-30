@@ -96,7 +96,7 @@ const PlacePage = () => {
           onConfirm={() => {
             setIsLocationPermissionGranted(true);
             setIsBottomSheetOpen(false);
-            router.push(`/placesearch?permissionGranted=true`);
+            router.push(`place/placesearch?permissionGranted=true`);
           }}
           
         />

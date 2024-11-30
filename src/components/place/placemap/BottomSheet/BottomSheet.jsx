@@ -1,10 +1,10 @@
 "use client";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { sidoOptions, gunguOptions } from "@/data/data"; 
-import SelectBox from "@/components/common/SelectBox/SelectBox";
+import { useRouter, useSearchParams } from "next/navigation";
+import { sidoOptions, gunguOptions } from "@/data/data";
+import SelectBox from "@/components/common/SelectBox/SelectBox"; 
 
 const BottomSheet = ({
   isOpen,
@@ -20,8 +20,15 @@ const BottomSheet = ({
   gunguOptions,
 }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      onClose();
+    }
+  }, [searchParams.toString()]);
 
   if (!isOpen) return null;
   
@@ -37,15 +44,12 @@ const BottomSheet = ({
   };
 
   const handleSearch = async () => {
-    console.log("Selected Sido:", selectedSido);
-    console.log("Selected Gungu:", selectedGungu);
-
     if (useCurrentLocation) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
-            router.push(`/placemap?lat=${latitude}&lng=${longitude}`);
+            router.push(`place/placemap?lat=${latitude}&lng=${longitude}`);
           },
           () => alert("현재 위치를 가져올 수 없습니다.")
         );
@@ -59,12 +63,12 @@ const BottomSheet = ({
             inputValue
           )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
         );
-  
+
         const data = await response.json();
-  
+
         if (data.status === "OK" && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
-          router.push(`/placemap?lat=${lat}&lng=${lng}`);
+          router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
         } else {
           alert("입력한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");
         }
@@ -74,20 +78,19 @@ const BottomSheet = ({
       }
     } else if (selectedSido || selectedGungu) {
       const location = `${selectedSido} ${selectedGungu || ""}`.trim();
-  
+
       try {
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
             location
           )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
         );
-  
+
         const data = await response.json();
-  
+
         if (data.status === "OK" && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
-          // 선택한 시/군/구 좌표로 페이지 이동
-          router.push(`/placemap?lat=${lat}&lng=${lng}`);
+          router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
         } else {
           alert("선택한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");
         }
@@ -156,6 +159,8 @@ const BottomSheet = ({
               setSelectedSido(value);
               if (value === "전국") {
                 setSelectedGungu(""); 
+              } else {
+                setSelectedGungu(""); 
               }
             }}
             placeholder="시/도 선택"
@@ -169,8 +174,10 @@ const BottomSheet = ({
                 value: gungu,
                 label: gungu,
               }))}
-              selectedValue={selectedGungu}
-              onChange={setSelectedGungu}
+              selectedValue={selectedGungu || ""}
+              onChange={(value) => {
+                setSelectedGungu(value);
+              }}
               placeholder="시/군/구 선택"
             />
             </SelectBoxWrapper>
@@ -408,6 +415,9 @@ const ImageWrapper = styled.div`
 const SelectBoxWrapper = styled.div`
   flex: 1;
   max-width: 210px;
-  min-width: 210px;
+  min-width: 210px; /* 최소 너비 */
+  min-height: 64px; /* 최소 높이 */
 `;
+
+
 export default BottomSheet;

@@ -14,6 +14,10 @@ const Header = ({title, showLogo, showX, showHomeIcon, showFavoriteIcon, showMap
 
   const router = useRouter();
 
+  const handleClose = () => {
+    router.push("/"); 
+  };
+
   return (
     <Container>
       <SmallContainer>
@@ -122,21 +126,21 @@ const RightIcons = styled.div`
 const StyledPlace = styled(Place)`
   width: 28px;
   height: 28px;
-  stroke-width: 1; /* Adjust line thickness */
+  stroke-width: 1; 
   color: black;
 `;
 
 const StyledHeart = styled(HeartOutlined)`
   width: 28px;
   height: 28px;
-  stroke-width: 1; /* Adjust line thickness */
+  stroke-width: 1; 
   color: black;
 `;
 
 const StyledHome = styled(Home)`
   width: 28px;
   height: 28px;
-  stroke-width: 1.5; /* Adjust line thickness */
+  stroke-width: 1.5; 
   color: black;
 `;
 

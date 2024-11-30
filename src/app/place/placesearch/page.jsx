@@ -3,11 +3,11 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
-import SearchBar from "@/components/placesearch/SearchBar/SearchBar";
-import Tabs from "@/components/placesearch/Tabs/Tabs";
-import FilterButtons from "@/components/placesearch/FilterButtons/FilterButtons";
-import CardList from "@/components/placesearch/CardList/CardList";
-import BottomSheet from "@/components/placesearch/BottomSheet/BottomSheet";
+import SearchBar from "@/components/place/placesearch/SearchBar/SearchBar";
+import Tabs from "@/components/place/placesearch/Tabs/Tabs";
+import FilterButtons from "@/components/place/placesearch/FilterButtons/FilterButtons";
+import CardList from "@/components/place/placesearch/CardList/CardList";
+import BottomSheet from "@/components/place/placesearch/BottomSheet/BottomSheet";
 import { sidoOptions, gunguOptions } from "@/data/data";
 import { Map, ArrowUp } from "@styled-icons/bootstrap";
 import { cards as initialCards } from "@/data/cardsData";
@@ -69,7 +69,7 @@ const PlaceSearchPage = () => {
   const handleHover2 = (filter) => setHoveredFilter(filter);
 
   const handleCardClick = (id) => {
-    router.push(`/placedetail?id=${id}`);
+    router.push(`/place/placedetail?id=${id}`);
   };
 
   const toggleLike = (e, id) => {
@@ -97,7 +97,7 @@ const PlaceSearchPage = () => {
 
   const handleMapView = () => {
     if (userLocation) {
-      router.push(`/placemap?lat=${userLocation.lat}&lng=${userLocation.lng}`);
+      router.push(`/place/placemap?lat=${userLocation.lat}&lng=${userLocation.lng}`);
     } else {
       alert("위치를 가져올 수 없습니다.");
     }
@@ -158,11 +158,14 @@ const PlaceSearchPage = () => {
 
   return (
     <>
+    <HeaderWrapper>
       <Header
         title="동반가능시설 검색"
         showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
+        showHomeIcon={WithMapIcon.args.showHomeIcon}
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
+    </HeaderWrapper>
     <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
       <SearchBar onClick={handleOpenBottomSheet} />
       <Tabs
@@ -221,16 +224,21 @@ const PlaceSearchPage = () => {
 
 const ScrollableContainer = styled.div`
   overflow-y: auto;
-  height: calc(100vh - 65px);
-  padding-bottom: 70px;
+  height: 100vh;
+  padding-bottom: 50px;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  margin-top: 20px;
+  padding-top: 70px;
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-
+const HeaderWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+`;
 const MapButton = styled.button`
   position: fixed;
   bottom: ${({ bottom }) => `${bottom}px`};
@@ -290,9 +298,5 @@ const ScrollToTopButton = styled.button`
   }
 
 `;
-
-
-
-
 
 export default PlaceSearchPage;

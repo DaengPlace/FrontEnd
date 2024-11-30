@@ -10,7 +10,7 @@ const BigFacilityCard = ({fac, toggleLike}) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/placedetail?id=${fac.id}`);
+    router.push(`/place/placedetail?id=${fac.id}`);
   };
 
   return (

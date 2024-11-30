@@ -112,9 +112,9 @@ const Overlay = styled.div`
 
 const PolicySheet = styled.div`
   position: fixed;
-  top: 50%;
+  bottom: 0;
   left: 50%;
-  transform: translate(-50%, -30%);
+  transform: translate(-50%, 0%);
   width: 600px;
   right: 0;
   background: #fff;

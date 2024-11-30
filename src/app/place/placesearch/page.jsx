@@ -224,7 +224,7 @@ const PlaceSearchPage = () => {
 const ScrollableContainer = styled.div`
   overflow-y: auto;
   height: calc(100vh - 50px);
-  padding-bottom: 50px;
+  padding-bottom: 60px;
   -ms-overflow-style: none;
   scrollbar-width: none;
   padding-top: 70px;

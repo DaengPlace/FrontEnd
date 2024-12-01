@@ -51,9 +51,14 @@ const MyProfilePage = () => {
     setNickname(currentNickname);
   };
 
-  const handleSaveProfile = () => {
-    alert("프로필이 수정되었습니다!");
-    router.push("/main");
+  const handleSaveProfile = async () => {
+    const isValid = await trigger(["nickname", "birthdate", "email"]);
+    if (isValid) {
+      alert("프로필이 수정 완료");
+      router.push("/mypage");
+    } else {
+      alert("모든 필수 입력 항목을 올바르게 작성해 주세요.");
+    }
   };
 
   const handleGenderSelect = (gender) => {
@@ -160,17 +165,20 @@ const MyProfilePage = () => {
             rules={{
               required: "생년월일은 필수 입력입니다.",
               pattern: {
-                value: /^\d{4}-\d{2}-\d{2}$/,
-                message: "생년월일은 YYYY-MM-DD 형식으로 입력해야 합니다.",
+                value: /^\d{2}\d{2}\d{2}$/,
+                message: "생년월일은 000101 형식으로 입력해야 합니다.",
               },
             }}
             render={({ field, fieldState }) => (
               <Input
-                placeholder="YYYY-MM-DD"
+                placeholder="000101"
                 {...field}
                 value={field.value || ""}
                 isValid={!fieldState.invalid}
-                onChange={field.onChange}
+                onChange={async (e) => {
+                  field.onChange(e.target.value);
+                  await trigger("birthdate");
+                }}
               />
             )}
           />
@@ -193,11 +201,14 @@ const MyProfilePage = () => {
             }}
             render={({ field, fieldState }) => (
               <Input
-                placeholder="이메일 입력"
+                placeholder="daengplace@daengplace.co.kr"
                 {...field}
                 value={field.value || ""}
                 isValid={!fieldState.invalid}
-                onChange={field.onChange}
+                onChange={async (e) => {
+                  field.onChange(e.target.value);
+                  await trigger("email");
+                }}
               />
             )}
           />

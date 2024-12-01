@@ -15,13 +15,13 @@ const Menu = () => {
       </MenuItem>
 
       <MenuItem>
-        <Link href='/search'>
+        <Link href='/place'>
             <MenuImage src='/assets/mainpage/daengplaceIcon.png' alt="daengplace icon" width={80} height={80} /><MenuDescription>댕플</MenuDescription>
         </Link>
       </MenuItem>
 
       <MenuItem>
-        <Link href='/user'>
+        <Link href='/mypage/bookmark'>
             <MenuImage src='/assets/mainpage/bookmarkIcon.png' alt="bookmark icon" width={80} height={80} /><MenuDescription>즐겨찾기</MenuDescription>
         </Link>
       </MenuItem>

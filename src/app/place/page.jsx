@@ -9,7 +9,6 @@ import Footer from "@/components/common/Footer/Footer.jsx";
 import CategorySelector from "@/components/place/CategorySelector/CategorySelector";
 import ReviewList from "@/components/place/ReviewList/ReviewList";
 import { Permission } from "@/components/common/BottomSheet/BottomSheet.stories";
-import Divider from "@/components/common/Divider/Divider.jsx";
 import Image from "next/image";
 import { reviews } from "@/data/reviewData";
 import Hr from "@/components/place/Hr/Hr";
@@ -39,13 +38,13 @@ const PlacePage = () => {
       <ImagesSection>
         <ImageWrapper onClick={() => setIsBottomSheetOpen(true)}>
           <Image
-            src="/assets/place/banner3.png"
+            src="/assets/place/banner3.svg"
             alt="내 주변 동반가능시설"
             width={270}
-            height={119}
+            height={118}
             style={{
               objectFit: "cover",
-              borderRadius: "10px",
+              borderRadius: "20px",
             }}
           />
           <OverlayText dark={false}>
@@ -55,13 +54,13 @@ const PlacePage = () => {
         </ImageWrapper>
         <ImageWrapper>
           <Image
-            src="/assets/place/banner2.png"
+            src="/assets/place/banner2.svg"
             alt="성향별 추천 시설"
             width={270}
-            height={119}
+            height={118}
             style={{
               objectFit: "cover",
-              borderRadius: "10px",
+              borderRadius: "20px",
             }}
           />
           <OverlayText dark={true}>
@@ -96,7 +95,7 @@ const PlacePage = () => {
           onConfirm={() => {
             setIsLocationPermissionGranted(true);
             setIsBottomSheetOpen(false);
-            router.push(`/placesearch?permissionGranted=true`);
+            router.push(`place/placesearch?permissionGranted=true`);
           }}
           
         />

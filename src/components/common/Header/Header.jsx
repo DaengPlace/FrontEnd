@@ -4,14 +4,19 @@ import {ChevronLeft} from "@styled-icons/bootstrap/ChevronLeft";
 import {Place} from "@styled-icons/material-rounded/Place";
 import {HeartOutlined} from "@styled-icons/entypo/HeartOutlined";
 import {Home} from "@styled-icons/feather/Home";
+import {CloseOutline} from "@styled-icons/evaicons-outline/CloseOutline";
 import { useRouter } from 'next/navigation';
 import theme from "@/styles/theme.js";
 import Image from 'next/image';
 import Logo from "@/../../public/assets/mainpage/Logo.png";
 
-const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
+const Header = ({title, showLogo, showX, showHomeIcon, showFavoriteIcon, showMapIcon}) => {
 
   const router = useRouter();
+
+  const handleClose = () => {
+    router.push("/"); 
+  };
 
   return (
     <Container>
@@ -40,13 +45,20 @@ const Header = ({title, showLogo, showFavoriteIcon, showMapIcon}) => {
           </IconWrapper>
         )}
         {showFavoriteIcon && (
-          <IconWrapper onClick={() => router.push('/place')}>
+          <IconWrapper onClick={() => router.push('/mypage/bookmark')}>
             <StyledHeart size="28" />
           </IconWrapper>
         )}
-        <IconWrapper onClick={() => router.push("/main")}>
-          <StyledHome size="28" color='black' />
-        </IconWrapper>
+        {showHomeIcon && (
+          <IconWrapper onClick={() => router.push("/main")}>
+            <StyledHome size="28" />
+          </IconWrapper>
+        )}
+        {showX && (
+          <IconWrapper>
+            <StyledCloseLine size="28" />
+          </IconWrapper>
+        )}
       </RightIcons>
 
     </Container>
@@ -63,6 +75,13 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 10px 20px;
   border-bottom: 1px solid #d1d1d1;
+
+  position: fixed; /* Header를 고정 */
+  top: 0; /* 상단에 고정 */
+  left: 50%; /* 화면 가운데 정렬 */
+  transform: translateX(-50%); /* 가운데 정렬 보정 */
+  background-color: white; /* 배경색 지정 (투명 문제 방지) */
+  z-index: 1000; /* 다른 요소보다 위로 배치 */
 `;
 
 const SmallContainer = styled.div`
@@ -107,20 +126,27 @@ const RightIcons = styled.div`
 const StyledPlace = styled(Place)`
   width: 28px;
   height: 28px;
-  stroke-width: 1; /* Adjust line thickness */
+  stroke-width: 1; 
   color: black;
 `;
 
 const StyledHeart = styled(HeartOutlined)`
   width: 28px;
   height: 28px;
-  stroke-width: 1; /* Adjust line thickness */
+  stroke-width: 1; 
   color: black;
 `;
 
 const StyledHome = styled(Home)`
   width: 28px;
   height: 28px;
-  stroke-width: 1.5; /* Adjust line thickness */
+  stroke-width: 1.5; 
   color: black;
+`;
+
+const StyledCloseLine = styled(CloseOutline)`
+  width: 28px;
+  height: 28px;
+  color: black;
+  stroke-width: 1.5; /* Adjust line thickness */
 `;

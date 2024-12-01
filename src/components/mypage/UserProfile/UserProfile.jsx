@@ -1,20 +1,30 @@
 "use client";
 
-import React from 'react';
-import styled from 'styled-components';
-import Image from 'next/image';
-import theme from '@/styles/theme.js';
+import React from "react";
+import styled from "styled-components";
+import Image from "next/image";
+import theme from "@/styles/theme.js";
+import { useRouter } from "next/navigation";
 
-const UserProfile = ({imagePath, name}) => {
+const UserProfile = ({ imagePath, name }) => {
+  const router = useRouter();
+
+  const handleEditBtnClick = () => {
+    router.push("/mypage/profile");
+  };
+
   return (
     <Container>
       <SectionBox>
-
-        <ProfileImage src={imagePath} alt="profile image" width={100} height={100} />
+        <ProfileImage
+          src={imagePath}
+          alt="profile image"
+          width={100}
+          height={100}
+        />
 
         <ProfileName>{name}</ProfileName>
-        <EditButton>편집</EditButton>
-
+        <EditButton onClick={handleEditBtnClick}>편집</EditButton>
       </SectionBox>
     </Container>
   );
@@ -43,9 +53,9 @@ const ProfileImage = styled(Image)`
 `;
 
 const ProfileName = styled.div`
-  font-weight:bold;
+  font-weight: bold;
   margin-right: auto;
-`;  
+`;
 
 const EditButton = styled.button`
   width: 50px;

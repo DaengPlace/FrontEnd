@@ -29,7 +29,7 @@ export default function ClientLayout({ children }) {
     "/reviews/reviewsInput",
   ];
   const noHeaderNavPaths = [
-    "/",
+    "/main",
     "/signin",
     "/signin/info",
     "/signin/profile",
@@ -58,6 +58,7 @@ const LayoutContainer = styled.div`
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 `;
 
 const Content = styled.main`

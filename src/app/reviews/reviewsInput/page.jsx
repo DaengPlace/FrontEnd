@@ -12,6 +12,7 @@ import TagSection from "@/components/reviews/reviewsInput/TagSection/TagSection"
 import SubmitButton from "@/components/reviews/reviewsInput/SubmitButton/SubmitButton";
 import ScrollToTopButton from "@/components/reviews/reviewsInput/ScrollToTopButton/ScrollToTopButton";
 import Divider from "@/components/common/Divider/Divider";
+import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 
 const ReviewsInputPage = () => {
   const [reviewText, setReviewText] = useState("");
@@ -24,7 +25,7 @@ const ReviewsInputPage = () => {
   const handleTagClick = (tag) => {
     if (tags.includes(tag)) {
       setTags(tags.filter((t) => t !== tag));
-    } else if (tags.length < 3) {
+    } else{
       setTags([...tags, tag]);
     }
   };
@@ -64,7 +65,7 @@ const ReviewsInputPage = () => {
   return (
     <>
       <HeaderWrapper>
-        <Header title="리뷰 작성" />
+        <Header title="리뷰 작성" showX={NoTitleHeader.args.showX} />
       </HeaderWrapper>
       <MainContent ref={containerRef}>
         <CategorySection />
@@ -97,7 +98,7 @@ const HeaderWrapper = styled.div`
 const MainContent = styled.div`
   padding: 16px;
   padding-top: 70px;
-  height: calc(100vh - 70px); 
+  height: 100vh; 
   overflow-y: auto;
   -ms-overflow-style: none; 
   scrollbar-width: none; 

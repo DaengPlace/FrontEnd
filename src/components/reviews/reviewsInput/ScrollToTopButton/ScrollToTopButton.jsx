@@ -13,7 +13,7 @@ export default ScrollToTopButton;
 
 const Button = styled.button`
   position: fixed;
-  bottom: 160px; 
+  bottom: 70px; 
   right: calc(50% - 290px); 
   width: 60px;
   height: 60px;
@@ -39,6 +39,5 @@ const Button = styled.button`
   
   span {
     margin-bottom: 10px;
-  }x;
-  }
+  };
 `;

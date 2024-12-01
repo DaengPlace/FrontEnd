@@ -78,6 +78,7 @@ const PlaceMap = () => {
         title="동반가능시설 검색"
         showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
         showMapIcon={WithMapIcon.args.showMapIcon}
+        showHomeIcon={WithMapIcon.args.showHomeIcon}
       />
     <MapContainerWrapper>
       <SearchBar onClick={() => setIsBottomSheetOpen(true)} />
@@ -138,6 +139,6 @@ const MapContainerWrapper = styled.div`
   height: 100vh;
   margin: 0;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 70px;
 `;
 export default PlaceMap;

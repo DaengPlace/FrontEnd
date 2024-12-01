@@ -5,18 +5,18 @@ import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import { useRouter } from "next/navigation";
 import Header from "@/components/common/Header/Header";
+import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 
 const ReviewScanPage = () => {
   const router = useRouter();
 
   const handleConfirm = () => {
-    alert("확인되었습니다!");
     router.push("/reviews/reviewsInput");
   };
 
   return (
     <>
-      <Header title="리뷰 정보 확인" showCloseButton={true} />
+      <Header title="리뷰 정보 확인" showX={NoTitleHeader.args.showX} />
       <Container>
         <Content>
           <Subtitle>
@@ -56,9 +56,9 @@ export default ReviewScanPage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 86vh;
+  height: 100vh;
   background-color: ${({ theme }) => theme.colors.defaultBackground};
-  padding: 20px;
+  padding: 70px 20px 20px 20px;
 `;
 
 const Content = styled.div`
@@ -117,6 +117,6 @@ const Divider = styled.div`
 
 const Footer = styled.footer`
   width: 100%;
-  max-width: 400px;
+  max-width: 540px;
   align-self: center;
 `;

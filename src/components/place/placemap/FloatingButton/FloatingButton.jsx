@@ -16,7 +16,7 @@ export default FloatingButton;
 
 const FloatingButtonContainer = styled.div`
   position: fixed;
-  bottom: 80px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

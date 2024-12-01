@@ -8,7 +8,7 @@ const Banner = () => {
   return (
     <BannerContainer>
       <BannerImage
-          src="/assets/mainpage/banner1.png"
+          src="/assets/mainpage/banner1.svg"
           alt="banner image"
           width={600}
           height={300}

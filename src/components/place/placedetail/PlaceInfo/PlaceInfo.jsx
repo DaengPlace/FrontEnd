@@ -16,7 +16,7 @@ const PlaceInfo = ({
     <>
       <CategoryBadge>{category}</CategoryBadge>
       <PlaceName>{placeName}</PlaceName>
-      <HeartIconContainer onClick={toggleLike}>
+      <HeartIconContainer isliked={isLiked} onClick={toggleLike}>
         {isLiked ? <Favorite /> : <FavoriteBorder />}
       </HeartIconContainer>
       <Address onClick={handleAddressClick}>{address}</Address>
@@ -50,7 +50,9 @@ const PlaceName = styled.h2`
   margin-bottom: 8px;
 `;
 
-const HeartIconContainer = styled.div`
+const HeartIconContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => !["hovered", "isliked"].includes(prop),
+})`
   position: absolute;
   right: 40px;
   top: 350px;
@@ -61,7 +63,7 @@ const HeartIconContainer = styled.div`
 
   svg {
     font-size: 30px;
-    color: ${({ isLiked }) => (isLiked ? "red" : "#000000")};
+    color: ${({ isliked }) => (isliked ? "red" : "#000000")};
     transition: transform 0.2s ease, color 0.2s ease;
   }
 

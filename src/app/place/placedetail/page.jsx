@@ -93,6 +93,7 @@ const PlaceDetailPage = () => {
     <>
       <Header
         title={selectedCard.title}
+        showHomeIcon={WithMapIcon.args.showHomeIcon}
         showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
@@ -165,8 +166,9 @@ const PlaceDetailPage = () => {
 export default PlaceDetailPage;
 
 const ScrollContainer = styled.div`
+  margin-top: 30px;
   flex: 1;
-  height: calc(100vh - 65px);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;

@@ -54,8 +54,8 @@ const MyProfilePage = () => {
   const handleSaveProfile = async () => {
     const isValid = await trigger(["nickname", "birthdate", "email"]);
     if (isValid) {
-      alert("프로필이 수정 완료");
-      router.push("/mypage");
+      alert("프로필이 수정되었습니다!");
+      router.push("/main");
     } else {
       alert("모든 필수 입력 항목을 올바르게 작성해 주세요.");
     }
@@ -201,7 +201,7 @@ const MyProfilePage = () => {
             }}
             render={({ field, fieldState }) => (
               <Input
-                placeholder="daengplace@daengplace.co.kr"
+                placeholder="이메일 입력"
                 {...field}
                 value={field.value || ""}
                 isValid={!fieldState.invalid}
@@ -365,11 +365,8 @@ const ErrorMessage = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  position: absolute;
-  bottom: 2rem;
-  left: 0;
+  margin-top: auto;
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 0 2rem;
 `;

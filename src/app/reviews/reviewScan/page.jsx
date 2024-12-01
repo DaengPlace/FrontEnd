@@ -11,7 +11,6 @@ const ReviewScanPage = () => {
   const router = useRouter();
 
   const handleConfirm = () => {
-    // alert("확인되었습니다!");
     router.push("/reviews/reviewsInput");
   };
 

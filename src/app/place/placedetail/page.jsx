@@ -166,6 +166,7 @@ const PlaceDetailPage = () => {
 export default PlaceDetailPage;
 
 const ScrollContainer = styled.div`
+  margin-top: 30px;
   flex: 1;
   height: 100vh;
   display: flex;

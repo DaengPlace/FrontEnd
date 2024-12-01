@@ -25,7 +25,7 @@ const ReviewsInputPage = () => {
   const handleTagClick = (tag) => {
     if (tags.includes(tag)) {
       setTags(tags.filter((t) => t !== tag));
-    } else if (tags.length < 3) {
+    } else{
       setTags([...tags, tag]);
     }
   };

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
-import DogInfo from "@/components/dog/DogInfo";
+import DogInfo from "@/components/dog/DogInfo/DogInfo";
 import { DOG } from "@/data/dogData";
 
 const DogConfirmPage = () => {

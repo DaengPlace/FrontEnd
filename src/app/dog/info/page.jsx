@@ -9,7 +9,7 @@ import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Modal from "@/components/common/Modal/Modal";
-import DogBottomSheet from "@/components/dog/DogBottomSheet";
+import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
 
 const DogInfoPage = () => {
   const router = useRouter();

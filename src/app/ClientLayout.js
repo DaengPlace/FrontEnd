@@ -19,6 +19,7 @@ export default function ClientLayout({ children }) {
     "/dog/edit",
     "/mypage/bookmark",
     "/mypage/bookmark/map",
+    "/mypage/profile",
     "/place/placesearch",
     "/place/placemap",
     "/place/placedetail",

@@ -80,7 +80,6 @@ const Container = styled.div`
 const WebcamContainer = styled.div`
   width: 60%;
   height: 30%;
-  border: 2px dashed #ccc;
   display: flex;
   justify-content: center;
   align-items: center;

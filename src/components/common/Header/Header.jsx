@@ -14,6 +14,7 @@ const Header = ({
   title,
   showLogo,
   showX,
+  onClose,
   showHomeIcon,
   showFavoriteIcon,
   showMapIcon,
@@ -60,7 +61,7 @@ const Header = ({
         )}
         {showX && (
           <IconWrapper>
-            <StyledCloseLine size="28" />
+            <StyledCloseLine onClick={onClose} size="28" />
           </IconWrapper>
         )}
       </RightIcons>

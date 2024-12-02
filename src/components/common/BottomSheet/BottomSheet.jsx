@@ -10,11 +10,14 @@ const BottomSheet = ({
   onConfirm,
   cancelText,
   confirmText,
+  setIsBottomSheetVisible,
 }) => {
   return (
     <Overlay>
       <Sheet>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
+        <CloseButton onClick={() => setIsBottomSheetVisible(false)}>
+          &times;
+        </CloseButton>
         {title && <Title>{title}</Title>}
         {content && <Content>{content}</Content>}
         <ButtonContainer>
@@ -41,6 +44,7 @@ BottomSheet.propTypes = {
   onConfirm: PropTypes.func.isRequired,
   cancelText: PropTypes.string,
   confirmText: PropTypes.string,
+  setIsBottomSheetVisible: PropTypes.func,
 };
 
 BottomSheet.defaultProps = {

@@ -80,7 +80,9 @@ const StyledButton = styled.button.withConfig({
   border: none;
   border-radius: 8px;
   cursor: ${({ $isActive, className }) =>
-    $isActive || className === "cancel" ? "pointer" : undefined};
+    $isActive || ["cancel", "edit"].includes(className)
+      ? "pointer"
+      : undefined};
   transition: all 0.3s ease;
 
   &:hover {

@@ -30,14 +30,13 @@ const SigninPage = () => {
 
   const nameRef = useRef(null);
   const birthdateRef = useRef(null);
-  const phoneRef = useRef(null);
   const emailRef = useRef(null);
   const verificationRef = useRef(null);
 
   const onSubmit = (data) => {
     if (isVerified) {
       router.push("/signin/info");
-    } else if (step === 4 && isVerificationSent) {
+    } else if (step === 3 && isVerificationSent) {
       verifyCode();
     }
   };
@@ -49,8 +48,6 @@ const SigninPage = () => {
       case 2:
         return "birthdate";
       case 3:
-        return "phone";
-      case 4:
         return "email";
       default:
         return "";
@@ -67,7 +64,7 @@ const SigninPage = () => {
     if (isVerificationSent) {
       return verificationCode.length === 6;
     }
-    if (step === 4 && !isVerificationSent) {
+    if (step === 3 && !isVerificationSent) {
       return isCurrentStepValid();
     }
     return isCurrentStepValid();
@@ -109,7 +106,7 @@ const SigninPage = () => {
     const handleKeyPress = async (event) => {
       if (event.key === "Enter" && isCurrentStepValid()) {
         event.preventDefault();
-        if (step === 4 && !isVerificationSent) {
+        if (step === 3 && !isVerificationSent) {
           handleSendVerificationCode();
         } else if (isVerificationSent && verificationCode.length === 6) {
           verifyCode();
@@ -134,9 +131,6 @@ const SigninPage = () => {
         birthdateRef.current?.focus();
         break;
       case 3:
-        phoneRef.current?.focus();
-        break;
-      case 4:
         emailRef.current?.focus();
         break;
     }
@@ -168,8 +162,6 @@ const SigninPage = () => {
       case 2:
         return ["보호자님의", "생년월일을 입력해주세요"];
       case 3:
-        return ["보호자님의", "휴대폰 번호를 입력해주세요"];
-      case 4:
         return ["보호자님의", "이메일을 입력해주세요"];
       default:
         return ["보호자님의", "정보를 입력해주세요"];
@@ -254,59 +246,6 @@ const SigninPage = () => {
 
         {step >= 3 && (
           <InputBox>
-            <p>휴대폰</p>
-            <Controller
-              name="phone"
-              control={control}
-              rules={{
-                required: "휴대폰 번호는 필수 입력입니다.",
-                pattern: {
-                  value: /^\d{3}-\d{4}-\d{4}$/,
-                  message: "010-0000-0000 형식이어야 합니다.",
-                },
-              }}
-              render={({ field, fieldState }) => {
-                const handlePhoneChange = (e) => {
-                  let value = e.target.value.replace(/[^0-9]/g, "");
-                  if (value.length <= 3) {
-                    value = value;
-                  } else if (value.length <= 7) {
-                    value = `${value.slice(0, 3)}-${value.slice(3)}`;
-                  } else {
-                    value = `${value.slice(0, 3)}-${value.slice(
-                      3,
-                      7
-                    )}-${value.slice(7, 11)}`;
-                  }
-                  field.onChange(value);
-                };
-
-                return (
-                  <>
-                    <Input
-                      {...field}
-                      value={field.value || ""}
-                      onChange={handlePhoneChange}
-                      ref={(e) => {
-                        field.ref(e);
-                        phoneRef.current = e;
-                      }}
-                      placeholder="휴대폰 번호 (예: 010-0000-0000)"
-                      type="text"
-                      isValid={!fieldState.invalid}
-                    />
-                    {fieldState.error && (
-                      <ErrorText>{fieldState.error.message}</ErrorText>
-                    )}
-                  </>
-                );
-              }}
-            />
-          </InputBox>
-        )}
-
-        {step >= 4 && (
-          <InputBox>
             <p>이메일</p>
             <Controller
               name="email"
@@ -382,7 +321,7 @@ const SigninPage = () => {
           onClick={
             isVerificationSent
               ? handleSubmit(onSubmit)
-              : step === 4
+              : step === 3
               ? handleSendVerificationCode
               : nextStep
           }
@@ -399,7 +338,7 @@ const SigninPage = () => {
             ? isVerified
               ? "완료"
               : "확인"
-            : step === 4
+            : step === 3
             ? "인증번호 발송"
             : "다음"}
         </Button>

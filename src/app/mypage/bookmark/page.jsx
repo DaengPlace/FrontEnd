@@ -58,6 +58,7 @@ const BookmarkPage = () => {
 export default BookmarkPage;
 
 const Container = styled.div`
+  width: 100%;
   max-width: 600px;
   margin: 0 auto;
   display: flex;

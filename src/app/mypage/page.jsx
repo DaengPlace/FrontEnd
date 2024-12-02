@@ -54,6 +54,7 @@ const MyPage = () => {
 export default MyPage;
 
 const Container = styled.div`
+  width: 100%;
   max-width: 600px;
   margin: 0 auto;
   display: flex;
@@ -68,7 +69,7 @@ const Space = styled.div`
 `;
 
 const MyPetsHeader = styled.div`
-  width: 540px;
+  width: 90%;
   display: flex;
   justify-content: space-between;
   align-items: center;

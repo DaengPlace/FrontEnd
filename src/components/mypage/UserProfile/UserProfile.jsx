@@ -33,7 +33,7 @@ const UserProfile = ({ imagePath, name }) => {
 export default UserProfile;
 
 const Container = styled.div`
-  width: 540px;
+  width: 90%;
 `;
 
 const SectionBox = styled.div`

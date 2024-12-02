@@ -32,7 +32,7 @@ const PetProfile = ({pets}) => {
 export default PetProfile;
 
 const Container = styled.div`
-  width: 540px;
+  width: 90%;
 `;
 
 const SectionBox = styled.div`

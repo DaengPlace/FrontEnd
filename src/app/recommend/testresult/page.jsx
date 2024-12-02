@@ -12,7 +12,12 @@ const RecommendTestResults = () => {
 
   return (
     <Container>
-      <Header title="성향테스트 조회" showFavoriteIcon={WithBookmarkIcon.args.showFavoriteIcon} showHomeIcon={WithBookmarkIcon.args.showHomeIcon} />
+      <Header 
+        title="성향테스트 조회" 
+        showFavoriteIcon={WithBookmarkIcon.args.showFavoriteIcon} 
+        showHomeIcon={WithBookmarkIcon.args.showHomeIcon} 
+        backbuttonPath="/recommend"
+      />
       <ScrollableContent>
         {dogs.map((dog, index) => (
           <DogCard key={index} dog={dog} />

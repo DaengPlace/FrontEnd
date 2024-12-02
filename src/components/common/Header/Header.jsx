@@ -18,6 +18,7 @@ const Header = ({
   showHomeIcon,
   showFavoriteIcon,
   showMapIcon,
+  backbuttonPath,
 }) => {
   const router = useRouter();
 
@@ -31,7 +32,7 @@ const Header = ({
           </LogoWrapper>
         ) : (
           <>
-            <IconWrapper onClick={() => router.back()}>
+            <IconWrapper onClick={() => (backbuttonPath ? router.push(backbuttonPath) : router.back())}>
               <ChevronLeft size="24" />
             </IconWrapper>
             <Title>{title}</Title>

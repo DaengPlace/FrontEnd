@@ -50,5 +50,6 @@ const CloseButton = styled.button`
 const Title = styled.h1`
   color: ${({ theme }) => theme.colors.black};
   font-size: 1.4rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
 `;

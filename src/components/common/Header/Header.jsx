@@ -1,27 +1,32 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
-import {ChevronLeft} from "@styled-icons/bootstrap/ChevronLeft";
-import {Place} from "@styled-icons/material-rounded/Place";
-import {HeartOutlined} from "@styled-icons/entypo/HeartOutlined";
-import {Home} from "@styled-icons/feather/Home";
-import {CloseOutline} from "@styled-icons/evaicons-outline/CloseOutline";
-import { useRouter } from 'next/navigation';
+import { ChevronLeft } from "@styled-icons/bootstrap/ChevronLeft";
+import { Place } from "@styled-icons/material-rounded/Place";
+import { HeartOutlined } from "@styled-icons/entypo/HeartOutlined";
+import { Home } from "@styled-icons/feather/Home";
+import { CloseOutline } from "@styled-icons/evaicons-outline/CloseOutline";
+import { useRouter } from "next/navigation";
 import theme from "@/styles/theme.js";
-import Image from 'next/image';
+import Image from "next/image";
 import Logo from "@/../../public/assets/mainpage/Logo.png";
 
-const Header = ({title, showLogo, showX, showHomeIcon, showFavoriteIcon, showMapIcon}) => {
-
+const Header = ({
+  title,
+  showLogo,
+  showX,
+  showHomeIcon,
+  showFavoriteIcon,
+  showMapIcon,
+}) => {
   const router = useRouter();
 
   const handleClose = () => {
-    router.push("/"); 
+    router.push("/");
   };
 
   return (
     <Container>
       <SmallContainer>
-
         {showLogo ? (
           <LogoWrapper onClick={() => router.push("/main")}>
             <LogoImage src={Logo} width={30} height={30} alt="logo" />
@@ -35,17 +40,16 @@ const Header = ({title, showLogo, showX, showHomeIcon, showFavoriteIcon, showMap
             <Title>{title}</Title>
           </>
         )}
-
       </SmallContainer>
 
       <RightIcons>
         {showMapIcon && (
-          <IconWrapper onClick={() => router.push('/place')}>
+          <IconWrapper onClick={() => router.push("/place")}>
             <StyledPlace size="28" />
           </IconWrapper>
         )}
         {showFavoriteIcon && (
-          <IconWrapper onClick={() => router.push('/mypage/bookmark')}>
+          <IconWrapper onClick={() => router.push("/mypage/bookmark")}>
             <StyledHeart size="28" />
           </IconWrapper>
         )}
@@ -60,7 +64,6 @@ const Header = ({title, showLogo, showX, showHomeIcon, showFavoriteIcon, showMap
           </IconWrapper>
         )}
       </RightIcons>
-
     </Container>
   );
 };
@@ -68,20 +71,19 @@ const Header = ({title, showLogo, showX, showHomeIcon, showFavoriteIcon, showMap
 export default Header;
 
 const Container = styled.div`
-  width: 600px;
-  height: 50px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  border-bottom: 1px solid #d1d1d1;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 
-  position: fixed; /* Header를 고정 */
-  top: 0; /* 상단에 고정 */
-  left: 50%; /* 화면 가운데 정렬 */
-  transform: translateX(-50%); /* 가운데 정렬 보정 */
-  background-color: white; /* 배경색 지정 (투명 문제 방지) */
-  z-index: 1000; /* 다른 요소보다 위로 배치 */
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  background-color: white;
+  z-index: 1000;
 `;
 
 const SmallContainer = styled.div`
@@ -108,7 +110,7 @@ const LogoImage = styled(Image)`
 const LogoTitle = styled.div`
   padding-left: 8px;
   font-size: 20px;
-  font-family: 'Gugi', sans-serif;
+  font-family: "Gugi", sans-serif;
 `;
 
 const Title = styled.div`
@@ -126,21 +128,21 @@ const RightIcons = styled.div`
 const StyledPlace = styled(Place)`
   width: 28px;
   height: 28px;
-  stroke-width: 1; 
+  stroke-width: 1;
   color: black;
 `;
 
 const StyledHeart = styled(HeartOutlined)`
   width: 28px;
   height: 28px;
-  stroke-width: 1; 
+  stroke-width: 1;
   color: black;
 `;
 
 const StyledHome = styled(Home)`
   width: 28px;
   height: 28px;
-  stroke-width: 1.5; 
+  stroke-width: 1.5;
   color: black;
 `;
 
@@ -148,5 +150,5 @@ const StyledCloseLine = styled(CloseOutline)`
   width: 28px;
   height: 28px;
   color: black;
-  stroke-width: 1.5; /* Adjust line thickness */
+  stroke-width: 1.5;
 `;

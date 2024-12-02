@@ -21,7 +21,6 @@ const SigninProfilePage = () => {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const {
     control,
-    handleSubmit,
     watch,
     trigger,
     formState: { errors },
@@ -32,6 +31,7 @@ const SigninProfilePage = () => {
     const isNameDuplicate = currentNickname === "사용중인닉네임";
     setIsDuplicate(isNameDuplicate);
     setIsChecked(true);
+    setNickname(currentNickname);
   };
 
   const handleImageUpload = (event) => {
@@ -57,7 +57,7 @@ const SigninProfilePage = () => {
         <Image src={profileImage} alt="profile" width={150} height={150} />
         <ImageUpload htmlFor="upload-image">
           <Image
-            src="/assets/profile/camera.svg"
+            src="/assets/common/camera.svg"
             alt="edit"
             width={50}
             height={50}
@@ -153,6 +153,7 @@ const SigninProfilePage = () => {
           confirmText="이어 등록"
           onClose={() => router.push("/main")}
           onConfirm={() => router.push("/dog/info")}
+          setIsBottomSheetVisible={setIsBottomSheetVisible}
         />
       )}
     </Container>

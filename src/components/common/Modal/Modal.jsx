@@ -63,24 +63,29 @@ const ModalOverlay = styled.div`
 const ModalContent = styled.div`
   background: #ffffff;
   border-radius: 10px;
-  width: 90%;
+  width: 100%;
   max-width: 400px;
-  padding: 20px;
+  padding: 30px 20px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const ModalTitle = styled.h2`
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: #404040;
-  margin-bottom: ${({$hasMessage}) => ($hasMessage ? "10px" : "40px")};
+  margin-bottom: ${({ $hasMessage }) => ($hasMessage ? "10px" : "40px")};
 `;
 
 const ModalMessage = styled.p`
-  font-size: 14px;
+  font-size: 15px;
   color: #404040;
   margin-bottom: 20px;
+  line-height: 1.4;
 `;
 
 const ModalActions = styled.div`

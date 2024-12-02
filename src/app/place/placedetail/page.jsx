@@ -132,7 +132,7 @@ const PlaceDetailPage = () => {
               onClose={() => setIsReviewBottomSheetOpen(false)}
               onConfirm={() => {
                 setIsReviewBottomSheetOpen(false);
-                router.push("/reviews/reviewScan");
+                router.push("/reviews/receiptCapture");
               }}
               cancelText="사진 업로드"
               confirmText="영수증 촬영"

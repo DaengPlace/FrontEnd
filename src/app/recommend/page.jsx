@@ -20,7 +20,13 @@ const RecommendPage = () => {
 
   return (
     <Container>
-      <Header title="성향별 시설 추천" showHomeIcon={WithBookmarkIcon.args.showHomeIcon} showFavoriteIcon={WithBookmarkIcon.args.showFavoriteIcon} showMapIcon={WithBookmarkIcon.args.showMapIcon} />
+      <Header 
+        title="성향별 시설 추천" 
+        showHomeIcon={WithBookmarkIcon.args.showHomeIcon} 
+        showFavoriteIcon={WithBookmarkIcon.args.showFavoriteIcon} 
+        showMapIcon={WithBookmarkIcon.args.showMapIcon}
+        backbuttonPath="/main"
+      />
 
       <ScrollableContent>
 

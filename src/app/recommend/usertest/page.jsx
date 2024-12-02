@@ -88,7 +88,7 @@ const RecommendUserTest = () => {
           }
           cancelText='나가기'
           confirmText='계속 작성'
-          onCancel={() => router.back()}
+          onCancel={() => router.push('/recommend/testresult')}
           onConfirm={() => setIsModalOpen(false)}
         />
       )}

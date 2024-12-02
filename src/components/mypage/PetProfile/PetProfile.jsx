@@ -4,8 +4,12 @@ import React from 'react';
 import styled from 'styled-components';
 import theme from '@/styles/theme.js';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const PetProfile = ({pets}) => {
+
+  const router = useRouter();
+
   return (
     <Container>
       {pets.map((pet) => (
@@ -17,7 +21,7 @@ const PetProfile = ({pets}) => {
             <ProfileInfo>{pet.breed} | {pet.birth} | {pet.gender === 1? "여아" : "남아"} | {pet.weight}kg</ProfileInfo>
             <ProfileIsNeutered>{pet.isNeutered === true? "중성화 수술 완료" : "중성화 수술 전"}</ProfileIsNeutered>
           </PetInfo>
-          <EditButton>편집</EditButton>
+          <EditButton onClick={() => router.push('/dog/edit')}>편집</EditButton>
 
         </SectionBox>
       ))}

@@ -13,6 +13,7 @@ import Header from '@/components/common/Header/Header';
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import { ChevronRight } from 'styled-icons/bootstrap';
 import theme from "@/styles/theme.js";
+import { useRouter } from 'next/navigation';
 
 const pets = [
   {id:1, image: "/assets/mypage/defaultPetImage.png", name: "뽀삐", breed: "말티즈", birth: "11개월", gender: 1, weight: 5.3, isNeutered: true},
@@ -20,6 +21,9 @@ const pets = [
 ];
 
 const MyPage = () => {
+
+  const router = useRouter();
+
   return (
     <Container>
       <Header title="마이페이지" showHomeIcon={OnlyHomeIcon.args.showHomeIcon} showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
@@ -31,7 +35,7 @@ const MyPage = () => {
 
       <MyPetsHeader>
         <SectionHeader header={"우리집 댕댕이들"} />
-        <AddPet>추가하기<StyledChevronRight /> </AddPet>
+        <AddPet onClick={() => router.push('/dog/info')}>추가하기<StyledChevronRight /> </AddPet>
       </MyPetsHeader>
       <PetProfile pets={pets} />
       <br/>
@@ -74,6 +78,7 @@ const AddPet = styled.div`
   font-size: 12px;
   display: flex;
   width: 80px;
+  cursor: pointer;
 `;
 
 const StyledChevronRight = styled(ChevronRight)`

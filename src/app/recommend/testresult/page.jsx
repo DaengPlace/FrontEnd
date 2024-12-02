@@ -2,7 +2,7 @@
 
 import Header from '@/components/common/Header/Header';
 import { WithBookmarkIcon } from '@/components/common/Header/Header.stories';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { dogs } from '@/data/DogsTest';
 import theme from '@/styles/theme';

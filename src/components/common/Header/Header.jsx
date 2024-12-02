@@ -21,10 +21,6 @@ const Header = ({
 }) => {
   const router = useRouter();
 
-  const handleClose = () => {
-    router.push("/");
-  };
-
   return (
     <Container>
       <SmallContainer>

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 const DogInfo = ({dog}) => {
 
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
-  const router = useRouter;
+  const router = useRouter();
 
   return (
     <Container>
@@ -29,7 +29,7 @@ const DogInfo = ({dog}) => {
       ) : (
         <>
           <NoInfoText>아직 성향에 대한 정보가 없어요!</NoInfoText>
-          <ActionButton>성향 테스트 하러가기</ActionButton>
+          <ActionButton onClick={() => router.push("/recommend/test")}>성향 테스트 하러가기</ActionButton>
         </>
       )}
 

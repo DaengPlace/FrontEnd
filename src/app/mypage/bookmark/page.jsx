@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import theme from '@/styles/theme';
 
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import Header from '@/components/common/Header/Header';
@@ -62,6 +63,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: ${theme.colors.defaultBackground};
 `;
 
 const Space = styled.div`

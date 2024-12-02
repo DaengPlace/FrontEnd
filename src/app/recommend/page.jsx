@@ -61,6 +61,7 @@ const Container = styled.div`
   align-items: center;
   height: 100vh; 
   overflow: hidden;
+  background-color: ${theme.colors.defaultBackground};
 `;
 
 const ScrollableContent = styled.div`

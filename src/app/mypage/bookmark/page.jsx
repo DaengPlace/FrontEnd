@@ -7,8 +7,8 @@ import theme from '@/styles/theme';
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import Header from '@/components/common/Header/Header';
 import { initialFacilities } from "@/data/facilities";
-import ScrollableContainer from '@/components/bookmark/ScrollableContainer/ScrollableContainer';
-import ButtonsContainer from '@/components/bookmark/ButtonsContainer/ButtonsContainer';
+import ScrollableContainer from '@/components/mypage/bookmark/ScrollableContainer/ScrollableContainer';
+import ButtonsContainer from '@/components/mypage/bookmark/ButtonsContainer/ButtonsContainer';
 
 const BookmarkPage = () => {
 
@@ -47,7 +47,12 @@ const BookmarkPage = () => {
 
   return (
     <Container>
-      <Header title="즐겨찾기" showHomeIcon={OnlyHomeIcon.args.showHomeIcon} showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon} showMapIcon={OnlyHomeIcon.args.showMapIcon}  />
+      <Header
+        title="즐겨찾기"
+        showHomeIcon={OnlyHomeIcon.args.showHomeIcon}
+        showFavoriteIcon={OnlyHomeIcon.args.showFavoriteIcon}
+        showMapIcon={OnlyHomeIcon.args.showMapIcon}
+      />
       <Space />
       <ScrollableContainer facilities={facilities} toggleLike={toggleLike} bottomRef={bottomRef} />
       <ButtonsContainer showScrollToTop={showScrollToTop} buttonBottom={buttonBottom} />

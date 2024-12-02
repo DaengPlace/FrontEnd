@@ -209,6 +209,7 @@ const MenuItem = styled.div`
   font-size: 14px;
   color: #333;
   cursor: pointer;
+  text-align: center;
 
   &:hover {
     background-color: #f4f4f4;

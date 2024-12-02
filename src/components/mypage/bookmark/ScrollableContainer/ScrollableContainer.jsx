@@ -8,7 +8,7 @@ const ScrollableContainer = ({facilities, toggleLike, bottomRef}) => {
       {facilities.map((fac) => (
         <BigFacilityCard key={fac.id} fac={fac} toggleLike={toggleLike} />
       ))}
-      <div ref={bottomRef} style={{ height: "1px" }}></div>
+      <Space />
     </Container>
   );
 };
@@ -16,8 +16,9 @@ const ScrollableContainer = ({facilities, toggleLike, bottomRef}) => {
 export default ScrollableContainer;
 
 const Container = styled.div`
+  width: 90%;
   overflow-y: auto;
-  height: calc(100vh - 65px);
+  height: 100vh;
   padding-top: 20px;
   padding-bottom: 20px;
   -ms-overflow-style: none;
@@ -25,4 +26,8 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const Space = styled.div`
+  height: 30px;
 `;

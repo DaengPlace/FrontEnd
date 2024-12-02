@@ -16,5 +16,5 @@ export default SectionHeader;
 const Container = styled.div`
   font-weight: bold;
   margin-bottom: 10px;
-  width: 540px;
+  width: 90%;
 `;

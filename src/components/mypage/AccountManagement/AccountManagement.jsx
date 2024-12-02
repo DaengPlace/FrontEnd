@@ -69,7 +69,7 @@ const AccountManagement = () => {
 export default AccountManagement;
 
 const Container = styled.div`
-  width: 540px; 
+  width: 90%; 
   margin-bottom: 30px;
 `;
 

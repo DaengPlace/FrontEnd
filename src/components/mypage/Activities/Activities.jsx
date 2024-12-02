@@ -31,7 +31,7 @@ const Activities = () => {
 export default Activities;
 
 const Container = styled.div`
-  width: 540px; 
+  width: 90%; 
 `;
 
 const ActivityBox = styled.div`

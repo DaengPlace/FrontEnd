@@ -3,8 +3,9 @@ import React from 'react';
 import styled from "styled-components";
 
 const FacilityCard = ({image, category, name, rating, link}) => {
+
     return (
-        <Link href="#">
+        <Link href='/place/placedetail/?id=1'>
             <CardContainer>
                 <CardImage src={image} alt={name} />
                 <CardInfo>

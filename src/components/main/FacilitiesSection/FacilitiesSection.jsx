@@ -2,8 +2,12 @@ import React from 'react';
 import FacilityCard from '../FacilityCard/FacilityCard';
 import styled from 'styled-components';
 import theme from '../../../styles/theme.js';
+import { useRouter } from 'next/navigation';
 
 const FacilitiesSection = ({sectionTitle, facilities, isCompact = false}) => {
+
+  const router = useRouter();
+
   return (
     <SectionContainer $isCompact={isCompact}>
       <SectionTitle>{sectionTitle}</SectionTitle>

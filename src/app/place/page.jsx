@@ -52,7 +52,7 @@ const PlacePage = () => {
             <div>찾아보기</div>
           </OverlayText>
         </ImageWrapper>
-        <ImageWrapper>
+        <ImageWrapper onClick={() => router.push('/recommend')}>
           <Image
             src="/assets/place/banner2.svg"
             alt="성향별 추천 시설"

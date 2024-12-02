@@ -3,6 +3,8 @@ import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 import { useRouter } from "next/navigation";
+import Header from "@/components/common/Header/Header";
+import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 
 const ReceiptCapture = () => {
   const webcamRef = useRef(null);
@@ -30,6 +32,8 @@ const ReceiptCapture = () => {
   };
 
   return (
+    <>
+    <Header title="영수증 스캔" showX={NoTitleHeader.args.showX} />
     <Container>
       {capturedImage ? (
         <PreviewContainer>
@@ -57,6 +61,7 @@ const ReceiptCapture = () => {
         </>
       )}
     </Container>
+    </>
   );
 };
 
@@ -73,8 +78,8 @@ const Container = styled.div`
 `;
 
 const WebcamContainer = styled.div`
-  width: 70%;
-  height: 300px;
+  width: 60%;
+  height: 30%;
   border: 2px dashed #ccc;
   display: flex;
   justify-content: center;

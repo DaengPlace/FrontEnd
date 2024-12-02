@@ -111,15 +111,19 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1.25rem;
   background-color: #f8f8f8;
+  position: relative;
 `;
 
 const ImagesSection = styled.section`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 20px;
-  margin-top: 20px;
+  width: 150px;
+  height: 110px;
+  position: relative;
+  margin: 20px auto;
 `;
 
 const ImageWrapper = styled.div`

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import FeatureGroup from '@/components/recommend/FeatureGroup/FeatureGroup';
+import FeatureTitle from '@/components/recommend/FeatureTitle/FeatureTitle';
 
 const RecommendDogTest = () => {
 
@@ -30,12 +31,14 @@ const RecommendDogTest = () => {
 
   return (
     <Container>
-      
       <Header showX={NoTitleHeader.args.showX} onClose={() => setIsModalOpen(true)} />
-
       <Content>
-
-        <Title>댕댕이의 성향을<br />알려주세요</Title>
+        <FeatureTitle title={
+          <>
+            댕댕이의 성향을<br />
+            알려주세요
+          </>
+        } />
         <FeatureGroup
           label="활동성"
           options={["활발해요", "점잖아요"]}
@@ -56,7 +59,6 @@ const RecommendDogTest = () => {
           selectedValue={selectedTags.relation}
           onSelect={(value) => handleCheckboxClick("relation", value)}
         />
-
       </Content>
 
       <Button 
@@ -111,9 +113,5 @@ const Content = styled.div`
   margin-top: 50px;
 `;
 
-const Title = styled.h1`
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-  line-height: 1.5;
-`;
+
 

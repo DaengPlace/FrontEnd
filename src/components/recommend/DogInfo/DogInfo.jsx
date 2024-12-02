@@ -34,19 +34,21 @@ const DogInfo = ({dog}) => {
       )}
 
       {openBottomSheet && (
-        <BottomSheet
-          title={
-            <>
-              기존 성향 테스트 기록이 남아있습니다.<br />
-              테스트를 다시 진행하시겠습니까?
-            </>
-          }
-          confirmText='진행'
-          cancelText='취소'
-          onConfirm={() => router.push('/recommend/dogtest')}
-          setIsBottomSheetVisible={setOpenBottomSheet}
-          warningText='새롭게 테스트를 진행할 경우 기존의 데이터는 삭제됩니다.'
-        />
+        <StyledBottomSheetWrapper>
+          <BottomSheet
+            title={
+              <>
+                기존 성향 테스트 기록이 남아있습니다.<br />
+                테스트를 다시 진행하시겠습니까?
+              </>
+            }
+            confirmText='진행'
+            cancelText='취소'
+            onConfirm={() => router.push('/recommend/dogtest')}
+            setIsBottomSheetVisible={setOpenBottomSheet}
+            warningText='새롭게 테스트를 진행할 경우 기존의 데이터는 삭제됩니다.'
+          />
+        </StyledBottomSheetWrapper>
       )}
     </Container>
   );
@@ -105,4 +107,10 @@ const NoInfoText = styled.div`
   font-size: 14px;
   color: ${theme.colors.divider};
   margin-bottom: 10px;
+`;
+
+const StyledBottomSheetWrapper = styled.div`
+  h2 {
+    margin-bottom: 20px; /* 제목과 버튼 사이 간격 */
+  }
 `;

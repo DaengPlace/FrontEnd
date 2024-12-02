@@ -46,12 +46,10 @@ const ReviewPage = () => {
 
   return (
     <>
-      <HeaderWrapper>
         <Header
           title="리뷰 전체보기"
           showCloseButton={true}
         />
-      </HeaderWrapper>
       <Container ref={containerRef}>
         <PageHeader title="92버터샵" reviewCount={reviews.length} />
         <ReviewSummary
@@ -73,13 +71,6 @@ const ReviewPage = () => {
 };
 
 export default ReviewPage;
-
-const HeaderWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  z-index: 1000;
-  background-color: white;
-`;
 
 const Container = styled.div`
   padding: 16px;

@@ -64,9 +64,7 @@ const ReviewsInputPage = () => {
 
   return (
     <>
-      <HeaderWrapper>
         <Header title="리뷰 작성" showX={NoTitleHeader.args.showX} />
-      </HeaderWrapper>
       <MainContent ref={containerRef}>
         <CategorySection />
         <Divider />
@@ -87,13 +85,6 @@ const ReviewsInputPage = () => {
 };
 
 export default ReviewsInputPage;
-
-const HeaderWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  z-index: 1000;
-  background-color: white;
-`;
 
 const MainContent = styled.div`
   padding: 16px;

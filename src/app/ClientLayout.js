@@ -24,7 +24,9 @@ export default function ClientLayout({ children }) {
     "/place/placemap",
     "/place/placedetail",
     "/recommend",
-    "/recommend/test",
+    "/recommend/testresult",
+    "/recommend/dogtest",
+    "/recommend/usertest",
     "/reviews/reviewScan",
     "/reviews/reviewsInput",
   ];

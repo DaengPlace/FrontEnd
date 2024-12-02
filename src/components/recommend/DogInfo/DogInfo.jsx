@@ -29,7 +29,7 @@ const DogInfo = ({dog}) => {
       ) : (
         <>
           <NoInfoText>아직 성향에 대한 정보가 없어요!</NoInfoText>
-          <ActionButton onClick={() => router.push("/recommend/test")}>성향 테스트 하러가기</ActionButton>
+          <ActionButton onClick={() => router.push("/recommend/dogtest")}>성향 테스트 하러가기</ActionButton>
         </>
       )}
 
@@ -43,7 +43,7 @@ const DogInfo = ({dog}) => {
           }
           confirmText='진행'
           cancelText='취소'
-          onConfirm={() => router.push('/recommend/test')}
+          onConfirm={() => router.push('/recommend/dogtest')}
           setIsBottomSheetVisible={setOpenBottomSheet}
           warningText='새롭게 테스트를 진행할 경우 기존의 데이터는 삭제됩니다.'
         />

@@ -9,15 +9,15 @@ import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 const ReceiptCapture = () => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
-  const [facingMode, setFacingMode] = useState("user"); 
+  const [facingMode, setFacingMode] = useState("user");
   const router = useRouter();
 
   useEffect(() => {
     const userAgent = navigator.userAgent || navigator.userAgentData;
     if (/Mobi|Android|iPhone/i.test(userAgent)) {
-      setFacingMode("environment"); 
+      setFacingMode("environment");
     } else {
-      setFacingMode("user"); 
+      setFacingMode("user");
     }
   }, []);
 
@@ -32,34 +32,40 @@ const ReceiptCapture = () => {
 
   return (
     <>
-    <Header title="영수증 스캔" showX={NoTitleHeader.args.showX} />
-    <Container>
-      {capturedImage ? (
-        <PreviewContainer>
-          <img src={capturedImage} alt="Captured Receipt" />
-          <ButtonContainer>
-            <Button onClick={() => setCapturedImage(null)}>다시 찍기</Button>
-            <Button onClick={handleConfirm}>확인</Button>
-          </ButtonContainer>
-        </PreviewContainer>
-      ) : (
-        <>
-          <WebcamContainer>
-            <Webcam
-              ref={webcamRef}
-              audio={false}
-              screenshotFormat="image/jpeg"
-              width="100%"
-              height="100%"
-              videoConstraints={{
-                facingMode: facingMode, 
-              }}
-            />
-          </WebcamContainer>
-          <Button onClick={captureImage}>촬영</Button>
-        </>
-      )}
-    </Container>
+      <Header title="영수증 스캔" showX={NoTitleHeader.args.showX} />
+      <Container>
+        {capturedImage ? (
+          <PreviewContainer>
+            <img src={capturedImage} alt="Captured Receipt" />
+            <ButtonContainer>
+              <Button onClick={() => setCapturedImage(null)}>다시 찍기</Button>
+              <Button onClick={handleConfirm}>확인</Button>
+            </ButtonContainer>
+          </PreviewContainer>
+        ) : (
+          <>
+            <WebcamFullContainer>
+              <Webcam
+                ref={webcamRef}
+                audio={false}
+                screenshotFormat="image/jpeg"
+                videoConstraints={{
+                  facingMode: facingMode,
+                }}
+                style={{ width: "100%", height: "100%",objectFit: "cover", }}
+              />
+              <Overlay>
+                <TopOverlay />
+                <BottomOverlay />
+                <LeftOverlay />
+                <RightOverlay />
+                <GreenBox />
+              </Overlay>
+            </WebcamFullContainer>
+            <Button onClick={captureImage}>촬영</Button>
+          </>
+        )}
+      </Container>
     </>
   );
 };
@@ -71,18 +77,73 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #f7f7f7;
-  padding: 20px;
+  height: calc(100%);
+  padding: 0;
+  margin: 0;
 `;
 
-const WebcamContainer = styled.div`
-  width: 60%;
-  height: 30%;
+const WebcamFullContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+`;
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+`;
+
+const TopOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc((100% - 70%) / 2);
+  background-color: rgba(128, 128, 128, 0.5);
+`;
+
+const BottomOverlay = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: calc((100% - 70%) / 2); 
+  background-color: rgba(128, 128, 128, 0.5);
+`;
+
+const LeftOverlay = styled.div`
+  position: absolute;
+  top: calc((100% - 70%) / 2); 
+  left: 0;
+  width: calc((100% - 70%) / 2);
+  height: 70%; 
+  background-color: rgba(128, 128, 128, 0.5);
+`;
+
+const RightOverlay = styled.div`
+  position: absolute;
+  top: calc((100% - 70%) / 2); 
+  right: 0;
+  width: calc((100% - 70%) / 2);
+  height: 70%;
+  background-color: rgba(128, 128, 128, 0.5);
+`;
+
+const GreenBox = styled.div`
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  top: calc((100% - 70%) / 2);
+  right:calc((100% - 70%) / 2);
+  border: 3px solid green;
+  background-color: transparent;
+  z-index: 2;
 `;
 
 const PreviewContainer = styled.div`
@@ -105,6 +166,8 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled.button`
+  position: absolute;
+  bottom: 5%;
   padding: 10px 20px;
   font-size: 16px;
   background-color: ${({ theme }) => theme.colors.primary};
@@ -112,6 +175,8 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  width: 100px;
+  height: 50px;
 
   &:hover {
     background-color: #0056b3;

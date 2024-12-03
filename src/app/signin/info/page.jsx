@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Button from "@/components/common/Button/Button";
-import SelectBox from "@/components/common/Selectbox/Selectbox";
+import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Header from "@/components/signin/Header/Header";
 
 const SigninInfoPage = () => {

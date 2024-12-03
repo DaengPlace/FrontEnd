@@ -36,7 +36,7 @@ const SigninPage = () => {
   const onSubmit = (data) => {
     if (isVerified) {
       router.push("/signin/info");
-    } else if (step === 3 && isVerificationSent) {
+    } else if (isVerificationSent) {
       verifyCode();
     }
   };
@@ -47,8 +47,6 @@ const SigninPage = () => {
         return "name";
       case 2:
         return "birthdate";
-      case 3:
-        return "email";
       default:
         return "";
     }
@@ -56,18 +54,16 @@ const SigninPage = () => {
 
   const isCurrentStepValid = () => {
     const currentField = getFieldName(step);
+    if (!currentField) return true;
     const fieldValue = watch(currentField);
     return fieldValue && !errors[currentField];
   };
 
   const isButtonActive = () => {
-    if (isVerificationSent) {
-      return verificationCode.length === 6;
-    }
-    if (step === 3 && !isVerificationSent) {
+    if (step < 3) {
       return isCurrentStepValid();
     }
-    return isCurrentStepValid();
+    return isVerified; // 완료 버튼 활성화 조건을 인증확인 후로 변경
   };
 
   const nextStep = async () => {
@@ -78,7 +74,8 @@ const SigninPage = () => {
   };
 
   const handleSendVerificationCode = () => {
-    if (isCurrentStepValid()) {
+    const email = watch("email");
+    if (email && !errors.email) {
       setIsVerificationSent(true);
       setTimer(180);
       setTimeExpired(false);
@@ -106,12 +103,10 @@ const SigninPage = () => {
     const handleKeyPress = async (event) => {
       if (event.key === "Enter" && isCurrentStepValid()) {
         event.preventDefault();
-        if (step === 3 && !isVerificationSent) {
-          handleSendVerificationCode();
+        if (step < 3) {
+          await nextStep();
         } else if (isVerificationSent && verificationCode.length === 6) {
           verifyCode();
-        } else {
-          await nextStep();
         }
       }
     };
@@ -245,88 +240,96 @@ const SigninPage = () => {
         )}
 
         {step >= 3 && (
-          <InputBox>
-            <p>이메일</p>
-            <Controller
-              name="email"
-              control={control}
-              rules={{
-                required: "이메일은 필수 입력입니다.",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "올바른 이메일 형식이어야 합니다.",
-                },
-              }}
-              render={({ field, fieldState }) => (
-                <>
-                  <Input
-                    {...field}
-                    value={field.value || ""}
-                    ref={(e) => {
-                      field.ref(e);
-                      emailRef.current = e;
-                    }}
-                    placeholder="이메일 (예: daengplace@gmail.com)"
-                    type="email"
-                    isValid={!fieldState.invalid}
-                  />
-                  {fieldState.error && (
-                    <ErrorText>{fieldState.error.message}</ErrorText>
+          <>
+            <InputBox>
+              <p>이메일</p>
+              <BoxContainer>
+                <Controller
+                  name="email"
+                  control={control}
+                  rules={{
+                    required: "이메일은 필수 입력입니다.",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "올바른 이메일 형식이어야 합니다.",
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      ref={(e) => {
+                        field.ref(e);
+                        emailRef.current = e;
+                      }}
+                      placeholder="이메일 (예: daengplace@gmail.com)"
+                      type="email"
+                      isValid={!fieldState.invalid}
+                    />
                   )}
-                </>
-              )}
-            />
-          </InputBox>
-        )}
+                />
+                <Button
+                  disabled={isVerified}
+                  isActive={!errors.email && watch("email") && !isVerified}
+                  onClick={isVerified ? null : handleSendVerificationCode}
+                  type="button"
+                >
+                  {isVerificationSent ? "재발송" : "인증번호 발송"}
+                </Button>
+              </BoxContainer>
+              {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+            </InputBox>
 
-        {isVerificationSent && (
-          <InputBox>
-            <p>인증번호</p>
-            <BoxContainer>
-              <Input
-                ref={verificationRef}
-                value={verificationCode}
-                onChange={handleVerificationCodeChange}
-                placeholder="인증번호 입력 (예: 000000)"
-                type="text"
-                isValid={!verificationError || timeExpired}
-              />
-
-              <Button
-                isActive
-                onClick={() => {
-                  handleSendVerificationCode();
-                }}
-              >
-                재발송
-              </Button>
-            </BoxContainer>
-            <PlusContent>
-              {!timeExpired && verificationError && (
-                <ErrorText>인증번호가 올바르지 않습니다.</ErrorText>
-              )}
-              {timeExpired && (
-                <ErrorText>
-                  입력 시간이 초과되었습니다. <br /> 재발송 버튼을 눌러 다시
-                  입력해주세요.
-                </ErrorText>
-              )}
-              <TimerDivider>{formatTime(timer)}</TimerDivider>
-            </PlusContent>
-          </InputBox>
+            {isVerificationSent && (
+              <InputBox>
+                <p>인증번호</p>
+                <BoxContainer>
+                  <Input
+                    ref={verificationRef}
+                    value={verificationCode}
+                    onChange={handleVerificationCodeChange}
+                    placeholder="인증번호 입력 (예: 000000)"
+                    type="text"
+                    isValid={!verificationError || timeExpired}
+                  />
+                  <Button
+                    disabled={isVerified}
+                    isActive={
+                      verificationCode.length === 6 &&
+                      !verificationError &&
+                      !isVerified
+                    }
+                    onClick={isVerified ? null : verifyCode}
+                    type="button"
+                  >
+                    인증확인
+                  </Button>
+                </BoxContainer>
+                <PlusContent>
+                  {!timeExpired && verificationError && (
+                    <ErrorText>인증번호가 올바르지 않습니다.</ErrorText>
+                  )}
+                  {timeExpired && (
+                    <ErrorText>
+                      입력 시간이 초과되었습니다. <br /> 재발송 버튼을 눌러 다시
+                      입력해주세요.
+                    </ErrorText>
+                  )}
+                  {isVerified && <SuccessText>인증되었습니다.</SuccessText>}
+                  <TimerDivider>
+                    {!isVerified && formatTime(timer)}
+                  </TimerDivider>
+                </PlusContent>
+              </InputBox>
+            )}
+          </>
         )}
 
         <Button
           isActive={isButtonActive()}
-          onClick={
-            isVerificationSent
-              ? handleSubmit(onSubmit)
-              : step === 3
-              ? handleSendVerificationCode
-              : nextStep
-          }
+          onClick={step < 3 ? nextStep : handleSubmit(onSubmit)}
           hasImage={true}
-          type={isVerificationSent ? "submit" : "button"}
+          type={step < 3 ? "button" : "submit"}
           style={{
             position: "absolute",
             bottom: "0",
@@ -334,13 +337,7 @@ const SigninPage = () => {
             width: "100%",
           }}
         >
-          {isVerificationSent
-            ? isVerified
-              ? "완료"
-              : "확인"
-            : step === 3
-            ? "인증번호 발송"
-            : "다음"}
+          {step < 3 ? "다음" : isVerified ? "완료" : "확인"}
         </Button>
       </Form>
     </Container>
@@ -382,11 +379,17 @@ const ErrorText = styled.span`
   display: block;
 `;
 
+const SuccessText = styled.span`
+  font-size: 1rem;
+  color: green;
+  margin-top: 5px;
+  display: block;
+`;
+
 const BoxContainer = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
-  position: relative;
 
   & > input {
     flex: 7 7 70%;

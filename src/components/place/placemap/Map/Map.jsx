@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import styled from "styled-components";
-import { GoogleMap, Circle } from "@react-google-maps/api";
+import { GoogleMap, Circle, Marker } from "@react-google-maps/api";
 
-const Map = ({ center, zoom, userLocation }) => (
+const Map = ({ center, zoom, userLocation, markers }) => (
   <MapContainer>
     <GoogleMap mapContainerStyle={{ width: "100%", height: "100%" }} center={center} zoom={zoom}>
       {userLocation && (
@@ -19,6 +19,17 @@ const Map = ({ center, zoom, userLocation }) => (
             }}
         />
       )}
+
+      {markers && 
+        markers.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={marker.position}
+            title={marker.title}
+          />
+        ))
+      }
+
     </GoogleMap>
   </MapContainer>
 );

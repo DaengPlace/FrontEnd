@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Button from "../Button/Button";
+import theme from "@/styles/theme";
 
 const BottomSheet = ({
   title,
@@ -11,6 +12,7 @@ const BottomSheet = ({
   cancelText,
   confirmText,
   setIsBottomSheetVisible,
+  warningText,
 }) => {
   return (
     <Overlay>
@@ -32,6 +34,9 @@ const BottomSheet = ({
             </Button>
           )}
         </ButtonContainer>
+        {warningText && (
+          <WarningText>{warningText}</WarningText>
+        )}
       </Sheet>
     </Overlay>
   );
@@ -45,6 +50,7 @@ BottomSheet.propTypes = {
   cancelText: PropTypes.string,
   confirmText: PropTypes.string,
   setIsBottomSheetVisible: PropTypes.func,
+  warningText: PropTypes.string,
 };
 
 BottomSheet.defaultProps = {
@@ -94,6 +100,7 @@ const Title = styled.h2`
   font-size: 18px;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 10px;
 `;
 
 const Content = styled.div`
@@ -106,4 +113,10 @@ const Content = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   gap: 10px;
+`;
+
+const WarningText = styled.div`
+  color: ${theme.colors.caution};
+  font-size: 14px;
+  margin-top: 15px;
 `;

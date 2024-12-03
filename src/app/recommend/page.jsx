@@ -20,12 +20,18 @@ const RecommendPage = () => {
 
   return (
     <Container>
-      <Header title="성향별 시설 추천" showHomeIcon={WithBookmarkIcon.args.showHomeIcon} showFavoriteIcon={WithBookmarkIcon.args.showFavoriteIcon} showMapIcon={WithBookmarkIcon.args.showMapIcon} />
+      <Header 
+        title="성향별 시설 추천" 
+        showHomeIcon={WithBookmarkIcon.args.showHomeIcon} 
+        showFavoriteIcon={WithBookmarkIcon.args.showFavoriteIcon} 
+        showMapIcon={WithBookmarkIcon.args.showMapIcon}
+        backbuttonPath="/main"
+      />
 
       <ScrollableContent>
 
         <TestBanner>
-          <BannerButton onClick={() => router.push('/recommend/test')}>성향 테스트 하러가기</BannerButton>
+          <BannerButton onClick={() => router.push('/recommend/testresult')}>성향 테스트 하러가기</BannerButton>
         </TestBanner>
 
         <Section>
@@ -36,7 +42,7 @@ const RecommendPage = () => {
 
         <Banner>
           <BannerText>아직 <span>성향 테스트</span>를 하지 않으셨나요?</BannerText>
-          <BannerImage onClick={() => router.push('/recommend/test')} src="/assets/recommend/recommendBanner.svg" alt="recommendBanner" width={560} height={373} />
+          <BannerImage onClick={() => router.push('/recommend/testresult')} src="/assets/recommend/recommendBanner.svg" alt="recommendBanner" width={560} height={373} />
           <Divider />
         </Banner>
 
@@ -61,6 +67,7 @@ const Container = styled.div`
   align-items: center;
   height: 100vh; 
   overflow: hidden;
+  background-color: ${theme.colors.defaultBackground};
 `;
 
 const ScrollableContent = styled.div`

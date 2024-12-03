@@ -14,15 +14,13 @@ const Header = ({
   title,
   showLogo,
   showX,
+  onClose,
   showHomeIcon,
   showFavoriteIcon,
   showMapIcon,
+  backbuttonPath,
 }) => {
   const router = useRouter();
-
-  const handleClose = () => {
-    router.push("/");
-  };
 
   return (
     <Container>
@@ -34,7 +32,7 @@ const Header = ({
           </LogoWrapper>
         ) : (
           <>
-            <IconWrapper onClick={() => router.back()}>
+            <IconWrapper onClick={() => (backbuttonPath ? router.push(backbuttonPath) : router.back())}>
               <ChevronLeft size="24" />
             </IconWrapper>
             <Title>{title}</Title>
@@ -60,7 +58,7 @@ const Header = ({
         )}
         {showX && (
           <IconWrapper>
-            <StyledCloseLine size="28" />
+            <StyledCloseLine onClick={onClose} size="28" />
           </IconWrapper>
         )}
       </RightIcons>

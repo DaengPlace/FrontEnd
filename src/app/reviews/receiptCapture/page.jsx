@@ -27,7 +27,6 @@ const ReceiptCapture = () => {
   };
 
   const handleConfirm = () => {
-    alert("이미지가 저장되었습니다!");
     router.push("/reviews/reviewScan");
   };
 

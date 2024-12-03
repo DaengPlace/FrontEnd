@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import { useJsApiLoader } from "@react-google-maps/api";
 import ImageContainer from "@/components/place/placedetail/ImageContainer/ImageContainer";
@@ -14,6 +14,14 @@ import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { cards } from "@/data/cardsData";
 
 const PlaceDetailPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ActualPlaceDetailPage />
+    </Suspense>
+  )
+}
+
+const ActualPlaceDetailPage = () => {
   const searchParams = useSearchParams();
   const id = parseInt(searchParams.get("id"), 10);
   const router = useRouter();

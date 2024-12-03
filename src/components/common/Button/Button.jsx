@@ -13,6 +13,7 @@ const Button = ({
   style,
   className,
   type = "button",
+  disabled = false,
 }) => {
   return (
     <Wrapper style={style}>
@@ -29,6 +30,7 @@ const Button = ({
         onClick={onClick}
         type={type}
         className={className}
+        disabled={disabled}
       >
         {children}
       </StyledButton>
@@ -42,12 +44,14 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   hasImage: PropTypes.bool,
   type: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 Button.defaultProps = {
   isActive: false,
   hasImage: false,
   type: "button",
+  disabled: false,
 };
 
 export default Button;
@@ -65,7 +69,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== "isActive",
+  shouldForwardProp: (prop) => prop !== "isActive" && prop !== "disabled",
 })`
   width: 100%;
   display: flex;
@@ -74,21 +78,25 @@ const StyledButton = styled.button.withConfig({
   padding: 12px;
   font-size: 16px;
   font-weight: bold;
-  color: ${({ $isActive }) => ($isActive ? "#ffffff" : "#999999")};
-  background-color: ${({ $isActive, theme }) =>
-    $isActive ? theme.colors.primary : "#f2f2f2"};
+  color: ${({ $isActive, disabled }) =>
+    disabled ? "#999999" : $isActive ? "#ffffff" : "#999999"};
+  background-color: ${({ $isActive, theme, disabled }) =>
+    disabled ? "#f2f2f2" : $isActive ? theme.colors.primary : "#f2f2f2"};
   border: none;
   border-radius: 8px;
-  cursor: ${({ $isActive, className }) =>
-    $isActive || ["cancel", "edit"].includes(className)
+  cursor: ${({ $isActive, disabled, className }) =>
+    disabled
+      ? "default"
+      : $isActive || ["cancel", "edit"].includes(className)
       ? "pointer"
       : undefined};
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: ${({ $isActive, theme }) =>
-      $isActive ? theme.colors.primaryHover : "#f2f2f2"};
+    background-color: ${({ $isActive, theme, disabled }) =>
+      disabled ? "#f2f2f2" : $isActive ? theme.colors.primaryHover : "#f2f2f2"};
   }
+
   &:disabled {
     background-color: #f2f2f2;
     color: #999999;

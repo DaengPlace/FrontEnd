@@ -269,8 +269,9 @@ const SigninPage = () => {
                   )}
                 />
                 <Button
-                  isActive={!errors.email && watch("email")}
-                  onClick={handleSendVerificationCode}
+                  disabled={isVerified}
+                  isActive={!errors.email && watch("email") && !isVerified}
+                  onClick={isVerified ? null : handleSendVerificationCode}
                   type="button"
                 >
                   {isVerificationSent ? "재발송" : "인증번호 발송"}
@@ -292,10 +293,13 @@ const SigninPage = () => {
                     isValid={!verificationError || timeExpired}
                   />
                   <Button
+                    disabled={isVerified}
                     isActive={
-                      verificationCode.length === 6 && !verificationError
+                      verificationCode.length === 6 &&
+                      !verificationError &&
+                      !isVerified
                     }
-                    onClick={verifyCode}
+                    onClick={isVerified ? null : verifyCode}
                     type="button"
                   >
                     인증확인
@@ -311,6 +315,7 @@ const SigninPage = () => {
                       입력해주세요.
                     </ErrorText>
                   )}
+                  {isVerified && <SuccessText>인증되었습니다.</SuccessText>}
                   <TimerDivider>{formatTime(timer)}</TimerDivider>
                 </PlusContent>
               </InputBox>
@@ -368,6 +373,13 @@ const InputBox = styled.div`
 const ErrorText = styled.span`
   font-size: 1rem;
   color: red;
+  margin-top: 5px;
+  display: block;
+`;
+
+const SuccessText = styled.span`
+  font-size: 1rem;
+  color: green;
   margin-top: 5px;
   display: block;
 `;

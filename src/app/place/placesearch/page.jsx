@@ -33,7 +33,6 @@ const PlaceSearchPage = () => {
   const bottomRef = useRef(null);
   const scrollableRef = useRef(null);
   const searchParams = useSearchParams();
-  const permissionGranted = searchParams.get("permissionGranted") === "true";
   
   const handleOpenBottomSheet = () => setIsBottomSheetOpen(true);
   const handleCloseBottomSheet = () => setIsBottomSheetOpen(false);
@@ -82,7 +81,7 @@ const PlaceSearchPage = () => {
   };
 
   useEffect(() => {
-    if (permissionGranted && navigator.geolocation) {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -93,7 +92,7 @@ const PlaceSearchPage = () => {
         }
       );
     }
-  }, [permissionGranted]);
+  }, []);
 
   const handleMapView = () => {
     if (userLocation) {

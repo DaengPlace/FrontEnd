@@ -63,7 +63,7 @@ const SigninPage = () => {
     if (step < 3) {
       return isCurrentStepValid();
     }
-    return isVerified;
+    return isVerified; // 완료 버튼 활성화 조건을 인증확인 후로 변경
   };
 
   const nextStep = async () => {
@@ -282,14 +282,25 @@ const SigninPage = () => {
             {isVerificationSent && (
               <InputBox>
                 <p>인증번호</p>
-                <Input
-                  ref={verificationRef}
-                  value={verificationCode}
-                  onChange={handleVerificationCodeChange}
-                  placeholder="인증번호 입력 (예: 000000)"
-                  type="text"
-                  isValid={!verificationError || timeExpired}
-                />
+                <BoxContainer>
+                  <Input
+                    ref={verificationRef}
+                    value={verificationCode}
+                    onChange={handleVerificationCodeChange}
+                    placeholder="인증번호 입력 (예: 000000)"
+                    type="text"
+                    isValid={!verificationError || timeExpired}
+                  />
+                  <Button
+                    isActive={
+                      verificationCode.length === 6 && !verificationError
+                    }
+                    onClick={verifyCode}
+                    type="button"
+                  >
+                    인증확인
+                  </Button>
+                </BoxContainer>
                 <PlusContent>
                   {!timeExpired && verificationError && (
                     <ErrorText>인증번호가 올바르지 않습니다.</ErrorText>

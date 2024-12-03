@@ -55,7 +55,7 @@ const PlaceMap = () => {
   const handleGunguChange = (event) => setSelectedGungu(event.target.value);
 
   const handleBackToList = () => {
-    router.push("/place/placesearch?permissionGranted=true"); 
+    router.push("/place/placesearch"); 
   };
 
   const handleCategoryClick = (category) => {

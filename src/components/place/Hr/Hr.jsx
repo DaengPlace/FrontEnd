@@ -9,7 +9,7 @@ export default Hr;
 
 const StyledHr = styled.hr`
   width: 100%;
-  margin-left: 8px;
+  padding : 0 1.25rem;
   margin-bottom: 10px;
   color: #ababab;
   border: none;

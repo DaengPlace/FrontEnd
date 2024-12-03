@@ -42,6 +42,7 @@ const PlacePage = () => {
             alt="내 주변 동반가능시설"
             width={270}
             height={118}
+            layout="responsive"
             style={{
               objectFit: "cover",
               borderRadius: "20px",
@@ -58,6 +59,7 @@ const PlacePage = () => {
             alt="성향별 추천 시설"
             width={270}
             height={118}
+            layout="responsive"
             style={{
               objectFit: "cover",
               borderRadius: "20px",
@@ -70,6 +72,7 @@ const PlacePage = () => {
         </ImageWrapper>
       </ImagesSection>
 
+      <CategoryWrapper>
       <CategorySection>
         <h2>카테고리별 <span>인기 리뷰</span> 🔥</h2>
         <CategorySelector
@@ -81,6 +84,7 @@ const PlacePage = () => {
         <Hr />
         <ReviewList reviews={reviews} />
       </CategorySection>
+      </CategoryWrapper>
       <Hr2 />
       <FooterWrapper>
         <Footer />
@@ -109,9 +113,9 @@ export default PlacePage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width : 100%;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 1.25rem;
   background-color: #f8f8f8;
   position: relative;
 `;
@@ -120,14 +124,13 @@ const ImagesSection = styled.section`
   display: flex;
   justify-content: center;
   gap: 20px;
-  width: 150px;
-  height: 110px;
+  height: 100%;
   position: relative;
   margin: 20px auto;
+  padding : 0 1.25rem;
 `;
 
 const ImageWrapper = styled.div`
-  position: relative;
   cursor: pointer;
 `;
 
@@ -141,13 +144,19 @@ const OverlayText = styled.div.withConfig({
   font-weight: bold;
   color: ${({ dark }) => (dark ? "white" : "black")};
   padding: 5px 10px;
+
+  @media (max-width: 500px) {
+    font-size : 10px;
+  }
 `;
 
+const CategoryWrapper = styled.div`
+  padding: 0 1.25rem;
+`
 const CategorySection = styled.section`
-  margin-top: 10px;
   background: #fff;
-  padding: 20px;
-  border-radius: 20px;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
   border: 1px solid #ababab;
   h2 {
     margin-bottom: 20px;
@@ -159,8 +168,7 @@ const CategorySection = styled.section`
 `;
 
 const FooterWrapper = styled.div`
-  margin-top: auto;
-  width: 100%;
-  margin-left: -20px;
-  padding: 10px 0;
+  margin-top: 0.75rem;
+  width: 100%; 
+  padding: 0 1.25rem;
 `;

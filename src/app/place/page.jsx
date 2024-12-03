@@ -21,7 +21,6 @@ const PlacePage = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-  const [isLocationPermissionGranted, setIsLocationPermissionGranted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,11 +31,14 @@ const PlacePage = () => {
     return null;
   }
 
+  const handleImageClick = () => {
+    router.push(`/place/placesearch`);
+  }
   return (
     <Container>
       <Banner />
       <ImagesSection>
-        <ImageWrapper onClick={() => setIsBottomSheetOpen(true)}>
+        <ImageWrapper onClick={handleImageClick}>
           <Image
             src="/assets/place/banner3.svg"
             alt="내 주변 동반가능시설"
@@ -53,7 +55,7 @@ const PlacePage = () => {
             <div>찾아보기</div>
           </OverlayText>
         </ImageWrapper>
-        <ImageWrapper onClick={() => router.push('/recommend')}>
+        <ImageWrapper>
           <Image
             src="/assets/place/banner2.svg"
             alt="성향별 추천 시설"
@@ -89,21 +91,6 @@ const PlacePage = () => {
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
-      {isBottomSheetOpen && (
-        <BottomSheet
-          title={Permission.args.title}
-          content={Permission.args.content}
-          cancelText={Permission.args.cancelText}
-          confirmText={Permission.args.confirmText}
-          onClose={() => setIsBottomSheetOpen(false)}
-          onConfirm={() => {
-            setIsLocationPermissionGranted(true);
-            setIsBottomSheetOpen(false);
-            router.push(`place/placesearch?permissionGranted=true`);
-          }}
-          
-        />
-      )}
     </Container>
   );
 };

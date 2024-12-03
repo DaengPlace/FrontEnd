@@ -316,7 +316,9 @@ const SigninPage = () => {
                     </ErrorText>
                   )}
                   {isVerified && <SuccessText>인증되었습니다.</SuccessText>}
-                  <TimerDivider>{formatTime(timer)}</TimerDivider>
+                  <TimerDivider>
+                    {!isVerified && formatTime(timer)}
+                  </TimerDivider>
                 </PlusContent>
               </InputBox>
             )}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,6 +16,14 @@ import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const PlaceSearchPage = () => {
+  return (
+    <Suspense>
+      <ActualPlaceSearchPage />
+    </Suspense>
+  )
+}
+
+const ActualPlaceSearchPage = () => {
   const router = useRouter();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedSido, setSelectedSido] = useState("");

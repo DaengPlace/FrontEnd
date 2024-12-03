@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useJsApiLoader } from "@react-google-maps/api";
@@ -15,6 +15,14 @@ import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 
 const PlaceMap = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ActualPlaceMap />
+    </Suspense>
+  )
+}
+
+const ActualPlaceMap = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 

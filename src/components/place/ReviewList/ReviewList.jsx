@@ -24,7 +24,7 @@ const ReviewList = ({ reviews }) => {
               <hr
                 style={{
                   width: "138%",
-                  marginLeft: "-30px",
+                  marginLeft: "-35px",
                   marginTop: "15px",
                   color: "#ABABAB",
                 }}
@@ -46,7 +46,7 @@ const ReviewList = ({ reviews }) => {
 };
 
 const Container = styled.div`
-  max-width: 600px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;

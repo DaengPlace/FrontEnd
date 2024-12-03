@@ -21,7 +21,6 @@ const PlacePage = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-  const [isLocationPermissionGranted, setIsLocationPermissionGranted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,16 +31,20 @@ const PlacePage = () => {
     return null;
   }
 
+  const handleImageClick = () => {
+    router.push(`/place/placesearch`);
+  }
   return (
     <Container>
       <Banner />
       <ImagesSection>
-        <ImageWrapper onClick={() => setIsBottomSheetOpen(true)}>
+        <ImageWrapper onClick={handleImageClick}>
           <Image
             src="/assets/place/banner3.svg"
             alt="내 주변 동반가능시설"
             width={270}
             height={118}
+            layout="responsive"
             style={{
               objectFit: "cover",
               borderRadius: "20px",
@@ -52,12 +55,13 @@ const PlacePage = () => {
             <div>찾아보기</div>
           </OverlayText>
         </ImageWrapper>
-        <ImageWrapper onClick={() => router.push('/recommend')}>
+        <ImageWrapper>
           <Image
             src="/assets/place/banner2.svg"
             alt="성향별 추천 시설"
             width={270}
             height={118}
+            layout="responsive"
             style={{
               objectFit: "cover",
               borderRadius: "20px",
@@ -70,6 +74,7 @@ const PlacePage = () => {
         </ImageWrapper>
       </ImagesSection>
 
+      <CategoryWrapper>
       <CategorySection>
         <h2>카테고리별 <span>인기 리뷰</span> 🔥</h2>
         <CategorySelector
@@ -81,25 +86,11 @@ const PlacePage = () => {
         <Hr />
         <ReviewList reviews={reviews} />
       </CategorySection>
+      </CategoryWrapper>
       <Hr2 />
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
-      {isBottomSheetOpen && (
-        <BottomSheet
-          title={Permission.args.title}
-          content={Permission.args.content}
-          cancelText={Permission.args.cancelText}
-          confirmText={Permission.args.confirmText}
-          onClose={() => setIsBottomSheetOpen(false)}
-          onConfirm={() => {
-            setIsLocationPermissionGranted(true);
-            setIsBottomSheetOpen(false);
-            router.push(`place/placesearch?permissionGranted=true`);
-          }}
-          
-        />
-      )}
     </Container>
   );
 };
@@ -109,21 +100,24 @@ export default PlacePage;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width : 100%;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 20px;
   background-color: #f8f8f8;
+  position: relative;
 `;
 
 const ImagesSection = styled.section`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 20px;
-  margin-top: 20px;
+  height: 100%;
+  position: relative;
+  margin: 20px auto;
+  padding : 0 1.25rem;
 `;
 
 const ImageWrapper = styled.div`
-  position: relative;
   cursor: pointer;
 `;
 
@@ -137,13 +131,19 @@ const OverlayText = styled.div.withConfig({
   font-weight: bold;
   color: ${({ dark }) => (dark ? "white" : "black")};
   padding: 5px 10px;
+
+  @media (max-width: 500px) {
+    font-size : 10px;
+  }
 `;
 
+const CategoryWrapper = styled.div`
+  padding: 0 1.25rem;
+`
 const CategorySection = styled.section`
-  margin-top: 10px;
   background: #fff;
-  padding: 20px;
-  border-radius: 20px;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
   border: 1px solid #ababab;
   h2 {
     margin-bottom: 20px;
@@ -155,8 +155,7 @@ const CategorySection = styled.section`
 `;
 
 const FooterWrapper = styled.div`
-  margin-top: auto;
-  width: 100%;
-  margin-left: -20px;
-  padding: 10px 0;
+  margin-top: 0.75rem;
+  width: 100%; 
+  padding: 0 1.25rem;
 `;

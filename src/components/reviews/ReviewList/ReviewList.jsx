@@ -10,20 +10,26 @@ import { useRouter } from "next/navigation";
 const ReviewList = ({ reviews }) => {
     const router = useRouter();
     const [likedReviews, setLikedReviews] = useState({});
+    const [dropdownStates, setDropdownStates] = useState({});
 
     const handleCardClick = () => {
         router.push("/reviews/ReviewDetail")
     }
-    const toggleLike = (id) => {
-        setLikedReviews((prev) => ({
+
+    const toggleLike = (id, event) => {
+      event.stopPropagation(); 
+      setLikedReviews((prev) => ({
         ...prev,
         [id]: !prev[id],
-        }));
+      }));
     };
-    const [isOpen, setIsOpen] = useState(false);
 
-    const toggleDropdown = () => {
-        setIsOpen((prev) => !prev);
+    const toggleDropdown = (id, event) => {
+      event.stopPropagation();
+      setDropdownStates((prev) => ({
+        ...prev,
+        [id]: !prev[id],
+      }));
     };
     
   return (
@@ -45,21 +51,21 @@ const ReviewList = ({ reviews }) => {
             <Author>{review.author}</Author>
             <span style={{marginBottom:"20px"}}>|</span>
             <Date>{review.date}</Date>
-            <LikeButton onClick={() => toggleLike(review.id)}>
+            <LikeButton onClick={(event) => toggleLike(review.id, event)}>
               {likedReviews[review.id] ? (
                 <FavoriteIcon style={{ color: "red" }} />
               ) : (
                 <FavoriteBorderIcon style={{ color: "#ccc" }} />
               )}
             </LikeButton>
-            <IconButton onClick={toggleDropdown}>
+            <IconButton onClick={(event) => toggleDropdown(review.id, event)}>
                 <MoreVertIcon />
             </IconButton>
-            {isOpen && (
-                <Menu>
+            {dropdownStates[review.id] && (
+              <Menu>
                 <MenuItem>수정</MenuItem>
                 <MenuItem>삭제</MenuItem>
-                </Menu>
+              </Menu>
             )}
             </CardHeader>
             <RatingContainer>

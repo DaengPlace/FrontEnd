@@ -31,7 +31,7 @@ const ActualPlaceDetailPage = () => {
   const [center, setCenter] = useState(null);
   const [address, setAddress] = useState("");
   const [isLiked, setIsLiked] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState(null); // 파일 상태 관리
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   const selectedCard = cards.find((card) => card.id === id);
   if (!selectedCard) {
@@ -50,6 +50,7 @@ const ActualPlaceDetailPage = () => {
         )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
       );
       const data = await response.json();
+
       if (data.status === "OK" && data.results.length > 0) {
         const { lat, lng } = data.results[0].geometry.location;
         setCenter({ lat, lng });
@@ -140,7 +141,7 @@ const ActualPlaceDetailPage = () => {
               onClose={() => setIsReviewBottomSheetOpen(false)}
               onConfirm={() => {
                 setIsReviewBottomSheetOpen(false);
-                router.push("/reviews/reviewScan");
+                router.push("/reviews/receiptCapture");
               }}
               cancelText="사진 업로드"
               confirmText="영수증 촬영"

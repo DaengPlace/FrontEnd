@@ -10,6 +10,7 @@ const Banner = () => {
         alt="야외 공간 있는 카페"
         width={600}
         height={400}
+        layout="responsive"
       />
     </Section>
   );
@@ -23,6 +24,5 @@ const Section = styled.section`
 
 const StyledImage = styled(Image)`
   object-fit: cover;
-  right: 20px;
 `;
 

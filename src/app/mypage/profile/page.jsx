@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Header from "@/components/common/Header/Header";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
-import SelectBox from "@/components/common/Selectbox/Selectbox";
+import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Image from "next/image";
 

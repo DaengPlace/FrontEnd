@@ -17,7 +17,7 @@ const BottomSheet = ({
   return (
     <Overlay>
       <Sheet>
-        <CloseButton onClick={() => setIsBottomSheetVisible(false)}>
+        <CloseButton onClick={onClose}>
           &times;
         </CloseButton>
         {title && <Title>{title}</Title>}

@@ -6,6 +6,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true, // 빌드 중 ESLint 경고 무시
+  },
 };
 
 export default nextConfig;

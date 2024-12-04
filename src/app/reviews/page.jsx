@@ -51,6 +51,7 @@ const ReviewPage = () => {
           showHomeIcon={WithMapIcon.args.showHomeIcon}
           showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
           showMapIcon={WithMapIcon.args.showMapIcon}
+          backbuttonPath={`/place/placedetail?id=1`}
         />
       <Container ref={containerRef}>
         <PageHeader title="92버터샵" reviewCount={reviews.length} />

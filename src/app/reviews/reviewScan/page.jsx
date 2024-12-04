@@ -50,7 +50,7 @@ const ReviewScanPage = () => {
         </Footer>
         {isModalOpen && (
         <Modal
-          title='성향테스트를 중단하시겠습니까?'
+          title='리뷰작성을 중단하시겠습니까?'
           message={
             <>
               지금까지 작성된 정보는<br />
@@ -59,7 +59,7 @@ const ReviewScanPage = () => {
           }
           cancelText='나가기'
           confirmText='계속 작성'
-          onCancel={() => router.back()}
+          onCancel={() => router.push("/reviews")}
           onConfirm={() => setIsModalOpen(false)}
         />
       )}

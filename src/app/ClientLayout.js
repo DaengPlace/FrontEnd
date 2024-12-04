@@ -31,6 +31,7 @@ export default function ClientLayout({ children }) {
     "/reviews/reviewScan",
     "/reviews/reviewsInput",
     "/reviews/receiptCapture",
+    "/reviews",
   ];
   const noHeaderNavPaths = [
     "/main",

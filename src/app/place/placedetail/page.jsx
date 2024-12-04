@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import styled from "styled-components";
 import { useJsApiLoader } from "@react-google-maps/api";
 import ImageContainer from "@/components/place/placedetail/ImageContainer/ImageContainer";
@@ -31,7 +31,7 @@ const ActualPlaceDetailPage = () => {
   const [center, setCenter] = useState(null);
   const [address, setAddress] = useState("");
   const [isLiked, setIsLiked] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const fileInputRef = useRef(null);
 
   const selectedCard = cards.find((card) => card.id === id);
   
@@ -86,18 +86,16 @@ const ActualPlaceDetailPage = () => {
     setIsReviewBottomSheetOpen(true);
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setUploadedFile(file);
-      alert(`파일이 업로드되었습니다: ${file.name}`);
-    }
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
   };
 
-  const handleCancel = () => {
-    const fileInput = document.getElementById("file-upload");
-    if (fileInput) {
-      fileInput.click();
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const selectedFile = files[0];
+      setIsReviewBottomSheetOpen(false);
+      router.push("/reviews/reviewScan");
     }
   };
 
@@ -141,33 +139,21 @@ const ActualPlaceDetailPage = () => {
                   <p>해당 시설에서 발급받은 영수증을 스캔해주세요</p>
                 </StyledContent>
               }
-              onClose={() => setIsReviewBottomSheetOpen(false)}
+              onClose={handleButtonClick}
               onConfirm={() => {
                 setIsReviewBottomSheetOpen(false);
                 router.push("/reviews/receiptCapture");
               }}
               cancelText="사진 업로드"
               confirmText="영수증 촬영"
-              cancelHandler={(e) => {
-                e.stopPropagation(); 
-                const fileInput = document.getElementById("file-upload");
-                if (fileInput) {
-                  fileInput.click(); 
-                }
-              }}
             />
             <HiddenFileInput
-              type="file"
-              id="file-upload"
-              accept="image/*"
-              onChange={(event) => {
-                const file = event.target.files[0];
-                if (file) {
-                  setUploadedFile(file);
-                  alert(`파일이 업로드되었습니다: ${file.name}`);
-                }
-              }}
-            />
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            multiple
+            onChange={handleFileChange}
+          />
           </>
         )}
       </ScrollContainer>

@@ -93,7 +93,7 @@ const ReviewsInputPage = () => {
           }
           cancelText='나가기'
           confirmText='계속 작성'
-          onCancel={() => router.back()}
+          onCancel={() => router.push("/reviews")}
           onConfirm={() => setIsModalOpen(false)}
         />
       )}

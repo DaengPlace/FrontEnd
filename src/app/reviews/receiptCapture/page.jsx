@@ -10,6 +10,7 @@ const ReceiptCapture = () => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState("user");
+  const [isInitialized, setIsInitialized] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -21,7 +22,19 @@ const ReceiptCapture = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (webcamRef.current) {
+      console.log("facingMode:", facingMode);
+      console.log("webcamRef:", webcamRef.current);
+
+      const hasUserMedia = webcamRef.current?.state?.hasUserMedia;
+      console.log("Webcam initialized:", hasUserMedia);
+      setIsInitialized(hasUserMedia); 
+    }
+  }, [facingMode, webcamRef]);
+
   const captureImage = () => {
+
     const imageSrc = webcamRef.current.getScreenshot();
     const img = new Image();
     img.src = imageSrc;
@@ -55,7 +68,9 @@ const ReceiptCapture = () => {
   };
 
   const handleConfirm = () => {
-    router.push("/reviews/reviewScan");
+    if (capturedImage) {
+      router.push("/reviews/reviewScan");
+    }
   };
 
   return (
@@ -76,7 +91,7 @@ const ReceiptCapture = () => {
               <Webcam
                 ref={webcamRef}
                 audio={false}
-                screenshotFormat="image/jpeg"
+                screenshotFormat="image/png"
                 videoConstraints={{
                   facingMode: facingMode,
                 }}

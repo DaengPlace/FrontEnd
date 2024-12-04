@@ -23,7 +23,35 @@ const ReceiptCapture = () => {
 
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    setCapturedImage(imageSrc);
+    const img = new Image();
+    img.src = imageSrc;
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const greenBoxWidth = img.width * 0.435;
+      const greenBoxHeight = img.height * 0.7;
+      const greenBoxX = img.width * 0.29;
+      const greenBoxY = img.height * 0.3 / 2;
+
+      canvas.width = greenBoxWidth;
+      canvas.height = greenBoxHeight;
+
+      ctx.drawImage(
+        img,
+        greenBoxX,
+        greenBoxY,
+        greenBoxWidth,
+        greenBoxHeight,
+        0,
+        0,
+        greenBoxWidth,
+        greenBoxHeight
+      );
+
+      setCapturedImage(canvas.toDataURL("image/jpeg"));
+    };
   };
 
   const handleConfirm = () => {
@@ -38,8 +66,8 @@ const ReceiptCapture = () => {
           <PreviewContainer>
             <img src={capturedImage} alt="Captured Receipt" />
             <ButtonContainer>
-              <Button onClick={() => setCapturedImage(null)}>다시 찍기</Button>
-              <Button onClick={handleConfirm}>확인</Button>
+              <Button className="retry" onClick={() => setCapturedImage(null)}>다시 찍기</Button>
+              <Button className="confirm" onClick={handleConfirm}>확인</Button>
             </ButtonContainer>
           </PreviewContainer>
         ) : (
@@ -62,7 +90,7 @@ const ReceiptCapture = () => {
                 <GreenBox />
               </Overlay>
             </WebcamFullContainer>
-            <Button onClick={captureImage}>촬영</Button>
+            <CaptureButton onClick={captureImage}>촬영</CaptureButton>
           </>
         )}
       </Container>
@@ -162,12 +190,33 @@ const PreviewContainer = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: row;
   gap: 10px;
+  margin-top: 20px;
 `;
 
 const Button = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: ${({ className }) =>
+    className === "confirm" ? "#0019F4" : "#0019F4"};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ className }) =>
+      className === "confirm" ? "#0056b3" : "#0056b3"};
+  }
+`;
+
+
+const CaptureButton = styled.button`
   position: absolute;
   bottom: 5%;
+  width: 20%;
+  height: 5%;
   padding: 10px 20px;
   font-size: 16px;
   background-color: ${({ theme }) => theme.colors.primary};
@@ -175,8 +224,6 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100px;
-  height: 50px;
 
   &:hover {
     background-color: #0056b3;

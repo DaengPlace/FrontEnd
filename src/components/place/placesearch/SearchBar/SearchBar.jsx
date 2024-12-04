@@ -22,8 +22,8 @@ const SearchBarContainer = styled.div`
   cursor: pointer;
   margin-left: 20px;
   &:hover div {
-    background-color: ${({ theme }) => theme.colors.divider}; /* 호버 시 배경색 변경 */
-    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+    background-color: ${({ theme }) => theme.colors.divider};
+    transition: background-color 0.3s ease;
   }
 `;
 
@@ -33,7 +33,7 @@ const SearchWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.deactivate};
   border-radius: 30px;
   padding: 10px 16px;
-  width: 560px;
+  width: 95%;
   height: 80px;
 `;
 

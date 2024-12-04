@@ -70,6 +70,8 @@ const RatingContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  width: 100%;
+  position: relative;
 `;
 
 const StarIcon = styled(Image)`
@@ -92,7 +94,7 @@ const ViewAllButton = styled.button`
   background: none;
   border: none;
   font-size: 14px;
-  left: 350px;
+  left: 63%;
   top: 3px;
   color: #000000;
   cursor: pointer;

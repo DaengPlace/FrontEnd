@@ -18,9 +18,9 @@ const Button = styled.button`
   cursor: pointer;
   font-size: 15px;
   font-weight: bold;
-  width: 138px;
-  height: 36px;
-  top: -20px;
+  width: 27%;
+  height: 4%;
+  top: -1.25rem;
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};

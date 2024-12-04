@@ -31,6 +31,7 @@ const ActualPlaceDetailPage = () => {
   const [center, setCenter] = useState(null);
   const [address, setAddress] = useState("");
   const [isLiked, setIsLiked] = useState(false);
+  const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
 
   const selectedCard = cards.find((card) => card.id === id);
@@ -139,7 +140,8 @@ const ActualPlaceDetailPage = () => {
                   <p>해당 시설에서 발급받은 영수증을 스캔해주세요</p>
                 </StyledContent>
               }
-              onClose={handleButtonClick}
+              onClose={() => setIsReviewBottomSheetOpen(false)}
+              onCancel={handleButtonClick}
               onConfirm={() => {
                 setIsReviewBottomSheetOpen(false);
                 router.push("/reviews/receiptCapture");

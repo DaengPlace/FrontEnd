@@ -9,6 +9,7 @@ const BottomSheet = ({
   content,
   onClose,
   onConfirm,
+  onCancel,
   cancelText,
   confirmText,
   setIsBottomSheetVisible,
@@ -24,7 +25,7 @@ const BottomSheet = ({
         {content && <Content>{content}</Content>}
         <ButtonContainer>
           {cancelText && (
-            <Button className="cancel" onClick={onClose}>
+            <Button className="cancel" onClick={onCancel || onClose}>
               {cancelText}
             </Button>
           )}
@@ -47,6 +48,7 @@ BottomSheet.propTypes = {
   content: PropTypes.node,
   onClose: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
   cancelText: PropTypes.string,
   confirmText: PropTypes.string,
   setIsBottomSheetVisible: PropTypes.func,
@@ -58,6 +60,7 @@ BottomSheet.defaultProps = {
   content: null,
   cancelText: "Cancel",
   confirmText: "Confirm",
+  onCancel: null,
 };
 
 export default BottomSheet;

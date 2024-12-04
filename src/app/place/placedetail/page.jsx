@@ -34,14 +34,11 @@ const ActualPlaceDetailPage = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const selectedCard = cards.find((card) => card.id === id);
-  if (!selectedCard) {
-    return <NotFound>선택한 장소의 정보를 찾을 수 없습니다.</NotFound>;
-  }
-
+  
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
-
+  
   const fetchCoordinates = async (address) => {
     try {
       const response = await fetch(
@@ -50,7 +47,7 @@ const ActualPlaceDetailPage = () => {
         )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
       );
       const data = await response.json();
-
+      
       if (data.status === "OK" && data.results.length > 0) {
         const { lat, lng } = data.results[0].geometry.location;
         setCenter({ lat, lng });
@@ -61,13 +58,19 @@ const ActualPlaceDetailPage = () => {
       console.error("Error fetching coordinates:", error);
     }
   };
-
+  
   useEffect(() => {
-    setIsClient(true);
-    setAddress(selectedCard.address);
-    fetchCoordinates(selectedCard.address);
-  }, []);
-
+    if (selectedCard) {
+      setIsClient(true);
+      setAddress(selectedCard.address);
+      fetchCoordinates(selectedCard.address);
+    }
+  }, [selectedCard]);
+  
+  if (!selectedCard) {
+    return <NotFound>선택한 장소의 정보를 찾을 수 없습니다.</NotFound>;
+  }
+  
   if (!isClient || !isLoaded) {
     return null;
   }

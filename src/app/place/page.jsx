@@ -34,6 +34,10 @@ const PlacePage = () => {
   const handleImageClick = () => {
     router.push(`/place/placesearch`);
   }
+
+  const handleImageClick2 = () => {
+    router.push(`/recommend`);
+  }
   return (
     <Container>
       <Banner />
@@ -55,7 +59,7 @@ const PlacePage = () => {
             <div>찾아보기</div>
           </OverlayText>
         </ImageWrapper>
-        <ImageWrapper>
+        <ImageWrapper onClick={handleImageClick2}>
           <Image
             src="/assets/place/banner2.svg"
             alt="성향별 추천 시설"

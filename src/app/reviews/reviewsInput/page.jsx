@@ -84,7 +84,7 @@ const ReviewsInputPage = () => {
         <SubmitButton>등록</SubmitButton>
         {isModalOpen && (
         <Modal
-          title='성향테스트를 중단하시겠습니까?'
+          title='리뷰작성을 중단하시겠습니까?'
           message={
             <>
               지금까지 작성된 정보는<br />

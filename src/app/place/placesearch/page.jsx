@@ -188,6 +188,7 @@ const ActualPlaceSearchPage = () => {
           "야외공간",
           "무게 제한 없음",
           "애견 동반 요금 없음",
+          "영업중"
         ]}
         selectedFilters={selectedFilters}
         hoveredFilter={hoveredFilter}

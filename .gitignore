@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+.babelrc
+.eslintrc.json
 
 # debug
 npm-debug.log*

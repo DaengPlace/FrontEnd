@@ -73,9 +73,13 @@ const ReceiptCapture = () => {
     }
   };
 
+  const handleCloseClick = () => {
+    router.back();
+  }
+
   return (
     <>
-      <Header title="영수증 스캔" showX={NoTitleHeader.args.showX} />
+      <Header title="영수증 스캔" showX={NoTitleHeader.args.showX} onClose={handleCloseClick}/>
       <Container>
         {capturedImage ? (
           <PreviewContainer>

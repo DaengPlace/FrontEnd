@@ -48,7 +48,9 @@ const ReviewPage = () => {
     <>
         <Header
           title="리뷰 전체보기"
-          showCloseButton={true}
+          showHomeIcon={WithMapIcon.args.showHomeIcon}
+          showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
+          showMapIcon={WithMapIcon.args.showMapIcon}
         />
       <Container ref={containerRef}>
         <PageHeader title="92버터샵" reviewCount={reviews.length} />

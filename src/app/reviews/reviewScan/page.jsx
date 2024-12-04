@@ -1,14 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import { useRouter } from "next/navigation";
+import Modal from '@/components/common/Modal/Modal';
 import Header from "@/components/common/Header/Header";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 
 const ReviewScanPage = () => {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleConfirm = () => {
     router.push("/reviews/reviewsInput");
@@ -16,7 +18,7 @@ const ReviewScanPage = () => {
 
   return (
     <>
-      <Header title="리뷰 정보 확인" showX={NoTitleHeader.args.showX} />
+      <Header title="리뷰 정보 확인" showX={NoTitleHeader.args.showX} onClose={() => setIsModalOpen(true)}/>
       <Container>
         <Content>
           <Subtitle>
@@ -46,6 +48,21 @@ const ReviewScanPage = () => {
             확인
           </Button>
         </Footer>
+        {isModalOpen && (
+        <Modal
+          title='성향테스트를 중단하시겠습니까?'
+          message={
+            <>
+              지금까지 작성된 정보는<br />
+              저장되지 않습니다.
+            </>
+          }
+          cancelText='나가기'
+          confirmText='계속 작성'
+          onCancel={() => router.back()}
+          onConfirm={() => setIsModalOpen(false)}
+        />
+      )}
       </Container>
     </>
   );

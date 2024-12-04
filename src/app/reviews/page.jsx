@@ -78,7 +78,7 @@ export default ReviewPage;
 const Container = styled.div`
   padding: 16px;
   padding-top: 70px;
-  height: calc(100vh - 50px); 
+  height: 100vh;
   overflow-y: auto;
   -ms-overflow-style: none; 
   scrollbar-width: none; 
@@ -89,7 +89,7 @@ const Container = styled.div`
 
 const ScrollToTopButton = styled.button`
   position: fixed;
-  bottom: 90px;
+  bottom: 20px;
   right: calc(50% - 280px); 
   width: 60px;
   height: 60px;

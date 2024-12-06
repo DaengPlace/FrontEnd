@@ -7,6 +7,14 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
+  const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
+  const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
+  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+  const handleKakaoLogin = () => {
+    window.location.href = KAKAO_URL;
+  };
+
   return (
     <Container>
       <TextBox>
@@ -29,7 +37,7 @@ export default function Home() {
           width={300}
           height={50}
           alt="kakao_login_btn"
-          onClick={() => router.push("/signin")} // 임시
+          onClick={handleKakaoLogin}
         />
         <Image
           src="/assets/common/google_login_btn.svg"

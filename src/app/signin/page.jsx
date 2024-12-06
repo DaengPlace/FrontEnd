@@ -63,7 +63,7 @@ const SigninPage = () => {
     if (step < 3) {
       return isCurrentStepValid();
     }
-    return isVerified; // 완료 버튼 활성화 조건을 인증확인 후로 변경
+    return isVerified;
   };
 
   const nextStep = async () => {

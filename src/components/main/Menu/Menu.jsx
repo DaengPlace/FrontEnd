@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import Image from "next/image";
 import React from 'react';
+import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 
 const Menu = () => {
   return (
@@ -20,11 +21,13 @@ const Menu = () => {
         </Link>
       </MenuItem>
 
-      <MenuItem>
-        <Link href='/mypage/bookmark'>
-            <MenuImage src='/assets/mainpage/bookmarkIcon.png' alt="bookmark icon" width={80} height={80} /><MenuDescription>즐겨찾기</MenuDescription>
-        </Link>
-      </MenuItem>
+      <AuthGuard>
+        <MenuItem>
+          <Link href='/mypage/bookmark'>
+              <MenuImage src='/assets/mainpage/bookmarkIcon.png' alt="bookmark icon" width={80} height={80} /><MenuDescription>즐겨찾기</MenuDescription>
+          </Link>
+        </MenuItem>
+      </AuthGuard>
     </MenuContainer>
   );
 };

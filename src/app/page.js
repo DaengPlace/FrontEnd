@@ -17,12 +17,6 @@ export default function Home() {
         <Title>댕댕플레이스</Title>
       </TextBox>
 
-      <Divider>
-        <hr />
-        <span>SNS 계정으로 로그인</span>
-        <hr />
-      </Divider>
-
       <ButtonBox>
         <Image
           src="/assets/common/kakao_login_btn.svg"
@@ -30,15 +24,19 @@ export default function Home() {
           height={50}
           alt="kakao_login_btn"
           onClick={() => router.push("/signin")} // 임시
-        />
+          />
         <Image
           src="/assets/common/google_login_btn.svg"
           width={300}
           height={50}
           alt="google_login_btn"
           onClick={() => router.push("/signin")} // 임시
-        />
+          />
       </ButtonBox>
+
+      <WithoutLoginBtn onClick={() => router.push("/main")}>
+        <span>로그인 없이 시작하기</span>
+      </WithoutLoginBtn>
     </Container>
   );
 }
@@ -63,24 +61,6 @@ const TextBox = styled.div`
   margin-top: 10rem;
 `;
 
-const Divider = styled.div`
-  display: flex;
-  align-items: center;
-  width: 50%;
-  gap: 10px;
-
-  hr {
-    flex: 1;
-    border: none;
-    border-top: 1px solid ${({ theme }) => theme.colors.white};
-  }
-  span {
-    font-size: 0.9rem;
-    color: ${({ theme }) => theme.colors.white};
-    white-space: nowrap;
-  }
-`;
-
 const ButtonBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -90,15 +70,15 @@ const ButtonBox = styled.div`
     cursor: pointer;
   }
 `;
-
+  
 const SubTitle = styled.h2`
   text-align: center;
   font-size: 1.4rem;
   font-family: "Do Hyeon", sans-serif !important;
 
   p {
-    margin: 0;
-    font-family: "Do Hyeon", sans-serif;
+  margin: 0;
+  font-family: "Do Hyeon", sans-serif;
   }
 `;
 
@@ -108,3 +88,26 @@ const Title = styled.h1`
   font-family: "Gugi", sans-serif;
   font-weight: 400;
 `;
+
+const WithoutLoginBtn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+
+  span {
+    font-size: 0.9rem;
+    color: ${({ theme }) => theme.colors.white};
+    text-align: center;
+    position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: ${({ theme }) => theme.colors.white};
+    margin-top: 1px;
+  }
+}`;

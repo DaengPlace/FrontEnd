@@ -1,4 +1,5 @@
 import ClientLayout from "@/app/ClientLayout";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata = {
   title: "댕댕플레이스",
@@ -9,7 +10,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body>
-        <ClientLayout>{children}</ClientLayout>
+        <AuthProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </AuthProvider>
       </body>
     </html>
   );

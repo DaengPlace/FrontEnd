@@ -12,6 +12,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { cards } from "@/data/cardsData";
+import axios from "axios";
+import useReviewStore from "@/stores/reviewStore";
 
 const PlaceDetailPage = () => {
   return (
@@ -33,7 +35,7 @@ const ActualPlaceDetailPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
-
+  const { setPlaceName, setVisitDate } = useReviewStore();
   const selectedCard = cards.find((card) => card.id === id);
   
   const { isLoaded } = useJsApiLoader({
@@ -62,6 +64,7 @@ const ActualPlaceDetailPage = () => {
   
   useEffect(() => {
     if (selectedCard) {
+      setPlaceName(selectedCard.title);
       setIsClient(true);
       setAddress(selectedCard.address);
       fetchCoordinates(selectedCard.address);
@@ -91,12 +94,61 @@ const ActualPlaceDetailPage = () => {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const selectedFile = files[0];
-      setIsReviewBottomSheetOpen(false);
-      router.push("/reviews/reviewScan");
+  
+      try {
+        const formData = new FormData();
+        formData.append("file", selectedFile, selectedFile.name);
+  
+        const uploadResponse = await axios.post(
+          "http://localhost:8080/ocr/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+  
+        if (uploadResponse.status === 200) {
+          const filePath = uploadResponse.data;
+          console.log("File uploaded successfully. Path:", filePath);
+  
+          const analyzeResponse = await axios.post(
+            "http://localhost:8080/ocr/analyze",
+            null,
+            {
+              params: { filePath: filePath },
+            }
+          );
+  
+          if (analyzeResponse.status === 200) {
+            const extractedTexts = analyzeResponse.data;
+            const combinedText = extractedTexts.join("");
+            const placeName = useReviewStore.getState().placeName;
+            console.log("Extracted texts:", combinedText);
+  
+            if (combinedText.includes(placeName)) {
+              const visitDateMatch = combinedText.match(/\d{4}[./-]\d{2}[./-]\d{2}/); 
+              const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
+              console.log("Extracted visit date:", visitDate);
+              setVisitDate(visitDate);
+              router.push("/reviews/reviewScan");
+            } else {
+              alert("해당 장소 방문 기록이 확인되지 않았습니다.");
+            }
+          } else {
+            console.error("Failed to analyze text:", analyzeResponse.statusText);
+          }
+        } else {
+          console.error("Failed to upload image:", uploadResponse.statusText);
+        }
+      } catch (error) {
+        console.error("Error during OCR process:", error);
+      }
     }
   };
 

@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import InfoIcon from '@mui/icons-material/Info';
 import useReviewStore from "@/stores/reviewStore";
+
 const PageHeader = ({ reviewCount }) => {
   const [isPolicyVisible, setIsPolicyVisible] = useState(false);
-  const { placeName } = useReviewStore();
+  const { placeName, category } = useReviewStore();
 
   const togglePolicySheet = () => {
     setIsPolicyVisible((prev) => !prev);
@@ -13,7 +14,7 @@ const PageHeader = ({ reviewCount }) => {
 
   return (
     <>
-      <CategoryBadge>반려동물용품점</CategoryBadge>
+      <CategoryBadge>{category}</CategoryBadge>
       <HeaderContainer>
         <HeaderTitle>{placeName} 리뷰 ({reviewCount})</HeaderTitle>
         <PolicyButton onClick={togglePolicySheet}>

@@ -28,7 +28,7 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
           const formData = new FormData();
           formData.append("file", selectedFile, "receipt.jpg");
   
-          const uploadResponse = await axios.post("http://localhost:8080/ocr/upload", formData, {
+          const uploadResponse = await axios.post("https://api.daengplace.com/ocr/upload", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -38,7 +38,7 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
             const filePath = uploadResponse.data;
   
             const analyzeResponse = await axios.post(
-              "http://localhost:8080/ocr/analyze",
+              "https://api.daengplace.com/ocr/analyze",
               null,
               { params: { filePath: filePath } }
             );

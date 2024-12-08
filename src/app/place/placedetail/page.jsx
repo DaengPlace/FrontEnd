@@ -35,9 +35,9 @@ const ActualPlaceDetailPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
-  const { setPlaceName, setVisitDate } = useReviewStore();
+  const { setPlaceName, setVisitDate, setCategory } = useReviewStore();
   const selectedCard = cards.find((card) => card.id === id);
-  
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
@@ -65,6 +65,7 @@ const ActualPlaceDetailPage = () => {
   useEffect(() => {
     if (selectedCard) {
       setPlaceName(selectedCard.title);
+      setCategory(selectedCard.category);
       setIsClient(true);
       setAddress(selectedCard.address);
       fetchCoordinates(selectedCard.address);
@@ -102,9 +103,9 @@ const ActualPlaceDetailPage = () => {
       try {
         const formData = new FormData();
         formData.append("file", selectedFile, selectedFile.name);
-  
+
         const uploadResponse = await axios.post(
-          "http://localhost:8080/ocr/upload",
+          "https://api.daengplace.com/ocr/upload",
           formData,
           {
             headers: {
@@ -118,7 +119,7 @@ const ActualPlaceDetailPage = () => {
           console.log("File uploaded successfully. Path:", filePath);
   
           const analyzeResponse = await axios.post(
-            "http://localhost:8080/ocr/analyze",
+            "https://api.daengplace.com/ocr/analyze",
             null,
             {
               params: { filePath: filePath },
@@ -127,6 +128,7 @@ const ActualPlaceDetailPage = () => {
   
           if (analyzeResponse.status === 200) {
             const extractedTexts = analyzeResponse.data;
+            console.log(extractedTexts);
             const combinedText = extractedTexts.join("");
             const placeName = useReviewStore.getState().placeName;
             console.log("Extracted texts:", combinedText);

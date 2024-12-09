@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import InfoIcon from "@mui/icons-material/Info";
+import useReviewStore from "@/stores/reviewStore";
 
 const CategorySection = () => {
   const [isPolicyVisible, setIsPolicyVisible] = useState(false);
-
+  const { placeName, category, visitDate } = useReviewStore();
   const togglePolicySheet = () => {
     setIsPolicyVisible((prev) => !prev);
   };
@@ -16,9 +17,9 @@ const CategorySection = () => {
       <Section>
         <HeaderRow>
           <div>
-            <CategoryBadge>반려동물용품점</CategoryBadge>
-            <SectionTitle>감자꽃감자 리뷰</SectionTitle>
-            <VisitDate>2024.11.01 방문</VisitDate>
+            <CategoryBadge>{category}</CategoryBadge>
+            <SectionTitle>{placeName} 리뷰</SectionTitle>
+            <VisitDate>{visitDate} 방문</VisitDate>
           </div>
           <PolicyButton onClick={togglePolicySheet}>
             <Span>리뷰 정책</Span>

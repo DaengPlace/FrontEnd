@@ -54,7 +54,7 @@ const ReviewPage = () => {
           backbuttonPath={`/place/placedetail?id=1`}
         />
       <Container ref={containerRef}>
-        <PageHeader title="92버터샵" reviewCount={reviews.length} />
+        <PageHeader reviewCount={reviews.length} />
         <ReviewSummary
           averageRating={averageRating}
           reviewCount={reviews.length}

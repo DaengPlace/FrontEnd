@@ -1,8 +1,8 @@
 export const cards = [
     {
       id: 1,
-      title: "92버터샵",
-      category: "카페",
+      title: "이화약국",
+      category: "의료품점",
       rating: "5.0",
       reviewsCount: 14,
       address: "경상북도 구미시 산호대로33길 18",

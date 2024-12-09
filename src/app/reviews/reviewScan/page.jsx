@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import { useRouter } from "next/navigation";
 import Modal from '@/components/common/Modal/Modal';
 import Header from "@/components/common/Header/Header";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
+import useReviewStore from "@/stores/reviewStore";
 
 const ReviewScanPage = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { placeName, visitDate } = useReviewStore();
 
   const handleConfirm = () => {
     router.push("/reviews/reviewsInput");
@@ -29,12 +31,12 @@ const ReviewScanPage = () => {
           <InfoBox>
             <InfoItem>
               <Label>상호명</Label>
-              <Value>간식곳간</Value>
+              <Value>{placeName || "장소 정보 없음"}</Value>
             </InfoItem>
             <Divider />
             <InfoItem>
               <Label>방문일자</Label>
-              <Value>2024.11.01</Value>
+              <Value>{visitDate || "날짜 정보 없음"}</Value>
             </InfoItem>
           </InfoBox>
         </Content>

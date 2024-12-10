@@ -11,7 +11,7 @@ export async function postKakaoToken(kakao_accessToken) {
         Authorization: `Bearer ${kakao_accessToken}`,
       },
     });
-    return response.data.accessToken;
+    return response.data;
   } catch (error) {
     throw new Error("Failed to login with Kakao: " + error);
   }

@@ -1,16 +1,16 @@
 "use client";
 
-import postKakaoToken from "@/apis/auth/postKakaoToken";
+import postGoogleToken from "@/apis/auth/postGoogleToken";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/authStore";
 
-const Auth = () => {
+const GoogleLogin = () => {
   const router = useRouter();
   const { setTokens } = useAuthStore();
-  const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
-  const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
+  const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 
   useEffect(() => {
     const getToken = async () => {
@@ -24,13 +24,16 @@ const Auth = () => {
 
       try {
         const params = new URLSearchParams();
-        params.append("grant_type", "authorization_code");
-        params.append("client_id", REST_API_KEY);
+        params.append("client_id", CLIENT_ID);
+        params.append(
+          "client_secret",
+          process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET
+        );
         params.append("redirect_uri", REDIRECT_URI);
         params.append("code", AUTHORIZATION_CODE);
 
         const response = await axios.post(
-          "https://kauth.kakao.com/oauth/token",
+          `https://oauth2.googleapis.com`,
           params,
           {
             headers: {
@@ -39,9 +42,8 @@ const Auth = () => {
           }
         );
 
-        const kakao_accessToken = response.data.access_token;
-        const data = await postKakaoToken(kakao_accessToken);
-        console.log(data);
+        const google_accessToken = response.data.access_token;
+        const data = await postGoogleToken(google_accessToken);
 
         if (data.accessToken) {
           router.push("/signin");
@@ -52,7 +54,7 @@ const Auth = () => {
           });
         }
       } catch (error) {
-        console.error("Failed to process Kakao login:", error);
+        console.error("Failed to process Google login:", error);
         alert("로그인에 실패했습니다. 다시 시도해주세요.");
       }
     };
@@ -62,4 +64,4 @@ const Auth = () => {
   return null;
 };
 
-export default Auth;
+export default GoogleLogin;

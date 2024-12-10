@@ -7,12 +7,16 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
-  const REST_API_KEY = process.env.NEXT_PUBLIC_REST_API_KEY;
-  const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+  const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 
-  const handleKakaoLogin = () => {
-    window.location.href = KAKAO_URL;
+  const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
+  const GOOGLE_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email`;
+
+  const handleLogin = (url) => {
+    window.location.href = url;
   };
 
   return (
@@ -37,14 +41,14 @@ export default function Home() {
           width={300}
           height={50}
           alt="kakao_login_btn"
-          onClick={handleKakaoLogin}
+          onClick={() => handleLogin(KAKAO_URL)}
         />
         <Image
           src="/assets/common/google_login_btn.svg"
           width={300}
           height={50}
           alt="google_login_btn"
-          onClick={() => router.push("/signin")} // 임시
+          onClick={() => handleLogin(GOOGLE_URL)}
         />
       </ButtonBox>
     </Container>

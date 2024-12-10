@@ -12,13 +12,14 @@ const FacilitiesSection = ({sectionTitle, facilities, isCompact = false}) => {
     <SectionContainer $isCompact={isCompact}>
       <SectionTitle>{sectionTitle}</SectionTitle>
         <CardContainer $isCompact={isCompact}>
-          {facilities.slice(0, 5).map((fac) => (
+          {facilities.slice(0, 5).map((fac, index) => (
             <FacilityCard
-              key={fac.id}
-              image={fac.image}
-              category={fac.category}
+              key={fac.placeId || index}
+              // image={fac.image}
+              image={fac.image || '/assets/mypage/facilityImage.png'}
+              category={fac.type}
               name={fac.name}
-              rating={fac.rating}
+              rating={fac.rating || 0}
             />
           ))}
         </CardContainer>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme.js";
+import axios from "axios";
 
 import Banner from "@/components/main/Banner/Banner.jsx";
 import Menu from "@/components/main/Menu/Menu.jsx";
@@ -21,6 +22,23 @@ const images = [
 const MainPage = () => {
   const [age, setAge] = useState(20);
   const [gender, setGender] = useState(1); // 0 : male, 1: female
+  const [popularFacilities, setPopularFacilities] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPopularFacilities = async () => {
+      try {
+        const response = await axios.get("https://api.daengplace.com/places/popular");
+        setPopularFacilities(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("인기 시설 데이터를 가져오는 데 실패했습니다 : ", error);
+        setLoading(false);
+      }
+    };
+
+    fetchPopularFacilities();
+  }, []);
 
   return (
     <Container>
@@ -37,7 +55,7 @@ const MainPage = () => {
             최근 <span>인기 시설 🔥</span>
           </>
         }
-        facilities={initialFacilities}
+        facilities={popularFacilities}
       />
       <FacilitiesSection
         sectionTitle={

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import theme from "@/styles/theme.js";
 import Image from "next/image";
 import Logo from "@/../../public/assets/mainpage/Logo.png";
+import AuthGuard from "../AuthGuard/AuthGuard";
 
 const Header = ({
   title,
@@ -47,9 +48,11 @@ const Header = ({
           </IconWrapper>
         )}
         {showFavoriteIcon && (
-          <IconWrapper onClick={() => router.push("/mypage/bookmark")}>
-            <StyledHeart size="28" />
-          </IconWrapper>
+          <AuthGuard>
+            <IconWrapper onClick={() => router.push("/mypage/bookmark")}>
+              <StyledHeart size="28" />
+            </IconWrapper>
+          </AuthGuard>
         )}
         {showHomeIcon && (
           <IconWrapper onClick={() => router.push("/main")}>
@@ -82,7 +85,7 @@ const Container = styled.div`
   left: 0;
 
   background-color: white;
-  z-index: 999;
+  z-index: 500;
 `;
 
 const SmallContainer = styled.div`
@@ -122,6 +125,7 @@ const RightIcons = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 `;
 
 const StyledPlace = styled(Place)`

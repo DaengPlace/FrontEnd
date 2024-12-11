@@ -134,10 +134,9 @@ const ActualPlaceDetailPage = () => {
         {isReviewBottomSheetOpen && (
           <>
             <BottomSheet
-              title="리뷰 작성을 위해"
               content={
                 <StyledContent>
-                  <p>해당 시설에서 발급받은 영수증을 스캔해주세요</p>
+                  <p>리뷰 작성을 위해<br />해당 시설에서 발급받은 영수증을 스캔해주세요</p>
                 </StyledContent>
               }
               onClose={() => setIsReviewBottomSheetOpen(false)}

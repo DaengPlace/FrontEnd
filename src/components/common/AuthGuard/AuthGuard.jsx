@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
+import ReactDOM from "react-dom";
 
 const AuthGuard = ({children}) => {
 

@@ -62,7 +62,7 @@ const Container = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 500;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.05);
 `;

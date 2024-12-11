@@ -34,12 +34,22 @@ const BottomSheet = ({
 
   const handleLocationClick = () => {
     setUseCurrentLocation(true);
+    
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          router.push(`/place/placemap?lat=${latitude}&lng=${longitude}`);
+        },
+        () => alert("현재 위치를 가져올 수 없습니다.")
+      );
+    } else {
+      alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
+    }
+    handleReset();
   };
 
   const handleSearch = async () => {
-    console.log("Selected Sido:", selectedSido);
-    console.log("Selected Gungu:", selectedGungu);
-
     if (useCurrentLocation) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(

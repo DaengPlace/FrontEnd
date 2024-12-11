@@ -30,8 +30,8 @@ const ActualPlaceMap = () => {
   const lat = parseFloat(searchParams.get("lat"));
   const lng = parseFloat(searchParams.get("lng"));
 
-  const [center, setCenter] = useState({ lat: 37.5665, lng: 126.978 });
-  const [zoom, setZoom] = useState(14);
+  const [center, setCenter] = useState({lat: 37.5665, lng: 126.9780});
+  const [zoom, setZoom] = useState(20);
   const [userLocation, setUserLocation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -49,12 +49,34 @@ const ActualPlaceMap = () => {
   });
   
   useEffect(() => {
-    if (!isNaN(lat) && !isNaN(lng)) {
+    const searchname = searchParams.get("name");
+    
+    if (searchname) {
+      fetchPlaces(null, null, searchname);
+    } else if (!isNaN(lat) && !isNaN(lng)) {
       setCenter({ lat, lng });
       setUserLocation({ lat, lng });
       setZoom(14);
+      fetchPlaces(lat, lng);
     }
-  }, [lat, lng]);
+  }, [lat, lng, searchParams]);
+  
+  useEffect(() => {
+    if (!userLocation) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ lat: latitude, lng: longitude });
+          },
+          () => {
+            alert("현재 위치를 가져올 수 없습니다.");
+          }
+        );
+      }
+    }
+  }, []);
+  
 
   useEffect(() => {
     if (userLocation) {
@@ -63,27 +85,60 @@ const ActualPlaceMap = () => {
     }
   }, [userLocation]);
 
-  const fetchPlaces = async (latitude, longitude) => {
+  const fetchPlaces = async (latitude, longitude, searchname = null) => {
     try {
-      const response = await axios.get("https://api.daengplace.com/places", {
-        params: { latitude, longitude, page: 1, size: 20 },
-      });
+      const params = {
+        page: 1,
+        size: 20,
+      };
+      if (latitude && longitude) {
+        params.latitude = latitude;
+        params.longitude = longitude;
+      }
+
+      if (searchname) {
+        params.search = searchname; 
+      }
+  
+      const response = await axios.get("https://api.daengplace.com/places", { params });
       const places = response.data.data.places || [];
       const fetchedMarkers = places.map((place) => ({
         id: place.placeId,
         position: { lat: place.latitude, lng: place.longitude },
         name: place.name,
         category: place.category,
-        is_parking: place.is_parking, 
-        inside: place.inside, 
-        outside: place.outside, 
-        weight_limit: place.weight_limit, 
-        pet_fee: place.pet_fee, 
-        operationHour: place.operationHour, 
+        is_parking: place.is_parking,
+        inside: place.inside,
+        outside: place.outside,
+        weight_limit: place.weight_limit,
+        pet_fee: place.pet_fee,
+        operationHour: place.operationHour,
       }));
-      setAllMarkers(fetchedMarkers); 
-      setMarkers(fetchedMarkers); 
-      console.log(places);
+      console.log("Fetched Markers:", fetchedMarkers);
+      setAllMarkers(fetchedMarkers);
+      setMarkers(fetchedMarkers);
+      if (searchname) {
+        const filteredMarkers = fetchedMarkers.filter((marker) =>
+          marker.name.includes(searchname) 
+        );
+        console.log("Filtered Markers:", filteredMarkers);
+        setMarkers(filteredMarkers);
+        if (filteredMarkers.length > 0) {
+          const { lat, lng } = filteredMarkers[0].position;
+          if (!isNaN(lat) && !isNaN(lng)) {
+              setCenter({ lat, lng }); 
+              setZoom(16);
+          } else {
+              console.error("Invalid marker coordinates:", { lat, lng });
+          }
+      } else {
+          alert(`${searchname}에 대한 결과를 찾을 수 없습니다.`);
+          if (userLocation) {
+            setCenter(userLocation);
+            setZoom(14);
+          }
+        }
+      }
     } catch (error) {
       console.error("Error fetching places:", error);
     }
@@ -98,12 +153,25 @@ const ActualPlaceMap = () => {
   const handleGunguChange = (event) => setSelectedGungu(event.target.value);
 
   const handleBackToList = () => {
-    if (!isNaN(lat) && !isNaN(lng)) {
-      router.push(`/place/placesearch?lat=${lat}&lng=${lng}`);
+    const searchname = searchParams.get("name");
+    
+    if (searchname) {
+      if (userLocation) {
+        router.push(`/place/placesearch?lat=${userLocation.lat}&lng=${userLocation.lng}`);
+      } else {
+        alert("사용자 위치를 가져올 수 없습니다.");
+      }
     } else {
-      alert("지도 데이터를 불러올 수 없습니다.");
+      if (!isNaN(lat) && !isNaN(lng)) {
+        router.push(`/place/placesearch?lat=${lat}&lng=${lng}`);
+      } else if (userLocation) {
+        router.push(`/place/placesearch?lat=${userLocation.lat}&lng=${userLocation.lng}`);
+      } else {
+        alert("지도 데이터를 불러올 수 없습니다.");
+      }
     }
   };
+  
 
   const categoryMapping = {
     미용: "서비스",

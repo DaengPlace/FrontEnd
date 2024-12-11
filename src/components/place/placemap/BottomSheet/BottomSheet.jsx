@@ -70,25 +70,8 @@ const BottomSheet = ({
         alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
       }
     } else if (inputValue) {
-      try {
-        const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            inputValue
-          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-        );
-
-        const data = await response.json();
-
-        if (data.status === "OK" && data.results.length > 0) {
-          const { lat, lng } = data.results[0].geometry.location;
-          router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
-        } else {
-          alert("입력한 위치의 좌표를 가져올 수 없습니다. 다시 시도해주세요.");
-        }
-      } catch (error) {
-        console.error("Error fetching coordinates:", error);
-        alert("위치를 검색하는 중 오류가 발생했습니다.");
-      }
+      console.log("Search Term:", inputValue);
+      router.push(`/place/placemap?name=${encodeURIComponent(inputValue)}`);
     } else if (selectedSido || selectedGungu) {
       const location = `${selectedSido} ${selectedGungu || ""}`.trim();
 
@@ -149,7 +132,7 @@ const BottomSheet = ({
                 />
               </SearchIcon>
               <FilterInput
-                placeholder="지역 또는 사업장명 입력"
+                placeholder="사업장명 입력"
                 value={inputValue || ""}
                 onChange={(e) => setInputValue(e.target.value)}
                 disabled={useCurrentLocation}

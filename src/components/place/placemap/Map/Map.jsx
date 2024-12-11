@@ -59,6 +59,7 @@ const Map = ({ center, zoom, userLocation, markers }) => {
             <Marker
               key={marker.id}
               position={marker.position}
+              zIndex={google.maps.Marker.MAX_ZINDEX + 1}
               title={marker.name}
               icon={getMarkerIcon(marker.category)}
               onClick={() => handleMarkerClick(marker.id)} 

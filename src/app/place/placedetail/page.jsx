@@ -14,6 +14,7 @@ import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { cards } from "@/data/cardsData";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
+import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 
 const PlaceDetailPage = () => {
   return (
@@ -199,7 +200,7 @@ const ActualPlaceDetailPage = () => {
             }}
           />
           <ReviewSection />
-          <WriteReviewButton onClick={handleWriteReviewButtonClick} />
+          <AuthGuard><WriteReviewButton onClick={handleWriteReviewButtonClick} /></AuthGuard>
         </PageContainer>
         {isMapBottomSheetOpen && (
           <MapBottomSheet
@@ -211,10 +212,9 @@ const ActualPlaceDetailPage = () => {
         {isReviewBottomSheetOpen && (
           <>
             <BottomSheet
-              title="리뷰 작성을 위해"
               content={
                 <StyledContent>
-                  <p>해당 시설에서 발급받은 영수증을 스캔해주세요</p>
+                  <p>리뷰 작성을 위해<br />해당 시설에서 발급받은 영수증을 스캔해주세요</p>
                 </StyledContent>
               }
               onClose={() => setIsReviewBottomSheetOpen(false)}

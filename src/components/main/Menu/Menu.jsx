@@ -4,26 +4,37 @@ import styled from "styled-components";
 import Link from "next/link";
 import Image from "next/image";
 import React from 'react';
+import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
+import { useRouter } from "next/navigation";
 
 const Menu = () => {
+
+  const router = useRouter();
+
+  const handleBookmarkClick = () => {
+    router.push("/mypage/bookmark");
+  };
+
   return (
     <MenuContainer>
       <MenuItem>
-        <Link href='/recommend'>
-          <MenuImage src='/assets/mainpage/recommendIcon.png' alt="recommend icon" width={80} height={80} /><MenuDescription>성향별 추천</MenuDescription>
-        </Link>
+        <LinkWrapper onClick={() => router.push("/recommend")}>
+          <MenuImage src='/assets/mainpage/recommendIcon.svg' alt="recommend icon" width={80} height={80} /><MenuDescription>성향별 추천</MenuDescription>
+        </LinkWrapper>
       </MenuItem>
 
       <MenuItem>
-        <Link href='/place'>
-            <MenuImage src='/assets/mainpage/daengplaceIcon.png' alt="daengplace icon" width={80} height={80} /><MenuDescription>댕플</MenuDescription>
-        </Link>
+        <LinkWrapper onClick={() => router.push("/place")}>
+            <MenuImage src='/assets/mainpage/daengplaceIcon.svg' alt="daengplace icon" width={80} height={80} /><MenuDescription>댕플</MenuDescription>
+        </LinkWrapper>
       </MenuItem>
 
       <MenuItem>
-        <Link href='/mypage/bookmark'>
-            <MenuImage src='/assets/mainpage/bookmarkIcon.png' alt="bookmark icon" width={80} height={80} /><MenuDescription>즐겨찾기</MenuDescription>
-        </Link>
+        <AuthGuard>
+          <LinkWrapper onClick={handleBookmarkClick}>
+            <MenuImage src='/assets/mainpage/bookmarkIcon.svg' alt="bookmark icon" width={80} height={80} /><MenuDescription>즐겨찾기</MenuDescription>
+          </LinkWrapper>
+        </AuthGuard>
       </MenuItem>
     </MenuContainer>
   );
@@ -58,4 +69,12 @@ const MenuImage = styled(Image)`
 
 const MenuDescription = styled.div`
     padding-top: 10px;
+`;
+
+const LinkWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
 `;

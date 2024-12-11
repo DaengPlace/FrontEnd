@@ -1,19 +1,19 @@
-import React from "react";
+import React, {memo} from "react";
 import styled from "styled-components";
 import Card from "../Card/Card";
 
-const CardList = ({ cards, onCardClick, toggleLike }) => (
+const CardList = memo(({ cards, onCardClick, toggleLike }) => (
   <CardListContainer>
     {cards.map((card) => (
       <Card
-        key={card.id}
+        key={card.id || card.placeId}
         card={card}
-        onCardClick={() => onCardClick(card.id)}
-        toggleLike={toggleLike}
+        onCardClick={() => onCardClick(card.placeId)}
+        toggleLike={(e) => toggleLike(e, card.placeId)}
       />
     ))}
   </CardListContainer>
-);
+));
 
 const CardListContainer = styled.div`
   display: flex;

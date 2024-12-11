@@ -14,6 +14,7 @@ import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { cards } from "@/data/cardsData";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
+import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 
 const PlaceDetailPage = () => {
   return (
@@ -199,7 +200,7 @@ const ActualPlaceDetailPage = () => {
             }}
           />
           <ReviewSection />
-          <WriteReviewButton onClick={handleWriteReviewButtonClick} />
+          <AuthGuard><WriteReviewButton onClick={handleWriteReviewButtonClick} /></AuthGuard>
         </PageContainer>
         {isMapBottomSheetOpen && (
           <MapBottomSheet

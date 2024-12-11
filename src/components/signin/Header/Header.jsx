@@ -1,11 +1,13 @@
 import styled from "styled-components";
+import { ChevronLeft } from "@styled-icons/bootstrap/ChevronLeft";
+import { CloseOutline } from "@styled-icons/evaicons-outline/CloseOutline";
 
 const Header = ({ titleLines, onBack, onClose }) => {
   return (
     <HeaderContainer>
       <ButtonContainer>
-        <BackButton onClick={onBack}>&lt;</BackButton>
-        <CloseButton onClick={onClose}>x</CloseButton>
+        <BackButton onClick={onBack}><ChevronLeft size={24} /></BackButton>
+        <CloseButton onClick={onClose}><CloseOutline size={28} /></CloseButton>
       </ButtonContainer>
       <Title>
         {titleLines.map((line, index) => (

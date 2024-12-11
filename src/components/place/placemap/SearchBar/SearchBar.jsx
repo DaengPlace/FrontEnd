@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
-const SearchBar = ({ onClick }) => (
+const SearchBar = ({ value, onClick }) => (
   <SearchBarWrapper onClick={onClick}>
     <SearchWrapper>
       <Image
@@ -13,7 +13,11 @@ const SearchBar = ({ onClick }) => (
         height={30}
         style={{ marginRight: "10px" }}
       />
-      <SearchInput placeholder="내 위치 주변" />
+      <SearchInput
+        placeholder="내 위치 주변"
+        value={value || ""}
+        readOnly
+      />
     </SearchWrapper>
   </SearchBarWrapper>
 );

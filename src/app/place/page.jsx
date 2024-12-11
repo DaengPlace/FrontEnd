@@ -32,8 +32,22 @@ const PlacePage = () => {
   }
 
   const handleImageClick = () => {
-    router.push(`/place/placesearch`);
-  }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          router.push(`/place/placesearch?lat=${latitude}&lng=${longitude}`); 
+        },
+        () => {
+          alert("현재 위치를 가져올 수 없습니다.");
+          router.push(`/place/placesearch`); 
+        }
+      );
+    } else {
+      alert("Geolocation을 지원하지 않는 브라우저입니다.");
+      router.push(`/place/placesearch`);
+    }
+  };
 
   const handleImageClick2 = () => {
     router.push(`/recommend`);

@@ -39,8 +39,21 @@ const BottomSheet = ({
     setInputValue("");; 
   };
 
-  const handleLocationClick = () => {
+  const handleLocationClick = async () => {
     setUseCurrentLocation(true);
+  
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          router.push(`/place/placemap?lat=${latitude}&lng=${longitude}`);
+        },
+        () => alert("현재 위치를 가져올 수 없습니다.")
+      );
+    } else {
+      alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
+    }
+    handleReset();
   };
 
   const handleSearch = async () => {
@@ -101,6 +114,7 @@ const BottomSheet = ({
     } else {
       alert("지역 또는 사업장명을 입력하거나 시/도를 선택해주세요.");
     }
+    handleReset();
   };
   
   

@@ -70,6 +70,7 @@ export default Header;
 
 const Container = styled.div`
   width: 100%;
+  max-width: 600px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -81,7 +82,7 @@ const Container = styled.div`
   left: 0;
 
   background-color: white;
-  z-index: 1000;
+  z-index: 999;
 `;
 
 const SmallContainer = styled.div`

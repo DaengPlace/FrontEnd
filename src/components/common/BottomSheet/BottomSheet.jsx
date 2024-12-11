@@ -75,7 +75,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  z-index: 1000;
+  z-index: 1100;
 `;
 
 const Sheet = styled.div`

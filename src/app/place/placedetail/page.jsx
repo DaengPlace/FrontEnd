@@ -12,6 +12,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { cards } from "@/data/cardsData";
+import axios from "axios";
+import useReviewStore from "@/stores/reviewStore";
 
 const PlaceDetailPage = () => {
   return (
@@ -23,7 +25,7 @@ const PlaceDetailPage = () => {
 
 const ActualPlaceDetailPage = () => {
   const searchParams = useSearchParams();
-  const id = parseInt(searchParams.get("id"), 10);
+  const placeId = parseInt(searchParams.get("placeId"), 10);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isMapBottomSheetOpen, setIsMapBottomSheetOpen] = useState(false);
@@ -33,9 +35,10 @@ const ActualPlaceDetailPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
+  const { setPlaceName, setVisitDate, setCategory } = useReviewStore();
+  const [selectedCard, setSelectedCard] = useState(null); 
+  const [isLoading, setIsLoading] = useState(true); 
 
-  const selectedCard = cards.find((card) => card.id === id);
-  
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
@@ -52,8 +55,6 @@ const ActualPlaceDetailPage = () => {
       if (data.status === "OK" && data.results.length > 0) {
         const { lat, lng } = data.results[0].geometry.location;
         setCenter({ lat, lng });
-      } else {
-        alert("주소에 대한 좌표를 가져올 수 없습니다.");
       }
     } catch (error) {
       console.error("Error fetching coordinates:", error);
@@ -61,10 +62,30 @@ const ActualPlaceDetailPage = () => {
   };
   
   useEffect(() => {
+    if (placeId) {
+      fetchPlaceDetails(placeId); 
+    }
+  }, [placeId]);
+  const fetchPlaceDetails = async (placeId) => {
+    try {
+      const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+      console.log(response.data);
+      setSelectedCard(response.data.data); 
+    } catch (error) {
+      console.error("Error fetching place details:", error);
+      setSelectedCard(null); 
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (selectedCard) {
+      setPlaceName(selectedCard.name);
+      setCategory(selectedCard.category);
       setIsClient(true);
-      setAddress(selectedCard.address);
-      fetchCoordinates(selectedCard.address);
+      setAddress(selectedCard.location);
+      fetchCoordinates(selectedCard.location);
     }
   }, [selectedCard]);
   
@@ -91,12 +112,62 @@ const ActualPlaceDetailPage = () => {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const selectedFile = files[0];
-      setIsReviewBottomSheetOpen(false);
-      router.push("/reviews/reviewScan");
+  
+      try {
+        const formData = new FormData();
+        formData.append("file", selectedFile, selectedFile.name);
+
+        const uploadResponse = await axios.post(
+          "https://api.daengplace.com/ocr/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+  
+        if (uploadResponse.status === 200) {
+          const filePath = uploadResponse.data;
+          console.log("File uploaded successfully. Path:", filePath);
+  
+          const analyzeResponse = await axios.post(
+            "https://api.daengplace.com/ocr/analyze",
+            null,
+            {
+              params: { filePath: filePath },
+            }
+          );
+  
+          if (analyzeResponse.status === 200) {
+            const extractedTexts = analyzeResponse.data;
+            console.log(extractedTexts);
+            const combinedText = extractedTexts.join("");
+            const placeName = useReviewStore.getState().placeName;
+            console.log("Extracted texts:", combinedText);
+  
+            if (combinedText.includes(placeName)) {
+              const visitDateMatch = combinedText.match(/\d{4}[./-]\d{2}[./-]\d{2}/); 
+              const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
+              console.log("Extracted visit date:", visitDate);
+              setVisitDate(visitDate);
+              router.push("/reviews/reviewScan");
+            } else {
+              alert("해당 장소 방문 기록이 확인되지 않았습니다.");
+            }
+          } else {
+            console.error("Failed to analyze text:", analyzeResponse.statusText);
+          }
+        } else {
+          console.error("Failed to upload image:", uploadResponse.statusText);
+        }
+      } catch (error) {
+        console.error("Error during OCR process:", error);
+      }
     }
   };
 
@@ -114,12 +185,18 @@ const ActualPlaceDetailPage = () => {
           <PlaceInfo
             isLiked={isLiked}
             toggleLike={toggleLike}
-            address={selectedCard.address}
+            address={selectedCard.location}
             handleAddressClick={handleAddressClick}
             category={selectedCard.category}
-            placeName={selectedCard.title}
-            openingHours={selectedCard.hours}
-            features={selectedCard.features}
+            placeName={selectedCard.name}
+            openhours={selectedCard.operationHour}
+            features={{
+              inside: selectedCard.inside,
+              outside: selectedCard.outside,
+              isParking: selectedCard.is_parking,
+              petFee: selectedCard.pet_fee,
+              weightLimit: selectedCard.weight_limit,
+            }}
           />
           <ReviewSection />
           <WriteReviewButton onClick={handleWriteReviewButtonClick} />

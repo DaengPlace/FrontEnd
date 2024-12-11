@@ -18,6 +18,7 @@ const BottomSheet = ({
   showGunguDropdown,
   sidoOptions,
   gunguOptions,
+  setSearchTerm,
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,6 +58,7 @@ const BottomSheet = ({
   };
 
   const handleSearch = async () => {
+    onClose();
     if (useCurrentLocation) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -71,6 +73,7 @@ const BottomSheet = ({
       }
     } else if (inputValue) {
       console.log("Search Term:", inputValue);
+      setSearchTerm(inputValue);
       router.push(`/place/placemap?name=${encodeURIComponent(inputValue)}`);
     } else if (selectedSido || selectedGungu) {
       const location = `${selectedSido} ${selectedGungu || ""}`.trim();
@@ -412,8 +415,8 @@ const ImageWrapper = styled.div`
 const SelectBoxWrapper = styled.div`
   flex: 1;
   max-width: 210px;
-  min-width: 210px; /* 최소 너비 */
-  min-height: 64px; /* 최소 높이 */
+  min-width: 210px; 
+  min-height: 64px; 
 `;
 
 

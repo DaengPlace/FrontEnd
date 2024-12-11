@@ -29,9 +29,10 @@ const ActualPlaceMap = () => {
 
   const lat = parseFloat(searchParams.get("lat"));
   const lng = parseFloat(searchParams.get("lng"));
+  const searchname = searchParams.get("name");
 
   const [center, setCenter] = useState({lat: 37.5665, lng: 126.9780});
-  const [zoom, setZoom] = useState(20);
+  const [zoom, setZoom] = useState(14);
   const [userLocation, setUserLocation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -43,23 +44,37 @@ const ActualPlaceMap = () => {
   const [showGunguDropdown, setShowGunguDropdown] = useState(false);
   const [allMarkers, setAllMarkers] = useState([]);
   const [markers, setMarkers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
-  
+
   useEffect(() => {
-    const searchname = searchParams.get("name");
-    
-    if (searchname) {
-      fetchPlaces(null, null, searchname);
-    } else if (!isNaN(lat) && !isNaN(lng)) {
-      setCenter({ lat, lng });
-      setUserLocation({ lat, lng });
-      setZoom(14);
-      fetchPlaces(lat, lng);
+    if (!userLocation && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+        },
+        () => {
+          alert("현재 위치를 가져올 수 없습니다.");
+        }
+      );
     }
-  }, [lat, lng, searchParams]);
+  }, [userLocation]);
+  
+    useEffect(() => {
+      if (searchname) {
+        fetchPlaces(null, null, searchname); 
+      } else if (!isNaN(lat) && !isNaN(lng)) {
+        setCenter({ lat, lng });
+        fetchPlaces(lat, lng); 
+      } else if (userLocation) {
+        setSelectedCategory("전체");
+        fetchPlaces(userLocation.lat, userLocation.lng); 
+      }
+    }, [lat, lng, searchname, userLocation]);
   
   useEffect(() => {
     if (!userLocation) {
@@ -76,15 +91,12 @@ const ActualPlaceMap = () => {
       }
     }
   }, []);
-  
-
   useEffect(() => {
-    if (userLocation) {
-      setSelectedCategory("전체");
-      fetchPlaces(userLocation.lat, userLocation.lng);
+    if (searchname) {
+      setSearchTerm(searchname); // 검색어를 상태로 저장
     }
-  }, [userLocation]);
-
+  }
+)
   const fetchPlaces = async (latitude, longitude, searchname = null) => {
     try {
       const params = {
@@ -115,29 +127,23 @@ const ActualPlaceMap = () => {
         operationHour: place.operationHour,
       }));
       console.log("Fetched Markers:", fetchedMarkers);
-      setAllMarkers(fetchedMarkers);
-      setMarkers(fetchedMarkers);
       if (searchname) {
         const filteredMarkers = fetchedMarkers.filter((marker) =>
-          marker.name.includes(searchname) 
+          marker.name.includes(searchname)
         );
-        console.log("Filtered Markers:", filteredMarkers);
-        setMarkers(filteredMarkers);
+  
         if (filteredMarkers.length > 0) {
+          setMarkers(filteredMarkers);
           const { lat, lng } = filteredMarkers[0].position;
-          if (!isNaN(lat) && !isNaN(lng)) {
-              setCenter({ lat, lng }); 
-              setZoom(16);
-          } else {
-              console.error("Invalid marker coordinates:", { lat, lng });
-          }
-      } else {
+          setCenter({ lat, lng });
+          setZoom(16);
+        } else {
           alert(`${searchname}에 대한 결과를 찾을 수 없습니다.`);
-          if (userLocation) {
-            setCenter(userLocation);
-            setZoom(14);
-          }
+          setMarkers(allMarkers); 
         }
+      } else {
+        setAllMarkers(fetchedMarkers);
+        setMarkers(fetchedMarkers);
       }
     } catch (error) {
       console.error("Error fetching places:", error);
@@ -251,10 +257,6 @@ const ActualPlaceMap = () => {
     }
 
     setMarkers(filteredMarkers);
-    console.log("Filtered Markers:", filteredMarkers);
-    console.log("All Markers:", allMarkers);
-console.log("Selected Filters:", filters);
-console.log("All Markers with Parking Info:", allMarkers.map((marker) => marker.pet_fee));
 
   };
 
@@ -267,6 +269,10 @@ console.log("All Markers with Parking Info:", allMarkers.map((marker) => marker.
     );
   }
 
+  const handleSearchTermUpdate = (term) => {
+    setSearchTerm(term || "내 위치 주변"); 
+  };
+
   return (
     <>
     <Header
@@ -276,7 +282,9 @@ console.log("All Markers with Parking Info:", allMarkers.map((marker) => marker.
         showHomeIcon={WithMapIcon.args.showHomeIcon}
       />
     <MapContainerWrapper>
-      <SearchBar onClick={() => setIsBottomSheetOpen(true)} />
+      <SearchBar
+      value={searchTerm}
+      onClick={() => setIsBottomSheetOpen(true)} />
       <Tabs
         selectedCategory={selectedCategory}
         onCategoryClick={handleCategoryClick}
@@ -305,6 +313,7 @@ console.log("All Markers with Parking Info:", allMarkers.map((marker) => marker.
         showGunguDropdown={showGunguDropdown}
         onSidoChange={handleSidoChange}
         onGunguChange={handleGunguChange}
+        setSearchTerm={handleSearchTermUpdate}
       />
     </MapContainerWrapper>
     </>

@@ -132,20 +132,6 @@ const ActualPlaceSearchPage = () => {
   };
   
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-        },
-        () => {
-          alert("현재 위치를 가져올 수 없습니다.");
-        }
-      );
-    }
-  }, []);
-  
-  useEffect(() => {
     const lat = parseFloat(searchParams.get("lat")); 
     const lng = parseFloat(searchParams.get("lng")); 
   

@@ -54,17 +54,21 @@ const Map = ({ center, zoom, userLocation, markers }) => {
             }}
           />
         )}
-        {markers &&
-          markers.map((marker) => (
-            <Marker
-              key={marker.id}
-              position={marker.position}
-              zIndex={google.maps.Marker.MAX_ZINDEX + 1}
-              title={marker.name}
-              icon={getMarkerIcon(marker.category)}
-              onClick={() => handleMarkerClick(marker.id)} 
-            />
-          ))}
+        {markers && markers.length > 0 && 
+          markers.map((marker, index) => {
+            console.log(`Rendering marker #${index}:`, marker);
+            return (
+              <Marker
+                key={marker.id}
+                position={marker.position}
+                zIndex={google.maps.Marker.MAX_ZINDEX + 1}
+                title={marker.name}
+                icon={getMarkerIcon(marker.category)}
+                onClick={() => handleMarkerClick(marker.id)}
+              />
+            );
+          })}
+
       </GoogleMap>
     </MapContainer>
   );

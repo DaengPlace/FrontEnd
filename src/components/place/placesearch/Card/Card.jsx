@@ -2,12 +2,26 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 
 const Card = ({ card, onCardClick, toggleLike }) => (
-  <CardContainer onClick={onCardClick}>
-    <HeartIconContainer onClick={(e) => toggleLike(e, card.id)} isliked={card.isLiked}>
-      {card.isLiked ? <Favorite /> : <FavoriteBorder />}
-    </HeartIconContainer>
+  <CardContainer
+    onClick={(e) => {
+      e.stopPropagation(); // 이벤트 전파 방지
+      onCardClick(card.id); // 카드 전체 클릭 시 실행
+    }}
+  >
+    <AuthGuard>
+      <HeartIconContainer 
+        className="heart-icon-container"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleLike(e, card.id)
+        }} 
+        isliked={card.isLiked}>
+        {card.isLiked ? <Favorite /> : <FavoriteBorder />}
+      </HeartIconContainer>
+    </AuthGuard>
     <Image
       src={card.image}
       alt={card.title}
@@ -61,6 +75,9 @@ const HeartIconContainer = styled.div.withConfig({
   width: 32px;
   height: 32px;
   z-index: 10;
+
+  &.heart-icon-container {
+  }
 
   svg {
     font-size: 30px;

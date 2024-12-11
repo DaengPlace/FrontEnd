@@ -38,6 +38,7 @@ const ActualPlaceSearchPage = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [isLocationPermissionGranted, setIsLocationPermissionGranted] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [searchedLocation, setSearchedLocation] = useState(null);
   const [buttonBottom, setButtonBottom] = useState(30);
   const bottomRef = useRef(null);
   const scrollableRef = useRef(null);
@@ -186,6 +187,7 @@ const ActualPlaceSearchPage = () => {
       }));
       setAllCards(mappedPlaces); 
       setCards(mappedPlaces);
+      setSearchedLocation({ lat, lng });
       console.log(places);
     } catch (error) {
       console.error("Error fetching places:", error);
@@ -221,8 +223,9 @@ const ActualPlaceSearchPage = () => {
   };
 
   const handleMapView = () => {
-    if (userLocation) {
-       const { lat, lng } = userLocation;
+    const location = searchedLocation || userLocation;
+    if (location) {
+      const { lat, lng } = location;
       router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
     } else {
       alert("위치를 가져올 수 없습니다.");

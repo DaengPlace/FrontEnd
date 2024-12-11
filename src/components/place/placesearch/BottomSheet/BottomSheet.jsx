@@ -124,7 +124,7 @@ const BottomSheet = ({
                 />
               </SearchIcon>
               <FilterInput
-                placeholder="지역 또는 사업장명 입력"
+                placeholder="사업장명 입력"
                 value={inputValue || ""}
                 onChange={(e) => setInputValue(e.target.value)}
                 disabled={useCurrentLocation}

@@ -7,24 +7,35 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
+  const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+  const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+  const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+
+  const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
+  const GOOGLE_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email`;
+
+  const handleLogin = (url) => {
+    window.location.href = url;
+  };
+
   return (
     <Container>
-
       <ButtonBox>
         <Image
           src="/assets/common/kakao_login_btn.svg"
           width={300}
           height={50}
           alt="kakao_login_btn"
-          onClick={() => router.push("/signin")} // 임시
-          />
+          onClick={() => handleLogin(KAKAO_URL)}
+        />
         <Image
           src="/assets/common/google_login_btn.svg"
           width={300}
           height={50}
           alt="google_login_btn"
-          onClick={() => router.push("/signin")} // 임시
-          />
+          onClick={() => handleLogin(GOOGLE_URL)}
+        />
       </ButtonBox>
 
       <WithoutLoginBtn onClick={() => router.push("/main")}>
@@ -57,7 +68,7 @@ const ButtonBox = styled.div`
     cursor: pointer;
   }
 `;
-  
+
 const WithoutLoginBtn = styled.div`
   display: flex;
   flex-direction: column;
@@ -72,12 +83,13 @@ const WithoutLoginBtn = styled.div`
     text-align: center;
     position: relative;
 
-  &::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 1px;
-    background-color: ${({ theme }) => theme.colors.white};
-    margin-top: 1px;
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 1px;
+      background-color: ${({ theme }) => theme.colors.white};
+      margin-top: 1px;
+    }
   }
-}`;
+`;

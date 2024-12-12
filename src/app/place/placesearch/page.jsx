@@ -121,15 +121,6 @@ const ActualPlaceSearchPage = () => {
   };
 
   const handleHover2 = (filter) => setHoveredFilter(filter);
-
-  const toggleLike = (e, id) => {
-    e.stopPropagation();
-    setCards((prevCards) =>
-      prevCards.map((card) =>
-        card.id === id ? { ...card, isLiked: !card.isLiked } : card
-      )
-    );
-  };
   
   useEffect(() => {
     const lat = parseFloat(searchParams.get("lat")); 
@@ -206,6 +197,15 @@ const ActualPlaceSearchPage = () => {
 
   const handleCardClick = (placeId) => {
     router.push(`/place/placedetail?placeId=${placeId}`);
+  };
+
+  const toggleLike = (e, placeId) => {
+    e.stopPropagation();
+    setCards((prevCards) =>
+      prevCards.map((card) =>
+        card.placeId === placeId ? { ...card, isLiked: !card.isLiked } : card
+      )
+    );
   };
 
   const handleMapView = () => {

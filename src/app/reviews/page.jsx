@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
 import { reviews } from "@/data/reviewData";
 import Header from "@/components/common/Header/Header";
 import PageHeader from "@/components/reviews/PageHeader/PageHeader";
@@ -12,6 +13,7 @@ import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const ReviewPage = () => {
+  const router = useRouter();
   const averageRating =
     reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
 
@@ -51,10 +53,9 @@ const ReviewPage = () => {
           showHomeIcon={WithMapIcon.args.showHomeIcon}
           showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
           showMapIcon={WithMapIcon.args.showMapIcon}
-          backbuttonPath={`/place/placedetail?id=1`}
         />
       <Container ref={containerRef}>
-        <PageHeader title="92버터샵" reviewCount={reviews.length} />
+        <PageHeader reviewCount={reviews.length} />
         <ReviewSummary
           averageRating={averageRating}
           reviewCount={reviews.length}

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import Button from "../Button/Button";
 import theme from "@/styles/theme";
+import ReactDOM from "react-dom";
 
 const BottomSheet = ({
   title,
@@ -15,7 +16,7 @@ const BottomSheet = ({
   setIsBottomSheetVisible,
   warningText,
 }) => {
-  return (
+  return ReactDOM.createPortal(
     <Overlay>
       <Sheet>
         <CloseButton onClick={onClose}>
@@ -39,7 +40,8 @@ const BottomSheet = ({
           <WarningText>{warningText}</WarningText>
         )}
       </Sheet>
-    </Overlay>
+    </Overlay>,
+    document.body
   );
 };
 
@@ -75,7 +77,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  z-index: 1000;
+  z-index: 9999;
 `;
 
 const Sheet = styled.div`
@@ -86,6 +88,7 @@ const Sheet = styled.div`
   padding: 25px;
   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
+  bottom: 0;
 `;
 
 const CloseButton = styled.button`
@@ -103,11 +106,11 @@ const Title = styled.h2`
   font-size: 18px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 `;
 
 const Content = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   margin: 15px 0 20px 0;
   text-align: center;

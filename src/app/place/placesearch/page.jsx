@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
+import axios from "axios";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchBar from "@/components/place/placesearch/SearchBar/SearchBar";
@@ -10,7 +11,6 @@ import CardList from "@/components/place/placesearch/CardList/CardList";
 import BottomSheet from "@/components/place/placesearch/BottomSheet/BottomSheet";
 import { sidoOptions, gunguOptions } from "@/data/data";
 import { Map, ArrowUp } from "@styled-icons/bootstrap";
-import { cards as initialCards } from "@/data/cardsData";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -33,14 +33,18 @@ const ActualPlaceSearchPage = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [hoveredFilter, setHoveredFilter] = useState(null);
-  const [cards, setCards] = useState(initialCards || []);
+  const [cards, setCards] = useState([]);
+  const [allCards, setAllCards] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [isLocationPermissionGranted, setIsLocationPermissionGranted] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [searchedLocation, setSearchedLocation] = useState(null);
   const [buttonBottom, setButtonBottom] = useState(30);
   const bottomRef = useRef(null);
   const scrollableRef = useRef(null);
   const searchParams = useSearchParams();
+  const [page, setpage] = useState(1);
+  const size = 20;
   
   const handleOpenBottomSheet = () => setIsBottomSheetOpen(true);
   const handleCloseBottomSheet = () => setIsBottomSheetOpen(false);
@@ -59,57 +63,161 @@ const ActualPlaceSearchPage = () => {
     setSelectedGungu(event.target.value);
   };
 
+  const categoryMapping = {
+    미용: "서비스",
+    반려동물용품: "서비스",
+    위탁관리: "서비스",
+    식당: "음식점",
+    카페: "음식점",
+    문예회관: "문화시설",
+    박물관: "문화시설",
+    미술관: "문화시설",
+    여행지: "문화시설",
+    동물병원: "의료시설",
+    동물약국: "의료시설",
+  };
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
-    setSelectedFilters([]);
+    filterCards(category, selectedFilters);
   };
-  const handleHover = (category) => setHoveredCategory(category);
 
+  const handleHover = (category) => setHoveredCategory(category);
+  
   const handleFilterClick = (filter) => {
-    setSelectedFilters((prevFilters) =>
-      prevFilters.includes(filter)
-        ? prevFilters.filter((f) => f !== filter)
-        : [...prevFilters, filter]
-    );
+    setSelectedFilters((prevFilters) => {
+      const updatedFilters = prevFilters.includes(filter)
+        ? prevFilters.filter((f) => f !== filter) 
+        : [...prevFilters, filter]; 
+      filterCards(selectedCategory, updatedFilters); 
+      return updatedFilters;
+    });
+  };
+
+  const filterCards = (category, filters) => {
+    let filteredCards = allCards;
+    if (category !== "전체") {
+      filteredCards = filteredCards.filter((card) => card.mainCategory === category);
+    }
+    if (filters.length > 0) {
+      filters.forEach((filter) => {
+        if (filter === "주차 가능") {
+          filteredCards = filteredCards.filter((card) => card.is_parking); 
+        } else if (filter === "실내공간") {
+          filteredCards = filteredCards.filter((card) => card.inside); 
+        } else if (filter === "야외공간") {
+          filteredCards = filteredCards.filter((card) => card.outside); 
+        } else if (filter === "무게 제한 없음") {
+          filteredCards = filteredCards.filter((card) => !card.weight_limit); 
+        } else if (filter === "애견 동반 요금 없음") {
+          filteredCards = filteredCards.filter((card) => !card.pet_fee); 
+        } else if (filter === "영업중") {
+          filteredCards = filteredCards.filter((card) => card.isOpenNow); 
+        }
+      });
+    }
+
+    setCards(filteredCards); 
   };
 
   const handleHover2 = (filter) => setHoveredFilter(filter);
+  
+  useEffect(() => {
+    const lat = parseFloat(searchParams.get("lat")); 
+    const lng = parseFloat(searchParams.get("lng")); 
+  
+    if (!isNaN(lat) && !isNaN(lng)) {
+      setUserLocation({ lat, lng }); 
+      fetchPlaces(lat, lng, page, size); 
+    } else {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ lat: latitude, lng: longitude });
+            fetchPlaces(latitude, longitude, page, size); 
+          },
+          () => {
+            alert("현재 위치를 가져올 수 없습니다.");
+          }
+        );
+      }
+      console.error("Invalid latitude or longitude in URL.");
+    }
+  }, [searchParams, page]);
 
-  const handleCardClick = (id) => {
-    router.push(`/place/placedetail?id=${id}`);
+  const fetchPlaces = async (lat, lng, page, size) => {
+    try {
+      const response = await axios.get("https://api.daengplace.com/places", {
+        params: {
+          latitude: lat,
+          longitude: lng,
+          page,
+          size,
+        },
+      });
+      const places = response.data.data.places || [];
+      const mappedPlaces = places.map((place) => ({
+        ...place,
+        mainCategory: categoryMapping[place.category] || "기타",
+        isOpenNow: checkIsOpen(place.operationHour), 
+      }));
+      setAllCards(mappedPlaces); 
+      setCards(mappedPlaces);
+      setSearchedLocation({ lat, lng });
+      console.log(places);
+    } catch (error) {
+      console.error("Error fetching places:", error);
+    }
   };
 
-  const toggleLike = (e, id) => {
+  const checkIsOpen = (operationHour) => {
+    if (!operationHour || !operationHour.todayOpen || !operationHour.todayClose) {
+      return false;
+    }
+  
+    const { todayOpen, todayClose } = operationHour;
+  
+    const now = new Date();
+    const [openHour, openMinute, openSecond] = todayOpen.split(":").map(Number);
+    const [closeHour, closeMinute, closeSecond] = todayClose.split(":").map(Number);
+  
+    const openTime = new Date();
+    openTime.setHours(openHour, openMinute, openSecond || 0);
+  
+    const closeTime = new Date();
+    closeTime.setHours(closeHour, closeMinute, closeSecond || 0); 
+  
+    if (closeTime <= openTime) {
+      closeTime.setDate(closeTime.getDate() + 1);
+    }
+  
+    return now >= openTime && now <= closeTime;
+  };
+
+  const handleCardClick = (placeId) => {
+    router.push(`/place/placedetail?placeId=${placeId}`);
+  };
+
+  const toggleLike = (e, placeId) => {
     e.stopPropagation();
     setCards((prevCards) =>
       prevCards.map((card) =>
-        card.id === id ? { ...card, isLiked: !card.isLiked } : card
+        card.placeId === placeId ? { ...card, isLiked: !card.isLiked } : card
       )
     );
   };
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-        },
-        () => {
-          alert("현재 위치를 가져올 수 없습니다.");
-        }
-      );
-    }
-  }, []);
-
   const handleMapView = () => {
-    if (userLocation) {
-      router.push(`/place/placemap?lat=${userLocation.lat}&lng=${userLocation.lng}`);
+    const location = searchedLocation || userLocation;
+    if (location) {
+      const { lat, lng } = location;
+      router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
     } else {
       alert("위치를 가져올 수 없습니다.");
     }
   };
-
+  
   const scrollToTop = () => {
     const container = document.getElementById("scrollable-container");
     if (container) {
@@ -162,7 +270,7 @@ const ActualPlaceSearchPage = () => {
       }
     };
   }, [cards]);
-
+  
   return (
     <>
       <Header
@@ -195,7 +303,7 @@ const ActualPlaceSearchPage = () => {
         onFilterClick={handleFilterClick}
         onHover={handleHover2}
       />
-      <CardList cards={cards} onCardClick={(id) => handleCardClick(id)} toggleLike={toggleLike} />
+      <CardList cards={cards} onCardClick={(placeId) => handleCardClick(placeId)} toggleLike={toggleLike} keyExtractor={(card) => card.id || card.placeId} />
       {/* 리스트 마지막 감지용 */}
       <div ref={bottomRef} style={{ height: "1px" }}></div>
       <MapButton bottom={buttonBottom} onClick={handleMapView}>

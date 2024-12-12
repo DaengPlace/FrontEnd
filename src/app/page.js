@@ -9,13 +9,6 @@ export default function Home() {
 
   return (
     <Container>
-      <TextBox>
-        <SubTitle>
-          <p>반려견과 함께 떠나는</p>
-          <p>특별한 공간</p>
-        </SubTitle>
-        <Title>댕댕플레이스</Title>
-      </TextBox>
 
       <ButtonBox>
         <Image
@@ -47,54 +40,31 @@ const Container = styled.div`
   flex-direction: column;
   gap: 40px;
 
-  background-image: url("/assets/common/start.svg");
+  background-image: url("/assets/common/start1.svg");
   background-size: cover;
   background-position: center;
   height: 100vh;
   color: ${({ theme }) => theme.colors.white};
 `;
 
-const TextBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 10rem;
-`;
-
 const ButtonBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-top: 22rem;
 
   img {
     cursor: pointer;
   }
 `;
   
-const SubTitle = styled.h2`
-  text-align: center;
-  font-size: 1.4rem;
-  font-family: "Do Hyeon", sans-serif !important;
-
-  p {
-  margin: 0;
-  font-family: "Do Hyeon", sans-serif;
-  }
-`;
-
-const Title = styled.h1`
-  text-align: center;
-  font-size: 3.3rem;
-  font-family: "Gugi", sans-serif;
-  font-weight: 400;
-`;
-
 const WithoutLoginBtn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   cursor: pointer;
+  margin-top: -16px;
 
   span {
     font-size: 0.9rem;

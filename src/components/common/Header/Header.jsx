@@ -77,7 +77,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px 10px 10px;
+  padding: 10px 20px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 
   position: absolute;

@@ -137,7 +137,11 @@ const SigninProfilePage = () => {
           />
           <Button
             isActive={!errors.nickname && watch("nickname")?.length > 0}
-            onClick={handleCheckDuplicate}
+            onClick={() => {
+              if (!errors.nickname && watch("nickname")?.length > 0) {
+                handleCheckDuplicate();
+              }
+            }}
           >
             중복확인
           </Button>

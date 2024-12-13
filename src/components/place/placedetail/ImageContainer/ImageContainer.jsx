@@ -6,7 +6,7 @@ const ImageContainer = () => {
   return (
     <Container>
       <StyledImage
-        src="/assets/image 19.png"
+        src="/assets/image 19.svg"
         alt="Main Place"
         width={600}
         height={352}

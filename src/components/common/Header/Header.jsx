@@ -8,7 +8,7 @@ import { CloseOutline } from "@styled-icons/evaicons-outline/CloseOutline";
 import { useRouter } from "next/navigation";
 import theme from "@/styles/theme.js";
 import Image from "next/image";
-import Logo from "@/../../public/assets/mainpage/Logo.png";
+import Logo from "@/../../public/assets/mainpage/Logo.svg";
 import AuthGuard from "../AuthGuard/AuthGuard";
 
 const Header = ({
@@ -28,8 +28,8 @@ const Header = ({
       <SmallContainer>
         {showLogo ? (
           <LogoWrapper onClick={() => router.push("/main")}>
-            <LogoImage src={Logo} width={30} height={30} alt="logo" />
-            <LogoTitle>댕댕플레이스</LogoTitle>
+            <LogoImage src={Logo} width={150} height={30} alt="logo" />
+            {/* <LogoTitle>댕댕플레이스</LogoTitle> */}
           </LogoWrapper>
         ) : (
           <>
@@ -105,7 +105,7 @@ const LogoWrapper = styled.div`
 `;
 
 const LogoImage = styled(Image)`
-  width: 30px;
+  width: 150px;
   height: 30px;
 `;
 

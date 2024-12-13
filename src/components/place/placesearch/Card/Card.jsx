@@ -34,12 +34,20 @@ const Card = ({ card, onCardClick, toggleLike }) => {
       }}
     >
       <AuthGuard>
-        <HeartIconContainer onClick={(e) => toggleLike(e, card.placeId)} isliked={card.isLiked}>
+        <HeartIconContainer 
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            toggleLike(e, card.placeId)
+          }}
+          isliked={card.isLiked}
+        >
           {card.isLiked ? <Favorite /> : <FavoriteBorder />}
         </HeartIconContainer>
       </AuthGuard>
+
       <Image
-        src={card.image || "/assets/image 19.png"}
+        src={"/assets/image 19.svg"}
         alt={card.name || "이미지 설명 없음"}
         width={510}
         height={300}

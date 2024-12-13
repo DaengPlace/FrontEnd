@@ -10,10 +10,11 @@ const AuthGuard = ({ children }) => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const handleAction = (e) => {
+    e.preventDefault();
     e.stopPropagation(); // 이벤트 전파 방지
     if (!accessToken) {
       setIsBottomSheetOpen(true); // 로그인 필요 알림
-    } else if (children.props.onClick) {
+    } else {
       children.props.onClick(e); // 로그인된 경우 원래 onClick 실행
     }
   };
@@ -27,11 +28,17 @@ const AuthGuard = ({ children }) => {
             title="로그인이 필요한 서비스입니다"
             confirmText="로그인"
             cancelText="닫기"
-            onConfirm={() => {
+            onConfirm={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
               setIsBottomSheetOpen(false);
               router.push('/'); // 로그인 페이지로 이동
             }}
-            onClose={() => setIsBottomSheetOpen(false)} // 닫기 버튼
+            onClose={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setIsBottomSheetOpen(false)
+            }} // 닫기 버튼
           />
         </>
       )}

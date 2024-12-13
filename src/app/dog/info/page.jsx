@@ -10,6 +10,7 @@ import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Modal from "@/components/common/Modal/Modal";
 import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
+import { useGetBreedTypes } from "@/hooks/dog/useGetBreedTypes";
 
 const DogInfoPage = () => {
   const router = useRouter();
@@ -33,6 +34,7 @@ const DogInfoPage = () => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const BreedTypes = useGetBreedTypes();
 
   const handleInputChange = (key, value) => {
     setDogInfo((prev) => ({ ...prev, [key]: value }));

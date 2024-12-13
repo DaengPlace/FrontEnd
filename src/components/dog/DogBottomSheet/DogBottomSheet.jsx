@@ -1,8 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { BREEDS } from "@/constants/DogBreeds";
+import { getBreedTypes } from "@/apis/dog/getBreedTypes";
 
 const DogBottomSheet = ({ onClose, onSelect }) => {
+  const [breedList, setBreedList] = useState([]);
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBreedTypes = async () => {
+      try {
+        const response = await getBreedTypes();
+        const breeds = response.data?.breeds || [];
+        setData(breeds);
+        setBreedList(breeds);
+      } catch (error) {
+        console.error("Failed to fetch breed types:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBreedTypes();
+  }, []);
+
+  const handleSearch = (searchValue) => {
+    if (!data) return;
+    const filteredBreeds = data.filter((breed) =>
+      breed.breedType.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setBreedList(filteredBreeds);
+  };
+
   return (
     <Overlay onClick={onClose}>
       <SheetContainer onClick={(e) => e.stopPropagation()}>
@@ -11,20 +40,24 @@ const DogBottomSheet = ({ onClose, onSelect }) => {
           <SearchInput
             type="text"
             placeholder="견종을 검색해 주세요"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && e.target.value.trim() !== "") {
-                onSelect(e.target.value);
-              }
-            }}
+            onChange={(e) => handleSearch(e.target.value)}
           />
         </SearchInputWrapper>
         <BreedList>
-          <p>많이 찾는 견종</p>
-          {BREEDS.map((breed, index) => (
-            <BreedItem key={index} onClick={() => onSelect(breed)}>
-              {breed}
-            </BreedItem>
-          ))}
+          {isLoading ? (
+            <p>로딩 중...</p>
+          ) : breedList.length > 0 ? (
+            breedList.map((breed) => (
+              <BreedItem
+                key={breed.breedTypeId}
+                onClick={() => onSelect(breed.breedType)}
+              >
+                {breed.breedType}
+              </BreedItem>
+            ))
+          ) : (
+            <p>검색 결과가 없습니다.</p>
+          )}
         </BreedList>
       </SheetContainer>
     </Overlay>
@@ -54,6 +87,22 @@ const SheetContainer = styled.div`
   padding: 25px;
   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
+  max-height: 70%;
+  overflow: hidden;
+`;
+
+const BreedList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 50vh;
+  overflow-y: auto;
+  border-top: 1px solid #eee;
+  p {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
 `;
 
 const Header = styled.h2`
@@ -75,18 +124,6 @@ const SearchInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.divider};
   background: #ebebeb;
   border-radius: 8px;
-`;
-
-const BreedList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  p {
-    font-size: 19px;
-    font-weight: 800;
-    margin-bottom: 10px;
-  }
 `;
 
 const BreedItem = styled.li`

@@ -2,13 +2,59 @@
 
 import Header from '@/components/common/Header/Header';
 import { WithBookmarkIcon } from '@/components/common/Header/Header.stories';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { dogs } from '@/data/DogsTest';
 import theme from '@/styles/theme';
 import DogCard from '@/components/recommend/DogCard/DogCard';
+import axios from 'axios';
 
 const RecommendTestResults = () => {
+
+  const [dogs, setDogs] = useState([]);
+  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW9fMzgwNjEyNzc5OSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MzQwNjg0ODUsImV4cCI6MTczNDEyODQ4NX0.RkZ9oXIk-EOpuVPdI57YNzgU04pQFDtPkbEdtbJOB9E';
+
+  useEffect(() => {
+    const fetchDogData = async () => {
+      try {
+        const response = await axios.get('https://api.daengplace.com/traits', {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization : `Bearer ${token}`,
+          }
+        });
+        const data = response.data;
+
+        const formattedDogs = data.data.petTraits.map((petTrait) => {
+          const personality = petTrait.petTraits.reduce(
+            (acc, trait) => {
+              acc[trait.traitQuestion] = trait.traitAnswer;
+              return acc;
+            },
+            {activity: "", sociality: "", relation: ""}
+          );
+
+          const tags = data.data.memberTraits.map(
+            (trait) => trait.traitAnswer
+          );
+
+          return {
+            id: petTrait.petId,
+            name: petTrait.petName,
+            hasPersonality: petTrait.petTraits.length > 0,
+            personality,
+            tags,
+          };
+        });
+
+        setDogs(formattedDogs);
+      } catch (error) {
+        console.error("성향 테스트 결과 데이터 가져오기 실패 : ", error)
+      }
+    };
+
+    fetchDogData();
+  }, []);
 
   return (
     <Container>

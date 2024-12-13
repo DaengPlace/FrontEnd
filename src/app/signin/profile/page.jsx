@@ -23,6 +23,8 @@ const SigninProfilePage = () => {
     "/assets/profile/default_profile.svg"
   );
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [isLocationBottomSheetVisible, setIsLocationBottomSheetVisible] =
+    useState(false);
   const {
     control,
     watch,
@@ -49,19 +51,25 @@ const SigninProfilePage = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    if (isChecked && !isDuplicate && nickname.length > 0) {
-      const updatedData = {
-        ...signinData,
-        nickname,
-        profileImageUrl: profileImage,
-      };
-      setSigninData(updatedData);
+  const handleLocationSubmit = async (status) => {
+    const updatedData = {
+      ...signinData,
+      nickname,
+      profileImageUrl: profileImage,
+      locationStatus: status,
+    };
+    setSigninData(updatedData);
 
-      await postSignin(updatedData);
-      if (!error) {
-        setIsBottomSheetVisible(true);
-      }
+    const response = await postSignin(updatedData);
+    if (!response.error) {
+      setIsLocationBottomSheetVisible(false);
+      setIsBottomSheetVisible(true);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (isChecked && !isDuplicate && nickname.length > 0) {
+      setIsLocationBottomSheetVisible(true);
     }
   };
 
@@ -159,6 +167,23 @@ const SigninProfilePage = () => {
           확인
         </Button>
       </ButtonContainer>
+
+      {isLocationBottomSheetVisible && (
+        <BottomSheet
+          title={
+            <>
+              댕댕플레이스에서 <br /> 보호자님의 위치 정보를 사용하고자 합니다.
+            </>
+          }
+          cancelText="차단"
+          confirmText="동의"
+          onClose={() => setIsLocationBottomSheetVisible(false)}
+          onConfirm={() => handleLocationSubmit(true)}
+          onCancel={() => handleLocationSubmit(false)}
+          setIsBottomSheetVisible={setIsLocationBottomSheetVisible}
+          warningText="‘차단' 선택 시 서비스 이용이 불가합니다."
+        />
+      )}
 
       {isBottomSheetVisible && (
         <BottomSheet

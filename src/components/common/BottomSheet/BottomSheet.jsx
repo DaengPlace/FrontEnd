@@ -19,9 +19,7 @@ const BottomSheet = ({
   return ReactDOM.createPortal(
     <Overlay>
       <Sheet>
-        <CloseButton onClick={onClose}>
-          &times;
-        </CloseButton>
+        <CloseButton onClick={onClose}>&times;</CloseButton>
         {title && <Title>{title}</Title>}
         {content && <Content>{content}</Content>}
         <ButtonContainer>
@@ -36,9 +34,7 @@ const BottomSheet = ({
             </Button>
           )}
         </ButtonContainer>
-        {warningText && (
-          <WarningText>{warningText}</WarningText>
-        )}
+        {warningText && <WarningText>{warningText}</WarningText>}
       </Sheet>
     </Overlay>,
     document.body
@@ -107,6 +103,7 @@ const Title = styled.h2`
   font-weight: bold;
   text-align: center;
   margin-bottom: 30px;
+  line-height: 1.5;
 `;
 
 const Content = styled.div`

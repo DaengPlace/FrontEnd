@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
+import { useAuthStore } from "@/stores/authStore";
+import { useSigninStore } from "@/stores/signinStore";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -17,6 +19,29 @@ const SigninPage = () => {
   const [timer, setTimer] = useState(180);
   const [timeExpired, setTimeExpired] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
+
+  const { setTokens } = useAuthStore();
+  const { setSigninData } = useSigninStore();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("accessToken");
+    const refreshToken = urlParams.get("refreshToken");
+
+    if (accessToken && refreshToken) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      setTokens({
+        accessToken,
+        refreshToken,
+      });
+
+      router.push("/signin");
+    } else {
+      console.log("Access Token이 URL에 없습니다.");
+    }
+  }, [router]);
 
   const {
     control,
@@ -35,6 +60,13 @@ const SigninPage = () => {
 
   const onSubmit = (data) => {
     if (isVerified) {
+      console.log("Signin Data: ", data);
+
+      setSigninData({
+        name: data.name,
+        birthDate: data.birthdate,
+        email: data.email,
+      });
       router.push("/signin/info");
     } else if (isVerificationSent) {
       verifyCode();

@@ -8,10 +8,14 @@ import Header from "@/components/signin/Header/Header";
 import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useSigninStore } from "@/stores/signinStore";
+import { usePostSignin } from "@/hooks/usePostSignin";
 import Image from "next/image";
 
 const SigninProfilePage = () => {
   const router = useRouter();
+  const { signinData, setSigninData } = useSigninStore();
+  const { postSignin } = usePostSignin();
   const [nickname, setNickname] = useState("");
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -42,6 +46,22 @@ const SigninProfilePage = () => {
         setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (isChecked && !isDuplicate && nickname.length > 0) {
+      const updatedData = {
+        ...signinData,
+        nickname,
+        profileImageUrl: profileImage,
+      };
+      setSigninData(updatedData);
+
+      await postSignin(updatedData);
+      if (!error) {
+        setIsBottomSheetVisible(true);
+      }
     }
   };
 
@@ -132,7 +152,7 @@ const SigninProfilePage = () => {
       <ButtonContainer>
         <Button
           isActive={isChecked && !isDuplicate && nickname.length > 0}
-          onClick={() => setIsBottomSheetVisible(true)}
+          onClick={handleSubmit}
           hasImage={false}
           type="button"
         >

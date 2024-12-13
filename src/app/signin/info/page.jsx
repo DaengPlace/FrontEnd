@@ -7,9 +7,11 @@ import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Button from "@/components/common/Button/Button";
 import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Header from "@/components/signin/Header/Header";
+import { useSigninStore } from "@/stores/signinStore";
 
 const SigninInfoPage = () => {
   const router = useRouter();
+  const { setSigninData } = useSigninStore();
   const [selectedGender, setSelectedGender] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState({
     city: null,
@@ -22,6 +24,27 @@ const SigninInfoPage = () => {
 
   const handleRegionChange = (key, value) => {
     setSelectedRegion((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSubmit = () => {
+    if (
+      selectedGender !== null &&
+      selectedRegion.city !== null &&
+      selectedRegion.district !== null
+    ) {
+      console.log(
+        "Signin Data: ",
+        selectedGender,
+        selectedRegion.city,
+        selectedRegion.district
+      );
+      setSigninData({
+        gender: selectedGender,
+        state: selectedRegion.city,
+        city: selectedRegion.district,
+      });
+      router.push("/signin/profile");
+    }
   };
 
   return (
@@ -82,15 +105,7 @@ const SigninInfoPage = () => {
             selectedRegion.city !== null &&
             selectedRegion.district !== null
           }
-          onClick={() => {
-            if (
-              selectedGender !== null &&
-              selectedRegion.city &&
-              selectedRegion.district
-            ) {
-              router.push("/signin/profile");
-            }
-          }}
+          onClick={() => handleSubmit()}
           hasImage={true}
           type="button"
         >

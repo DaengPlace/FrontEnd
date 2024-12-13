@@ -8,6 +8,7 @@ import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import { useAuthStore } from "@/stores/authStore";
+import { useSigninStore } from "@/stores/signinStore";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -20,8 +21,7 @@ const SigninPage = () => {
   const [verificationError, setVerificationError] = useState(false);
 
   const { setTokens } = useAuthStore();
-  const [age, setAge] = useState(20);
-  const [gender, setGender] = useState(1); // 0 : male, 1: female
+  const { setSigninData } = useSigninStore();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -60,6 +60,13 @@ const SigninPage = () => {
 
   const onSubmit = (data) => {
     if (isVerified) {
+      console.log("Signin Data: ", data);
+
+      setSigninData({
+        name: data.name,
+        birthDate: data.birthdate,
+        email: data.email,
+      });
       router.push("/signin/info");
     } else if (isVerificationSent) {
       verifyCode();

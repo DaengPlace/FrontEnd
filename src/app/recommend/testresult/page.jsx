@@ -11,18 +11,21 @@ import axios from 'axios';
 const RecommendTestResults = () => {
 
   const [dogs, setDogs] = useState([]);
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW9fMzgwNjEyNzc5OSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MzQwNjg0ODUsImV4cCI6MTczNDEyODQ4NX0.RkZ9oXIk-EOpuVPdI57YNzgU04pQFDtPkbEdtbJOB9E';
-
+  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW9fMzgyMjM1MDcxNSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MzQxMTY3ODUsImV4cCI6MTczNDE3Njc4NX0.-jBsk8YVbxZW8PeDhxGsY6lyFyTOJJAfU3hkXnzYVKE';
+  
   useEffect(() => {
+    localStorage.setItem('accessToken', token);
     const fetchDogData = async () => {
       try {
         const response = await axios.get('https://api.daengplace.com/traits', {
           headers: {
-            Accept: 'application/json',
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
-            Authorization : `Bearer ${token}`,
+            'Authorization' : `Bearer ${token}`,
           }
         });
+        console.log("API 응답 데이터 : ", response.data);
+
         const data = response.data;
 
         const formattedDogs = data.data.petTraits.map((petTrait) => {
@@ -99,6 +102,3 @@ const ScrollableContent = styled.div`
     display: none;
   }
 `;
-
-
-

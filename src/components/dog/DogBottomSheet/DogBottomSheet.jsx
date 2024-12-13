@@ -50,7 +50,7 @@ const DogBottomSheet = ({ onClose, onSelect }) => {
             breedList.map((breed) => (
               <BreedItem
                 key={breed.breedTypeId}
-                onClick={() => onSelect(breed.breedType)}
+                onClick={() => onSelect(breed)}
               >
                 {breed.breedType}
               </BreedItem>

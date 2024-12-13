@@ -97,7 +97,7 @@ const DogInfoPage = () => {
           name: dogInfo.name,
           breed: dogInfo.breed,
           birthDate: dogInfo.birthDate,
-          gender: dogInfo.gender === "여아" ? "FEMAIL" : "MAIL",
+          gender: dogInfo.gender,
           isNeutered: dogInfo.neutered === "했어요",
           weight: parseFloat(`${dogInfo.weightWhole}.${dogInfo.weightDecimal}`),
         });
@@ -298,7 +298,7 @@ const DogInfoPage = () => {
         <DogBottomSheet
           onClose={() => setIsBottomSheetOpen(false)}
           onSelect={(breed) => {
-            handleInputChange("breed", breed);
+            handleInputChange("breed", breed.breedType);
             setIsBottomSheetOpen(false);
           }}
         />

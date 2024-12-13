@@ -7,13 +7,9 @@ export const axiosInstance = axios.create({
   },
 });
 
-/*
-
-추후에 토큰이나 에러 처리를 할 때 사용
-
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,5 +19,3 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
- */

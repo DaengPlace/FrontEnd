@@ -22,14 +22,19 @@ const KakaoLogin = () => {
       console.log("AUTHORIZATION_CODE", AUTHORIZATION_CODE);
 
       try {
-        const response = await axios.get(
-          `${BASE_URL}/login/oauth2/code/kakao?code=${AUTHORIZATION_CODE}`,
+        const response = await axios.post(
+          `${BASE_URL}/login/oauth2/code/kakao`,
+          {
+            code: AUTHORIZATION_CODE,
+          },
           {
             headers: {
               Accept: "application/json",
+              "Content-Type": "application/x-www-form-urlencoded",
             },
           }
         );
+        setTokens(response.data);
         console.log("Response: ", response.data);
       } catch (error) {
         console.error("Error: ", error.response?.data || error.message);

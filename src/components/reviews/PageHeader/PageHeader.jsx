@@ -2,11 +2,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import InfoIcon from '@mui/icons-material/Info';
-import useReviewStore from "@/stores/reviewStore";
 
-const PageHeader = ({ reviewCount }) => {
+const PageHeader = ({ placeName, category, reviewCount }) => {
   const [isPolicyVisible, setIsPolicyVisible] = useState(false);
-  const { placeName, category } = useReviewStore();
 
   const togglePolicySheet = () => {
     setIsPolicyVisible((prev) => !prev);

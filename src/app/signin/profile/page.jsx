@@ -61,10 +61,8 @@ const SigninProfilePage = () => {
     setSigninData(updatedData);
 
     const response = await postSignin(updatedData);
-    if (!response.error) {
-      setIsLocationBottomSheetVisible(false);
-      setIsBottomSheetVisible(true);
-    }
+    setIsLocationBottomSheetVisible(false);
+    setIsBottomSheetVisible(true);
   };
 
   const handleSubmit = () => {
@@ -181,7 +179,6 @@ const SigninProfilePage = () => {
           }
           cancelText="차단"
           confirmText="동의"
-          onClose={() => setIsLocationBottomSheetVisible(false)}
           onConfirm={() => handleLocationSubmit(true)}
           onCancel={() => handleLocationSubmit(false)}
           setIsBottomSheetVisible={setIsLocationBottomSheetVisible}

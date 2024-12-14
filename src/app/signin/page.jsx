@@ -105,24 +105,15 @@ const SigninPage = () => {
     }
   };
 
-  const handleSendVerificationCode = async () => {
+  const handleSendVerificationCode = () => {
     const email = watch("email");
-    if (email && !errors.email) {
-      try {
-        // 이메일 인증번호 요청
-        const response = await getSendCode(email);
-        console.log("인증번호 발송 성공:", response);
-        setIsVerificationSent(true);
-        setTimer(180);
-        setTimeExpired(false);
-        setVerificationCode("");
-        setVerificationError(false);
-        verificationRef.current?.focus();
-      } catch (error) {
-        console.error("인증번호 발송 실패:", error);
-        setIsVerificationSent(false);
-      }
-    }
+
+    setIsVerificationSent(true);
+    setTimer(180);
+    setTimeExpired(false);
+    setVerificationCode("");
+    setVerificationError(false);
+    verificationRef.current?.focus();
   };
 
   const handleVerificationCodeChange = (e) => {

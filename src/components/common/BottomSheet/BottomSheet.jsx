@@ -19,7 +19,7 @@ const BottomSheet = ({
   return ReactDOM.createPortal(
     <Overlay>
       <Sheet>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
+        {onClose && <CloseButton onClick={onClose}>&times;</CloseButton>}
         {title && <Title>{title}</Title>}
         {content && <Content>{content}</Content>}
         <ButtonContainer>

@@ -17,7 +17,7 @@ const RecommendTestResults = () => {
     localStorage.setItem('accessToken', token);
     const fetchDogData = async () => {
       try {
-        const response = await axios.get('https://api.daengplace.com/traits', {
+        const response = await axios.get('https://api.daengplace.com/traits/', {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

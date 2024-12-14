@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
 import styled from "styled-components";
 import HeaderSection from "@/components/reviews/ReviewsDetail/HeaderSection/HeaderSection";
 import SubHeader from "@/components/reviews/ReviewsDetail/SubHeader/SubHeader";
@@ -9,6 +11,14 @@ import ReviewCard from "@/components/reviews/ReviewsDetail/ReviewCard/ReviewCard
 const ReviewDetailPage = () => {
   const [likedReviews, setLikedReviews] = useState({});
   const [isOpen, setIsOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const accessToken = localStorage.getItem("accessToken");
+  const reviewId = searchParams.get("reviewId");
+  const placeId = searchParams.get("placeId");
+  console.log("Review ID:", reviewId, "Place ID:", placeId);
+  const [place, setPlace] = useState(null); 
+  const [review, setReview] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const toggleLike = (id) => {
     setLikedReviews((prev) => ({
@@ -21,25 +31,38 @@ const ReviewDetailPage = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const review = {
-    id: 1,
-    category: "반려동물용품점",
-    title: "간식곳간",
-    author: "뽀삐엄마",
-    date: "2024.11.01",
-    rating: 5,
-    image: "/assets/image.png",
-    review: `
-      야외 공간이 넓어서 뛰어놀기 참 좋네요!
-      재방문 의사 100% 입니다^^
-      음료 종류도 다양하고 아이들 간식도 정말 다양해요 ㅎㅎ
-    `,
-  };
+  useEffect(() => {
+    const fetchReviewDetail = async () => {
+      try {
+        const response = await axios.get(`https://api.daengplace.com/reviews/${placeId}/and/${reviewId}`);
+        console.log("Review Detail:", response.data.data);
+        setReview(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("리뷰 상세 정보를 가져오는 데 실패했습니다:", error);
+        setLoading(false);
+      }
+    };
+
+    const fetchPlaceDetail = async () => {
+      try {
+        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+        setPlace(response.data.data); 
+      } catch (error) {
+        console.error("장소 정보를 가져오는 데 실패했습니다:", error);
+      }
+    };
+
+    if (reviewId && placeId) {
+      fetchReviewDetail();
+      fetchPlaceDetail(); 
+    }
+  }, [reviewId, placeId]);
 
   return (
     <>
       <HeaderSection />
-      <SubHeader category={review.category} title={review.title} />
+      <SubHeader category={place?.category || "카테고리 없음"} title={place?.name || "제목 없음"} />
       <Container>
         <ReviewCard
           review={review}
@@ -47,6 +70,7 @@ const ReviewDetailPage = () => {
           toggleLike={toggleLike}
           isOpen={isOpen}
           toggleDropdown={toggleDropdown}
+          accessToken={accessToken}
         />
       </Container>
     </>

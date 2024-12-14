@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useDogStore } from "@/stores/dogStore";
 import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
@@ -12,6 +13,7 @@ import Checkbox from "@/components/common/Checkbox/Checkbox";
 const DogEditPage = () => {
   const router = useRouter();
   const inputRefs = useRef([]);
+  const { dogData, setDogData } = useDogStore();
   const {
     control,
     formState: { errors },
@@ -19,17 +21,34 @@ const DogEditPage = () => {
     mode: "onChange",
   });
   const [dogInfo, setDogInfo] = useState({
-    name: "",
-    breed: "",
-    birthDate: "",
-    gender: null,
-    neutered: null,
-    weightWhole: "",
-    weightDecimal: "",
+    name: dogData.name || "",
+    breed: dogData.breed || "",
+    birthDate: dogData.birthDate || "",
+    gender: dogData.gender || null,
+    neutered: dogData.isNeutered ? "했어요" : "안했어요",
+    weightWhole: dogData.weight ? String(Math.floor(dogData.weight)) : "",
+    weightDecimal: dogData.weight
+      ? String((dogData.weight % 1).toFixed(1).split(".")[1])
+      : "",
   });
 
   const handleInputChange = (key, value) => {
     setDogInfo((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSave = () => {
+    const updatedWeight = parseFloat(
+      `${dogInfo.weightWhole}.${dogInfo.weightDecimal}`
+    );
+    setDogData({
+      name: dogInfo.name,
+      breed: dogInfo.breed,
+      birthDate: dogInfo.birthDate,
+      gender: dogInfo.gender === "여아",
+      isNeutered: dogInfo.neutered === "했어요",
+      weight: updatedWeight,
+    });
+    router.push("/dog/confirm");
   };
 
   return (
@@ -39,7 +58,6 @@ const DogEditPage = () => {
         onBack={() => router.push("/dog/info")}
         onClose={() => router.push("/")}
       />
-
       <InputContainer>
         <InputBox>
           <p>이름</p>
@@ -51,7 +69,6 @@ const DogEditPage = () => {
             onChange={(e) => handleInputChange("name", e.target.value)}
           />
         </InputBox>
-
         <InputBox>
           <p>견종</p>
           <Input
@@ -62,7 +79,6 @@ const DogEditPage = () => {
             onChange={(e) => handleInputChange("breed", e.target.value)}
           />
         </InputBox>
-
         <InputBox>
           <p>생년월일</p>
           <Controller
@@ -96,7 +112,6 @@ const DogEditPage = () => {
             )}
           />
         </InputBox>
-
         <InputBox>
           <p>성별</p>
           <BoxContainer>
@@ -112,7 +127,6 @@ const DogEditPage = () => {
             />
           </BoxContainer>
         </InputBox>
-
         <InputBox>
           <p>중성화 수술 여부</p>
           <BoxContainer>
@@ -128,7 +142,6 @@ const DogEditPage = () => {
             />
           </BoxContainer>
         </InputBox>
-
         <InputBox>
           <p>몸무게</p>
           <BoxContainer>
@@ -153,13 +166,8 @@ const DogEditPage = () => {
           </BoxContainer>
         </InputBox>
       </InputContainer>
-
       <FixedButtonContainer>
-        <Button
-          isActive={true}
-          onClick={() => router.push("/dog/confirm")}
-          type="button"
-        >
+        <Button isActive={true} onClick={handleSave} type="button">
           확인
         </Button>
       </FixedButtonContainer>
@@ -214,7 +222,6 @@ const FixedButtonContainer = styled.div`
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-
   width: 100%;
   max-width: 600px;
   padding: 0 2rem;

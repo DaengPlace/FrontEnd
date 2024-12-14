@@ -10,6 +10,7 @@ import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Modal from "@/components/common/Modal/Modal";
 import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
+import { useDogStore } from "@/stores/dogStore";
 
 const DogInfoPage = () => {
   const router = useRouter();
@@ -33,6 +34,7 @@ const DogInfoPage = () => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const { setDogData } = useDogStore();
 
   const handleInputChange = (key, value) => {
     setDogInfo((prev) => ({ ...prev, [key]: value }));
@@ -91,6 +93,14 @@ const DogInfoPage = () => {
           nextRef.focus();
         }
       } else {
+        setDogData({
+          name: dogInfo.name,
+          breed: dogInfo.breed,
+          birthDate: dogInfo.birthDate,
+          gender: dogInfo.gender,
+          isNeutered: dogInfo.neutered === "했어요",
+          weight: parseFloat(`${dogInfo.weightWhole}.${dogInfo.weightDecimal}`),
+        });
         router.push("/dog/confirm");
       }
     }
@@ -288,7 +298,7 @@ const DogInfoPage = () => {
         <DogBottomSheet
           onClose={() => setIsBottomSheetOpen(false)}
           onSelect={(breed) => {
-            handleInputChange("breed", breed);
+            handleInputChange("breed", breed.breedType);
             setIsBottomSheetOpen(false);
           }}
         />

@@ -13,7 +13,7 @@ export const postSignin = async (signinData) => {
     email,
   } = signinData;
 
-  const response = await axios.post(`/oauth2/signin`, {
+  const response = await axios.post(`/members`, {
     name,
     nickname,
     profileImageUrl,

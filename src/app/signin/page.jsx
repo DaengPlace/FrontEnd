@@ -11,6 +11,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useSigninStore } from "@/stores/signinStore";
 import { postSendCode } from "@/apis/auth/email/postSendCode";
 import { postCheckCode } from "@/apis/auth/email/postCheckCode";
+import { postCheckDuplicate } from "@/apis/auth/email/postCheckDuplicate";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const SigninPage = () => {
   const [timer, setTimer] = useState(180);
   const [timeExpired, setTimeExpired] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
+  const [verificationErrorMessage, setVerificationErrorMessage] = useState("");
 
   const { setTokens } = useAuthStore();
   const { setSigninData } = useSigninStore();
@@ -109,17 +111,24 @@ const SigninPage = () => {
   const handleSendVerificationCode = async () => {
     const email = watch("email");
     try {
+      const duplicateCheckResponse = await postCheckDuplicate(email);
+
+      if (!duplicateCheckResponse.data.isValid) {
+        setVerificationError(true);
+        setVerificationErrorMessage("이미 회원가입된 유저입니다.");
+        return;
+      }
+
       const response = await postSendCode(email);
-      console.log("Verification Code Sent: ", response);
+
       setIsVerificationSent(true);
       setTimer(180);
       setTimeExpired(false);
       setVerificationCode("");
       setVerificationError(false);
-      verificationRef.current?.focus();
     } catch (error) {
-      console.error("Error sending verification code: ", error);
       setVerificationError(true);
+      setVerificationErrorMessage("인증번호 발송 중 오류가 발생했습니다.");
     }
   };
 
@@ -309,6 +318,10 @@ const SigninPage = () => {
                       placeholder="이메일 (예: daengplace@gmail.com)"
                       type="email"
                       isValid={!fieldState.invalid}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setVerificationErrorMessage("");
+                      }}
                     />
                   )}
                 />
@@ -321,6 +334,9 @@ const SigninPage = () => {
                   {isVerificationSent ? "재발송" : "인증번호 발송"}
                 </Button>
               </BoxContainer>
+              {verificationErrorMessage && (
+                <ErrorText>{verificationErrorMessage}</ErrorText>
+              )}
               {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
             </InputBox>
 
@@ -332,7 +348,7 @@ const SigninPage = () => {
                     ref={verificationRef}
                     value={verificationCode}
                     onChange={handleVerificationCodeChange}
-                    placeholder="인증번호 입력 (예: ABC123)"
+                    placeholder="인증번호 입력"
                     type="text"
                     isValid={!verificationError || timeExpired}
                   />

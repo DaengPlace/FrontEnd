@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Hr2 from "@/components/place/Hr2/Hr2";
@@ -6,24 +6,74 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
-const ReviewList = ({ reviews }) => {
+const ReviewList = ({ reviews, setReviews, accessToken }) => {
     const router = useRouter();
     const [likedReviews, setLikedReviews] = useState({});
+    const [likeCounts, setLikeCounts] = useState({});
     const [dropdownStates, setDropdownStates] = useState({});
 
-    const handleCardClick = () => {
-        router.push("/reviews/ReviewDetail")
-    }
+    const NativeDate = global.Date;
 
-    const toggleLike = (id, event) => {
-      event.stopPropagation(); 
-      setLikedReviews((prev) => ({
-        ...prev,
-        [id]: !prev[id],
-      }));
+    const formatDate = (dateString) => {
+      const date = new NativeDate(dateString); 
+      if (isNaN(date)) {
+        return "Invalid date";
+      }
+      const kstOffset = 9 * 60 * 60 * 1000; 
+      const localDate = new NativeDate(date.getTime() + kstOffset);
+      const year = localDate.getFullYear();
+      const month = String(localDate.getMonth() + 1).padStart(2, "0");
+      const day = String(localDate.getDate()).padStart(2, "0");
+      return `${year}.${month}.${day}`;
     };
-
+    const handleCardClick = (reviewId, placeId) => {
+        router.push(`/reviews/ReviewDetail?reviewId=${reviewId}&placeId=${placeId}`)
+    }
+    
+    const toggleLike = async (placeId, reviewId, event) => {
+      event.stopPropagation();
+    
+      try {
+        const reviewIndex = reviews.findIndex((review) => review.reviewId === reviewId);
+        if (reviewIndex === -1) {
+          console.error("Review not found in the reviews list.");
+          return;
+        }
+    
+        const isCurrentlyLiked = reviews[reviewIndex].liked;
+    
+        const response = isCurrentlyLiked
+          ? await axios.delete(
+              `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
+              { headers: { Authorization: `Bearer ${accessToken}` } }
+            )
+          : await axios.post(
+              `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
+              {},
+              { headers: { Authorization: `Bearer ${accessToken}` } }
+            );
+    
+        const { likeCount, liked } = response.data.data;
+    
+        setReviews((prevReviews) => {
+          const updatedReviews = [...prevReviews];
+          updatedReviews[reviewIndex] = {
+            ...updatedReviews[reviewIndex],
+            liked,
+            likeCount,
+          };
+          console.log(updatedReviews);
+          return updatedReviews;
+        });
+      } catch (error) {
+        console.error("Failed to toggle like:", error.response?.data || error.message);
+        alert(error.response?.data?.message || "An error occurred while toggling like.");
+      }
+    };
+    
+    
     const toggleDropdown = (id, event) => {
       event.stopPropagation();
       setDropdownStates((prev) => ({
@@ -31,13 +81,38 @@ const ReviewList = ({ reviews }) => {
         [id]: !prev[id],
       }));
     };
-    
+    const handleEditClick = (reviewId, placeId, event) => {
+      event.stopPropagation();
+      router.push(`/reviews/reviewsInput?reviewId=${reviewId}&placeId=${placeId}`);
+    };
+
+    const handleDeleteClick = (reviewId) => {
+      if (confirm("정말로 삭제하시겠습니까?")) {
+        axios
+          .delete(`https://api.daengplace.com/reviews/${reviewId}`,
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          )
+          .then(() => {
+            alert("리뷰가 삭제되었습니다.");
+            router.refresh();
+          })
+          .catch((error) => {
+            console.error("리뷰 삭제 실패:", error);
+            alert("리뷰 삭제에 실패했습니다.");
+          });
+      }
+    };
   return (
     <ReviewListContainer>
       <Title>리뷰 ({reviews.length})</Title>
       <Hr2/> 
       {reviews.map((review) => (
-        <ReviewCard key={review.id} onClick={handleCardClick} >
+        <ReviewCard
+        key={review.reviewId}
+        onClick={() => handleCardClick(review.reviewId, review.placeId)}
+        >
           <CardHeader>
           <AvatarWrapper>
               <Image
@@ -48,23 +123,34 @@ const ReviewList = ({ reviews }) => {
                 style={{ borderRadius: "50%" }}
               />
             </AvatarWrapper>
-            <Author>{review.author}</Author>
+            <Author>{review.memberNickname}</Author>
             <span style={{marginBottom:"20px"}}>|</span>
-            <Date>{review.date}</Date>
-            <LikeButton onClick={(event) => toggleLike(review.id, event)}>
-              {likedReviews[review.id] ? (
-                <FavoriteIcon style={{ color: "red" }} />
-              ) : (
-                <FavoriteBorderIcon style={{ color: "#ccc" }} />
-              )}
+            <Date>{formatDate(review.createdAt)}</Date>
+            <LikeButton
+                onClick={(event) => toggleLike(review.placeId, review.reviewId, event)}
+            >
+                {review.liked ? (
+                    <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                    <FavoriteBorderIcon style={{ color: "#ccc" }} />
+                )}
             </LikeButton>
-            <IconButton onClick={(event) => toggleDropdown(review.id, event)}>
+            <IconButton onClick={(event) => toggleDropdown(review.reviewId, event)}>
                 <MoreVertIcon />
             </IconButton>
-            {dropdownStates[review.id] && (
+            {dropdownStates[review.reviewId] && (
               <Menu>
-                <MenuItem>수정</MenuItem>
-                <MenuItem>삭제</MenuItem>
+                <MenuItem
+                  onClick={(e) => handleEditClick(review.reviewId, review.placeId, e)}
+                >
+                  수정
+                </MenuItem>
+                <MenuItem onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteClick(review.reviewId);
+                }}>
+                  삭제
+                </MenuItem>
               </Menu>
             )}
             </CardHeader>
@@ -76,10 +162,10 @@ const ReviewList = ({ reviews }) => {
             </Rating>
             </RatingContainer>
           <CardContent>
-            <Text>{review.review}</Text>
+            <Text>{review.content}</Text>
             <ImageWrapper>
               <Image
-                src={review.image}
+                src={review.image || "/assets/image.png"}
                 alt={`리뷰 이미지 ${review.id}`}
                 width={100} 
                 height={100} 
@@ -120,6 +206,7 @@ const ReviewCard = styled.div`
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 8px;
   width: 100%;
 `;
@@ -171,10 +258,11 @@ const ImageWrapper = styled.div`
 `;
 const LikeButton = styled.div`
   cursor: pointer;
-  margin-left: 260px;
+  margin-left: auto;
   width:40px;
   height:30px;
-
+  align-items: center;
+  justify-content: center;
   &:hover svg {
     transform: scale(1.2);
   }
@@ -186,9 +274,7 @@ const IconButton = styled.button`
   padding: 8px;
   border-radius: 50%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translateX(-10px) translateY(-2.5px);
+  transform: translateX(-25px) translateY(-2.7px);
   svg {
     color: #ABABAB; 
     transition: transform 0.2s ease, color 0.2s ease;

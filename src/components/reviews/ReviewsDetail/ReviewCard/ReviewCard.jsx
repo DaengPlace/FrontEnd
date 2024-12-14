@@ -6,7 +6,21 @@ import Image from "next/image";
 import LikeButton from "../LikeButton/LikeButton";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
-const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown }) => {
+const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown, accessToken }) => {
+  const NativeDate = global.Date;
+  const formatDate = (dateString) => {
+    const date = new NativeDate(dateString); 
+    if (isNaN(date)) {
+      return "Invalid date";
+    }
+    const kstOffset = 9 * 60 * 60 * 1000; 
+    const localDate = new NativeDate(date.getTime() + kstOffset);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, "0");
+    const day = String(localDate.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -20,12 +34,14 @@ const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown }
           />
         </AvatarWrapper>
         <UserInfo>
-          <Author>{review.author}</Author>
+          <Author>{review.memberId}</Author>
           <span style={{ marginBottom: "20px" }}>|</span>
-          <Date>{review.date}</Date>
+          <Date>{formatDate(review.createdAt)}</Date>
         </UserInfo>
-        <LikeButton isLiked={likedReviews[review.id]} onClick={() => toggleLike(review.id)} />
-        <DropdownMenu isOpen={isOpen} toggleDropdown={toggleDropdown} />
+        <LikeButton isLiked={likedReviews[review.reviewId]} onClick={() => toggleLike(review.reviewId)} />
+        <DropdownMenu isOpen={isOpen} toggleDropdown={toggleDropdown} reviewId={review.reviewId} 
+  placeId={review.placeId} 
+  accessToken={accessToken} />
       </CardHeader>
       <RatingContainer>
         <Rating>
@@ -39,8 +55,8 @@ const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown }
       <CardContent>
         <ImageWrapper>
           <Image
-            src={review.image}
-            alt={`리뷰 이미지 ${review.id}`}
+            src={review.image || "/assets/image.png"}
+            alt={`리뷰 이미지 ${review.reviewId}`}
             width={540}
             height={540}
             objectFit="cover"
@@ -48,7 +64,7 @@ const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown }
             priority
           />
         </ImageWrapper>
-        <Text>{review.review}</Text>
+        <Text>{review.content}</Text>
       </CardContent>
     </Card>
   );

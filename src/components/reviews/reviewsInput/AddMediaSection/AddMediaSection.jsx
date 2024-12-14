@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import AddIcon from '@mui/icons-material/Add';
 
-const AddMediaSection = () => {
+const AddMediaSection = ({ mediaFiles, onMediaFilesChange }) => {
     const fileInputRef = useRef(null);
   
     const handleButtonClick = () => {
@@ -10,7 +10,17 @@ const AddMediaSection = () => {
     };
   
     const handleFileChange = (event) => {
-      const files = event.target.files;
+      const files = Array.from(event.target.files);
+      const filePreviews = files.map((file) => ({
+        file,
+        url: URL.createObjectURL(file),
+      }));
+      onMediaFilesChange([...mediaFiles, ...filePreviews]); // 상위 컴포넌트에 전달
+    };
+  
+    const handleRemoveFile = (index) => {
+      const updatedFiles = mediaFiles.filter((_, i) => i !== index);
+      onMediaFilesChange(updatedFiles); // 상위 컴포넌트에 전달
     };
   
     return (
@@ -28,6 +38,21 @@ const AddMediaSection = () => {
             onChange={handleFileChange}
           />
         </Media>
+        <PreviewContainer>
+        {mediaFiles.map((file, index) => (
+          <PreviewItem key={index}>
+            {file.file.type.startsWith("image") ? (
+              <PreviewImage src={file.url} alt="미리보기 이미지" />
+            ) : (
+              <PreviewVideo controls>
+                <source src={file.url} type={file.file.type} />
+                지원하지 않는 영상 형식입니다.
+              </PreviewVideo>
+            )}
+            <RemoveButton onClick={() => handleRemoveFile(index)}>X</RemoveButton>
+          </PreviewItem>
+        ))}
+      </PreviewContainer>
       </Section>
     );
   };
@@ -67,4 +92,47 @@ const AddMediaButton = styled.button`
 `;
 const HiddenFileInput = styled.input`
   display: none; 
+`;
+
+const PreviewContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const PreviewItem = styled.div`
+  position: relative;
+  width: 100px;
+  height: 100px;
+`;
+
+const PreviewImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+`;
+
+const PreviewVideo = styled.video`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+`;
+
+const RemoveButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
 `;

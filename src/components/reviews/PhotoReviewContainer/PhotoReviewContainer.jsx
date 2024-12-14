@@ -4,10 +4,18 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const PhotoReviewContainer = ({ reviews }) => {
-    const router = useRouter();
-    const handleClick = () => {
-        router.push("/reviews/PhotoReview")
-    }
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/reviews/PhotoReview");
+  };
+
+  // reviews 데이터 미리 처리하여 기본 이미지를 설정
+  const processedReviews = reviews.map((review) => ({
+    ...review,
+    imageUrls: review.imageUrls?.length > 0 ? review.imageUrls : ["/assets/image.png"],
+  }));
+
   return (
     <Container>
       <SectionHeader>
@@ -15,17 +23,19 @@ const PhotoReviewContainer = ({ reviews }) => {
         <ViewMore onClick={handleClick}>더보기 &gt;</ViewMore>
       </SectionHeader>
       <PhotoList>
-        {reviews.slice(0, 5).map((review) => (
-          <PhotoWrapper key={review.id}>
-            <Image
-              src={review.image}
-              alt={`리뷰 이미지 ${review.id}`}
-              width={100}
-              height={100}
-              style={{ borderRadius: "10px" }}
-              priority 
-            />
-          </PhotoWrapper>
+        {processedReviews.slice(0, 5).map((review) => (
+          review.imageUrls[0] && ( // 이미지가 있는 경우에만 렌더링
+            <PhotoWrapper key={review.reviewId}>
+              <Image
+                src={review.imageUrls[0]} // URL이 없으면 기본 이미지 사용
+                alt={`리뷰 이미지 ${review.reviewId}`}
+                width={100}
+                height={100}
+                style={{ borderRadius: "10px" }}
+                priority
+              />
+            </PhotoWrapper>
+          )
         ))}
       </PhotoList>
     </Container>

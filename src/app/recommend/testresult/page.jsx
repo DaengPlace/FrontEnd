@@ -11,10 +11,10 @@ import axios from 'axios';
 const RecommendTestResults = () => {
 
   const [dogs, setDogs] = useState([]);
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW9fMzgyMjM1MDcxNSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MzQxMTY3ODUsImV4cCI6MTczNDE3Njc4NX0.-jBsk8YVbxZW8PeDhxGsY6lyFyTOJJAfU3hkXnzYVKE';
   
   useEffect(() => {
-    localStorage.setItem('accessToken', token);
+    const token = localStorage.getItem('accessToken');
+    console.log(token);
     const fetchDogData = async () => {
       try {
         const response = await axios.get('https://api.daengplace.com/traits/', {

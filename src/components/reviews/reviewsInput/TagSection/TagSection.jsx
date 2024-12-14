@@ -16,9 +16,9 @@ const TagSection = ({ tags, onTagClick }) => (
         "✨ 깔끔해요",
         "💸 가격이 합리적이에요",
         "🌻 뷰가 좋아요",
-      ].map((tag, index) => (
+      ].map((tag) => (
         <Tag
-          key={index}
+          key={tag}
           selected={tags.includes(tag)}
           onClick={() => onTagClick(tag)}
         >

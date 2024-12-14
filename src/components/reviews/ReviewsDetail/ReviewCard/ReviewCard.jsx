@@ -78,8 +78,8 @@ const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, a
                 )}
           </LikeButton>
         <DropdownMenu isOpen={isOpen} toggleDropdown={toggleDropdown} reviewId={review.reviewId} 
-  placeId={review.placeId} 
-  accessToken={accessToken} />
+          placeId={review.placeId} 
+          accessToken={accessToken} />
       </CardHeader>
       <RatingContainer>
         <Rating>

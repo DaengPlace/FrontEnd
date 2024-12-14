@@ -17,7 +17,7 @@ const ReviewDetailPage = () => {
   const placeId = searchParams.get("placeId");
   console.log("Review ID:", reviewId, "Place ID:", placeId);
   const [place, setPlace] = useState(null); 
-  const [review, setReview] = useState("");
+  const [review, setReview] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const toggleLike = (id) => {
@@ -34,7 +34,11 @@ const ReviewDetailPage = () => {
   useEffect(() => {
     const fetchReviewDetail = async () => {
       try {
-        const response = await axios.get(`https://api.daengplace.com/reviews/${placeId}/and/${reviewId}`);
+        const response = await axios.get(`https://api.daengplace.com/reviews/${placeId}/and/${reviewId}`,
+          {
+            headers: { Authorization : `Bearer ${accessToken}` },
+          }
+        );
         console.log("Review Detail:", response.data.data);
         setReview(response.data.data);
         setLoading(false);
@@ -71,6 +75,7 @@ const ReviewDetailPage = () => {
           isOpen={isOpen}
           toggleDropdown={toggleDropdown}
           accessToken={accessToken}
+          setReview={setReview}
         />
       </Container>
     </>

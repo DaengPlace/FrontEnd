@@ -60,6 +60,7 @@ export default DropdownMenu;
 const DropdownWrapper = styled.div`
   position: relative;
   display: inline-block;
+  margin-left: -15px;
 `;
 
 const Button = styled.button`

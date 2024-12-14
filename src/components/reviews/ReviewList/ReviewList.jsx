@@ -261,6 +261,7 @@ const LikeButton = styled.div`
   margin-left: auto;
   width:40px;
   height:30px;
+  margin-right: -35px;
   align-items: center;
   justify-content: center;
   &:hover svg {
@@ -274,7 +275,7 @@ const IconButton = styled.button`
   padding: 8px;
   border-radius: 50%;
   display: flex;
-  transform: translateX(-25px) translateY(-2.7px);
+  transform: translateX(10px) translateY(-2.7px);
   svg {
     color: #ABABAB; 
     transition: transform 0.2s ease, color 0.2s ease;

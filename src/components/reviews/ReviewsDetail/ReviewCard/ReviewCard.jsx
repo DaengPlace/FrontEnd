@@ -3,11 +3,14 @@
 import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import LikeButton from "../LikeButton/LikeButton";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
+import axios from "axios";
 
-const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown, accessToken }) => {
+const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, accessToken }) => {
   const NativeDate = global.Date;
+
   const formatDate = (dateString) => {
     const date = new NativeDate(dateString); 
     if (isNaN(date)) {
@@ -19,6 +22,33 @@ const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown, 
     const month = String(localDate.getMonth() + 1).padStart(2, "0");
     const day = String(localDate.getDate()).padStart(2, "0");
     return `${year}.${month}.${day}`;
+  };
+
+  const toggleLike = async (placeId, reviewId) => {
+    try {
+      const isCurrentlyLiked = review.liked;
+
+      const response = isCurrentlyLiked
+        ? await axios.delete(
+            `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          )
+        : await axios.post(
+            `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
+            {},
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+          );
+
+      const { likeCount, liked } = response.data.data;
+      setReview((prevReview) => ({
+        ...prevReview,
+        liked,
+        likeCount,
+      }));
+    } catch (error) {
+      console.error("Failed to toggle like:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "An error occurred while toggling like.");
+    }
   };
 
   return (
@@ -34,11 +64,19 @@ const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown, 
           />
         </AvatarWrapper>
         <UserInfo>
-          <Author>{review.memberId}</Author>
+          <Author>{review.memberNickname}</Author>
           <span style={{ marginBottom: "20px" }}>|</span>
           <Date>{formatDate(review.createdAt)}</Date>
         </UserInfo>
-        <LikeButton isLiked={likedReviews[review.reviewId]} onClick={() => toggleLike(review.reviewId)} />
+        <LikeButton
+                onClick={(event) => toggleLike(review.placeId, review.reviewId, event)}
+            >
+                {review.liked ? (
+                    <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                    <FavoriteBorderIcon style={{ color: "#ccc" }} />
+                )}
+          </LikeButton>
         <DropdownMenu isOpen={isOpen} toggleDropdown={toggleDropdown} reviewId={review.reviewId} 
   placeId={review.placeId} 
   accessToken={accessToken} />
@@ -78,7 +116,17 @@ const Card = styled.div`
   margin-left: 10px;
   margin-top: -20px;
 `;
-
+const LikeButton = styled.div`
+  cursor: pointer;
+  margin-left: auto;
+  width:40px;
+  height:30px;
+  align-items: center;
+  justify-content: center;
+  &:hover svg {
+    transform: scale(1.2);
+  }
+`;
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
@@ -110,6 +158,7 @@ const Author = styled.span`
 const Date = styled.span`
   font-size: 15px;
   margin-left: 4px;
+  margin-top: 2px;
 `;
 
 const RatingContainer = styled.div`

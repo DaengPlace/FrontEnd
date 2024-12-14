@@ -5,14 +5,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_BASE_URL;
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 
 export default function Home() {
   const router = useRouter();
 
   const KAKAO_URL = `${BASE_URL}/oauth2/authorization/kakao`;
-  const GOOGLE_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email`;
+  const GOOGLE_URL = `${BASE_URL}/oauth2/authorization/google`;
 
   const handleLogin = (url) => {
     window.location.href = url;

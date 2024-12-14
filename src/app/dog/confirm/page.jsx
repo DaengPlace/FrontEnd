@@ -5,10 +5,29 @@ import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import DogInfo from "@/components/dog/DogInfo/DogInfo";
-import { DOG } from "@/data/dogData";
+import { useDogStore } from "@/stores/dogStore";
+import { postRegister } from "@/apis/dog/postRegister";
 
 const DogConfirmPage = () => {
   const router = useRouter();
+  const { dogData } = useDogStore();
+  console.log(dogData);
+
+  const handleRegister = async () => {
+    try {
+      await postRegister({
+        name: dogData.name,
+        breed: dogData.breed,
+        birthDate: dogData.birthDate,
+        weight: dogData.weight,
+        gender: dogData.gender === "여아" ? "FEMALE" : "MALE",
+        isNeutered: dogData.isNeutered,
+      });
+      router.push("/main");
+    } catch (error) {
+      alert("등록 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
 
   return (
     <Container>
@@ -17,7 +36,7 @@ const DogConfirmPage = () => {
         onBack={() => router.push("/")}
         onClose={() => router.push("/")}
       />
-      <DogInfo dog={DOG[0]} />
+      <DogInfo />
       <ButtonBox>
         <Button
           onClick={() => router.push("/dog/edit")}
@@ -27,7 +46,7 @@ const DogConfirmPage = () => {
         >
           수정
         </Button>
-        <Button onClick={() => router.push("/main")} isActive={true} fullWidth>
+        <Button onClick={handleRegister} isActive={true} fullWidth>
           등록
         </Button>
       </ButtonBox>

@@ -9,6 +9,7 @@ import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import { useAuthStore } from "@/stores/authStore";
 import { useSigninStore } from "@/stores/signinStore";
+import { getSendCode } from "@/apis/auth/email/getSendCode";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -39,7 +40,6 @@ const SigninPage = () => {
 
       router.push("/signin");
     } else {
-      console.log("Access Token이 URL에 없습니다.");
     }
   }, [router]);
 
@@ -105,15 +105,23 @@ const SigninPage = () => {
     }
   };
 
-  const handleSendVerificationCode = () => {
+  const handleSendVerificationCode = async () => {
     const email = watch("email");
     if (email && !errors.email) {
-      setIsVerificationSent(true);
-      setTimer(180);
-      setTimeExpired(false);
-      setVerificationCode("");
-      setVerificationError(false);
-      verificationRef.current?.focus();
+      try {
+        // 이메일 인증번호 요청
+        const response = await getSendCode(email);
+        console.log("인증번호 발송 성공:", response);
+        setIsVerificationSent(true);
+        setTimer(180);
+        setTimeExpired(false);
+        setVerificationCode("");
+        setVerificationError(false);
+        verificationRef.current?.focus();
+      } catch (error) {
+        console.error("인증번호 발송 실패:", error);
+        setIsVerificationSent(false);
+      }
     }
   };
 

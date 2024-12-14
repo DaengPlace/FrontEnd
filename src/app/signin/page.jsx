@@ -9,7 +9,8 @@ import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import { useAuthStore } from "@/stores/authStore";
 import { useSigninStore } from "@/stores/signinStore";
-import { getSendCode } from "@/apis/auth/email/getSendCode";
+import { postSendCode } from "@/apis/auth/email/postSendCode";
+import { postCheckCode } from "@/apis/auth/email/postCheckCode";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -105,27 +106,39 @@ const SigninPage = () => {
     }
   };
 
-  const handleSendVerificationCode = () => {
+  const handleSendVerificationCode = async () => {
     const email = watch("email");
-
-    setIsVerificationSent(true);
-    setTimer(180);
-    setTimeExpired(false);
-    setVerificationCode("");
-    setVerificationError(false);
-    verificationRef.current?.focus();
+    try {
+      const response = await postSendCode(email);
+      console.log("Verification Code Sent: ", response);
+      setIsVerificationSent(true);
+      setTimer(180);
+      setTimeExpired(false);
+      setVerificationCode("");
+      setVerificationError(false);
+      verificationRef.current?.focus();
+    } catch (error) {
+      console.error("Error sending verification code: ", error);
+      setVerificationError(true);
+    }
   };
 
   const handleVerificationCodeChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
-    setVerificationCode(value);
+    setVerificationCode(e.target.value);
     setVerificationError(false);
   };
 
-  const verifyCode = () => {
-    if (verificationCode === "000000") {
-      setIsVerified(true);
-    } else {
+  const verifyCode = async () => {
+    const email = watch("email");
+    try {
+      const response = await postCheckCode(email, verificationCode);
+
+      if (response.data.success) {
+        setIsVerified(true);
+      } else {
+        setVerificationError(true);
+      }
+    } catch (error) {
       setVerificationError(true);
     }
   };
@@ -319,14 +332,14 @@ const SigninPage = () => {
                     ref={verificationRef}
                     value={verificationCode}
                     onChange={handleVerificationCodeChange}
-                    placeholder="인증번호 입력 (예: 000000)"
+                    placeholder="인증번호 입력 (예: ABC123)"
                     type="text"
                     isValid={!verificationError || timeExpired}
                   />
                   <Button
                     disabled={isVerified}
                     isActive={
-                      verificationCode.length === 6 &&
+                      verificationCode.length > 0 &&
                       !verificationError &&
                       !isVerified
                     }

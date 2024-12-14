@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
-import { reviews } from "@/data/reviewData";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import PageHeader from "@/components/reviews/PageHeader/PageHeader";
 import ReviewSummary from "@/components/reviews/ReviewSummary/ReviewSummary";
@@ -13,12 +13,57 @@ import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const ReviewPage = () => {
-  const router = useRouter();
-  const averageRating =
-    reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get("placeId");
+  const [reviews, setReviews] = useState([]);
+  const [placeData, setPlaceData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const accessToken = localStorage.getItem("accessToken");
 
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const containerRef = useRef(null);
+
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://api.daengplace.com/reviews/places/${placeId}`,
+          {
+            headers: { Authorization : `Bearer ${accessToken}` },
+          }
+          );
+          console.log("Fetched reviews:", response.data.data);
+          setReviews(response.data.data);
+      }catch (error) {
+        console.error("Error fetching reviews:", error);
+        setError(error.message || "Failed to fetch reviews.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchPlaceData = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.daengplace.com/places/${placeId}`
+        );
+        setPlaceData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching place data:", error);
+        setError(error.message || "Failed to fetch place data.");
+      }
+    };
+
+    if (placeId) {
+      fetchReviews();
+      fetchPlaceData();
+    } else {
+      console.warn("placeId is undefined.");
+    }
+  }, [placeId]);
 
   const scrollToTop = () => {
     if (containerRef.current) {
@@ -55,14 +100,18 @@ const ReviewPage = () => {
           showMapIcon={WithMapIcon.args.showMapIcon}
         />
       <Container ref={containerRef}>
-        <PageHeader reviewCount={reviews.length} />
+        <PageHeader placeName={placeData?.name || "장소 이름 없음"}
+          category={placeData?.category || "카테고리 없음"} reviewCount={reviews.length} />
         <ReviewSummary
-          averageRating={averageRating}
+          averageRating={
+            reviews.reduce((sum, review) => sum + review.rating, 0) /
+            (reviews.length || 0.0)
+          }
           reviewCount={reviews.length}
         />
-        <TagSection />
+        <TagSection reviews={reviews}/>
         <PhotoReviewContainer reviews={reviews} />
-        <ReviewList reviews={reviews} />
+        <ReviewList reviews={reviews} setReviews={setReviews} accessToken={accessToken} />
       </Container>
       {showScrollToTop && (
         <ScrollToTopButton onClick={scrollToTop}>

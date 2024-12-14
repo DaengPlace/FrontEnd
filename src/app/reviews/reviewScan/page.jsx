@@ -3,19 +3,38 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Modal from '@/components/common/Modal/Modal';
 import Header from "@/components/common/Header/Header";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
+import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
 
-const ReviewScanPage = () => {
+const ReviewScanPage = ({ocrVisitDate}) => {
   const router = useRouter();
+  const searchParams = useSearchParams(); 
+  const placeId = searchParams.get("placeId"); 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { placeName, visitDate } = useReviewStore();
+  const [placeData, setPlaceData] = useState(null);
+  const { visitDate } = useReviewStore();
+
+  useEffect(() => {
+    const fetchPlaceData = async () => {
+      try {
+        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+        setPlaceData(response.data.data);
+      } catch (error) {
+        console.error("장소 데이터를 가져오는 데 실패했습니다:", error);
+      }
+    };
+
+    if (placeId) {
+      fetchPlaceData();
+    }
+  }, [placeId]);
 
   const handleConfirm = () => {
-    router.push("/reviews/reviewsInput");
+    router.push(`/reviews/reviewsInput?placeId=${placeId}`);
   };
 
   return (
@@ -31,7 +50,7 @@ const ReviewScanPage = () => {
           <InfoBox>
             <InfoItem>
               <Label>상호명</Label>
-              <Value>{placeName || "장소 정보 없음"}</Value>
+              <Value>{placeData?.name || "장소 정보 없음"}</Value>
             </InfoItem>
             <Divider />
             <InfoItem>
@@ -61,7 +80,7 @@ const ReviewScanPage = () => {
           }
           cancelText='나가기'
           confirmText='계속 작성'
-          onCancel={() => router.push("/reviews")}
+          onCancel={() => router.push(`/reviews?placeId=${placeId}`)}
           onConfirm={() => setIsModalOpen(false)}
         />
       )}

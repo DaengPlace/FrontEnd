@@ -1,25 +1,46 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import InfoIcon from "@mui/icons-material/Info";
+import { useSearchParams } from "next/navigation";
 import useReviewStore from "@/stores/reviewStore";
+import axios from "axios";
 
 const CategorySection = () => {
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get("placeId"); // URL에서 placeId 가져오기
+  const [placeData, setPlaceData] = useState(null); // place 데이터를 저장할 상태
   const [isPolicyVisible, setIsPolicyVisible] = useState(false);
-  const { placeName, category, visitDate } = useReviewStore();
   const togglePolicySheet = () => {
     setIsPolicyVisible((prev) => !prev);
   };
+  useEffect(() => {
+    const fetchPlaceData = async () => {
+      try {
+        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+        setPlaceData(response.data.data); // 서버에서 받은 데이터 저장
+      } catch (error) {
+        console.error("장소 정보를 가져오는 데 실패했습니다:", error);
+      }
+    };
 
+    if (placeId) {
+      fetchPlaceData();
+    }
+  }, [placeId]);
+
+  if (!placeData) {
+    // 데이터를 아직 불러오지 않았을 때 로딩 표시
+    return <Section>로딩 중...</Section>;
+  }
   return (
     <>
       <Section>
         <HeaderRow>
           <div>
-            <CategoryBadge>{category}</CategoryBadge>
-            <SectionTitle>{placeName} 리뷰</SectionTitle>
-            <VisitDate>{visitDate} 방문</VisitDate>
+            <CategoryBadge>{placeData.category}</CategoryBadge>
+            <SectionTitle>{placeData.name} 리뷰</SectionTitle>
           </div>
           <PolicyButton onClick={togglePolicySheet}>
             <Span>리뷰 정책</Span>

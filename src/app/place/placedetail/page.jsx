@@ -156,7 +156,7 @@ const ActualPlaceDetailPage = () => {
               const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
               console.log("Extracted visit date:", visitDate);
               setVisitDate(visitDate);
-              router.push("/reviews/reviewScan");
+              router.push(`/reviews/reviewScan?placeId=${placeId}`);
             } else {
               alert("해당 장소 방문 기록이 확인되지 않았습니다.");
             }
@@ -199,7 +199,12 @@ const ActualPlaceDetailPage = () => {
               weightLimit: selectedCard.weight_limit,
             }}
           />
-          <ReviewSection />
+          <ReviewSection
+            placeId={placeId}
+            rating={selectedCard.rating}
+            reviewCount={selectedCard.review_count}
+            reviews={selectedCard.reviews}
+           />
           <AuthGuard><WriteReviewButton onClick={handleWriteReviewButtonClick} /></AuthGuard>
         </PageContainer>
         {isMapBottomSheetOpen && (
@@ -221,7 +226,7 @@ const ActualPlaceDetailPage = () => {
               onCancel={handleButtonClick}
               onConfirm={() => {
                 setIsReviewBottomSheetOpen(false);
-                router.push("/reviews/receiptCapture");
+                router.push(`/reviews/receiptCapture?placeId=${placeId}`);
               }}
               cancelText="사진 업로드"
               confirmText="영수증 촬영"

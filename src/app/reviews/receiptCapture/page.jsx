@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 import useReviewStore from "@/stores/reviewStore";
@@ -12,6 +12,8 @@ import useReviewStore from "@/stores/reviewStore";
 const ReceiptCapture = () => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get("placeId");
   const [facingMode, setFacingMode] = useState("user");
   const router = useRouter();
   const { placeName, setVisitDate } = useReviewStore();
@@ -100,7 +102,7 @@ const ReceiptCapture = () => {
   };
 
   const handleCloseClick = () => {
-    router.back();
+    router.push(`/reviews?placeId=${placeId}`);
   };
 
   return (

@@ -17,11 +17,16 @@ const ReviewScanPage = ({ocrVisitDate}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [placeData, setPlaceData] = useState(null);
   const { visitDate } = useReviewStore();
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchPlaceData = async () => {
       try {
-        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`,
+          {
+            headers: { Authorization : `Bearer ${accessToken}` }
+          }
+        );
         setPlaceData(response.data.data);
       } catch (error) {
         console.error("장소 데이터를 가져오는 데 실패했습니다:", error);

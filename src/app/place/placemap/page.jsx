@@ -45,6 +45,7 @@ const ActualPlaceMap = () => {
   const [allMarkers, setAllMarkers] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -112,7 +113,13 @@ const ActualPlaceMap = () => {
         params.search = searchname; 
       }
   
-      const response = await axios.get("https://api.daengplace.com/places", { params });
+      const response = await axios.get("https://api.daengplace.com/places", { 
+        params,
+        headers: {
+          Authorization: `Bearer ${accessToken}`, 
+          "Content-Type": "application/json", 
+        },
+        });
       const places = response.data.data.places || [];
       const fetchedMarkers = places.map((place) => ({
         id: place.placeId,
@@ -124,6 +131,7 @@ const ActualPlaceMap = () => {
         outside: place.outside,
         weight_limit: place.weight_limit,
         pet_fee: place.pet_fee,
+        is_favorite: place.is_favorite || false,
         operationHour: place.operationHour,
       }));
       console.log("Fetched Markers:", fetchedMarkers);

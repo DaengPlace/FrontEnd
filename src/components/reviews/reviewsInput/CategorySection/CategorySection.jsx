@@ -12,13 +12,18 @@ const CategorySection = () => {
   const placeId = searchParams.get("placeId"); // URL에서 placeId 가져오기
   const [placeData, setPlaceData] = useState(null); // place 데이터를 저장할 상태
   const [isPolicyVisible, setIsPolicyVisible] = useState(false);
+  const accessToken = localStorage.getItem("accessToken");
   const togglePolicySheet = () => {
     setIsPolicyVisible((prev) => !prev);
   };
   useEffect(() => {
     const fetchPlaceData = async () => {
       try {
-        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`,
+          {
+            headers: { Authorization : `Bearer ${accessToken}` }
+          }
+        );
         setPlaceData(response.data.data); // 서버에서 받은 데이터 저장
       } catch (error) {
         console.error("장소 정보를 가져오는 데 실패했습니다:", error);

@@ -32,6 +32,8 @@ const ReviewPage = () => {
         const response = await axios.get(
           `https://api.daengplace.com/reviews/places/${placeId}`,
           {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
             headers: { Authorization : `Bearer ${accessToken}` },
           }
           );
@@ -48,7 +50,10 @@ const ReviewPage = () => {
     const fetchPlaceData = async () => {
       try {
         const response = await axios.get(
-          `https://api.daengplace.com/places/${placeId}`
+          `https://api.daengplace.com/places/${placeId}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` }, 
+          }
         );
         setPlaceData(response.data.data);
       } catch (error) {

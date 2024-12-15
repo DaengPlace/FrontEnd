@@ -3,7 +3,13 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-const SelectBox = ({ options, selectedValue, onChange, placeholder, disabled }) => {
+const SelectBox = ({
+  options,
+  selectedValue,
+  onChange,
+  placeholder,
+  disabled,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelectChange = (value) => {
@@ -12,9 +18,9 @@ const SelectBox = ({ options, selectedValue, onChange, placeholder, disabled }) 
   };
 
   return (
-    <SelectWrapper 
-    onClick={() => setIsOpen((prev) => !prev)}
-    disabled={disabled}
+    <SelectWrapper
+      onClick={() => setIsOpen((prev) => !prev)}
+      disabled={disabled}
     >
       <SelectedItem disabled={disabled}>
         <SelectText>
@@ -65,7 +71,6 @@ export default SelectBox;
 
 const SelectWrapper = styled.div`
   width: 100%;
-  height: 64px;
   max-width: 300px;
   position: relative;
   cursor: pointer;

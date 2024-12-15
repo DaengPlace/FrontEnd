@@ -3,52 +3,110 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useDogStore } from "@/stores/dogStore";
 import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
+import axios from "axios";
 
 const DogEditPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const petId = searchParams.get("petId");
+
   const inputRefs = useRef([]);
-  const { dogData, setDogData } = useDogStore();
+
   const {
     control,
-    formState: { errors },
+    formState: { errors }, trigger
   } = useForm({
     mode: "onChange",
   });
   const [dogInfo, setDogInfo] = useState({
-    name: dogData.name || "",
-    breed: dogData.breed || "",
-    birthDate: dogData.birthDate || "",
-    gender: dogData.gender || null,
-    neutered: dogData.isNeutered ? "했어요" : "안했어요",
-    weightWhole: dogData.weight ? String(Math.floor(dogData.weight)) : "",
-    weightDecimal: dogData.weight
-      ? String((dogData.weight % 1).toFixed(1).split(".")[1])
-      : "",
+    name: "",
+    breed: "",
+    birthDate: "",
+    gender: null,
+    neutered: "",
+    weightWhole: "",
+    weightDecimal: "",
   });
+
+  // 반려견 정보 가져오기
+  useEffect(() => {
+    const fetchDogInfo = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(`https://api/daengplace.com/members/pets/${petId}`, {
+          headers: {
+            'Accept': "application/json",
+            'Content-Type': "application/json",
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const data = response.data.data;
+
+        console.log(data);
+
+        // 상태 초기화
+        setDogInfo({
+          name: data.name,
+          breed: data.breed,
+          birthDate: data.birthDate,
+          gender: data.gender === "MALE" ? "남아" : "여아",
+          neutered: data.isNeutered ? "했어요" : "안했어요",
+          weightWhole: String(Math.floor(data.weight)), 
+          weightDecimal: String((data.weight % 1).toFixed(1).split(".")[1]), 
+        });
+      } catch (error) {
+        console.error("반려견 정보 가져오기 실패 : ", error);
+      }
+    };
+
+    if (petId) fetchDogInfo();
+  }, [petId]);
 
   const handleInputChange = (key, value) => {
     setDogInfo((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSave = () => {
-    const updatedWeight = parseFloat(
-      `${dogInfo.weightWhole}.${dogInfo.weightDecimal}`
-    );
-    setDogData({
-      name: dogInfo.name,
-      breed: dogInfo.breed,
-      birthDate: dogInfo.birthDate,
-      gender: dogInfo.gender === "여아",
-      isNeutered: dogInfo.neutered === "했어요",
-      weight: updatedWeight,
-    });
-    router.push("/dog/confirm");
+  const handleSave = async () => {
+    const isValid = await trigger(["birthDate"]); // 폼 검증
+    if (isValid) {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const updatedWeight = parseFloat(`${dogInfo.weightWhole}.${dogInfo.weightDecimal}`);
+        const payload = {
+          name: dogInfo.name,
+          breed: dogInfo.breed,
+          birthDate: `20${dogInfo.birthDate.slice(0, 2)}-${dogInfo.birthDate.slice(2, 4)}-${dogInfo.birthDate.slice(4, 6)}`, // "230101" → "2023-01-01"
+          gender: dogInfo.gender === "남아" ? "MALE" : "FEMALE",
+          isNeutered: dogInfo.neutered === "했어요",
+          weight: updatedWeight,
+        };
+
+        const response = await axios.put(
+          `https://api.daengplace.com/members/pets/${petId}`,
+          payload,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        alert("정보가 성공적으로 수정되었습니다!");
+        router.push("/dog/info");
+      } catch (error) {
+        console.error("반려견 정보 수정 실패:", error);
+        alert("정보 수정에 실패했습니다. 다시 시도해주세요.");
+      }
+    } else {
+      alert("생년월일을 올바르게 입력해주세요.");
+    }
   };
 
   return (
@@ -88,7 +146,7 @@ const DogEditPage = () => {
               required: "생년월일은 필수 입력입니다.",
               pattern: {
                 value: /^\d{6}$/,
-                message: "생년월일은 6자리 숫자여야 합니다. (예: 980918)",
+                message: "생년월일은 6자리 숫자여야 합니다. (예: 240101)",
               },
             }}
             render={({ field }) => (
@@ -96,7 +154,7 @@ const DogEditPage = () => {
                 <Input
                   {...field}
                   ref={(el) => (inputRefs.current[2] = el)}
-                  placeholder="생년월일 (예: 980918)"
+                  placeholder="생년월일 (예: 240101)"
                   type="text"
                   value={field.value || ""}
                   onChange={(e) => {

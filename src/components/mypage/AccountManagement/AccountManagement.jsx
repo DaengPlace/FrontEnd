@@ -4,12 +4,16 @@ import theme from '@/styles/theme.js';
 import { ChevronRight } from 'styled-icons/bootstrap';
 import dynamic from 'next/dynamic';
 import { NoTitle, Danger } from "@/components/common/Modal/Modal.stories";
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 const Modal = dynamic(() => import("@/components/common/Modal/Modal"), {ssr: false});
 
 const AccountManagement = () => {
 
   const [LogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [quitModalOpen, setQuitModalOpen] = useState(false);
+
+  const router = useRouter();
 
   const closeLogoutModal = () => {
     setLogoutModalOpen(false);
@@ -18,6 +22,11 @@ const AccountManagement = () => {
   const closeQuitModal = () => {
     setQuitModalOpen(false);
   };
+
+  const handleLogout = async () => {
+    localStorage.clear();
+    router.push("/");
+  } 
 
   return (
     <Container>
@@ -44,6 +53,7 @@ const AccountManagement = () => {
           onCancel={closeLogoutModal}
           onConfirm={() => {
             closeLogoutModal();
+            handleLogout();
           }}
         />
       )}

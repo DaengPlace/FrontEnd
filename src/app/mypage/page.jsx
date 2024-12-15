@@ -15,6 +15,8 @@ import { ChevronRight } from "styled-icons/bootstrap";
 import theme from "@/styles/theme.js";
 import { useRouter } from "next/navigation";
 import { getPets } from "@/apis/dog/getPets";
+import axios from 'axios';
+
 
 const MyPage = () => {
   const router = useRouter();
@@ -32,8 +34,27 @@ const MyPage = () => {
 
     fetchPets();
   }, []);
-
   console.log(pets);
+  const [userProfile, setUserProfile] = useState([]);
+  const token = localStorage.getItem('accessToken');
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('https://api.daengplace.com/members/profile', {
+          headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          },
+        });
+        setUserProfile(response.data.data);
+      } catch (error) {
+        console.error("회원 조회 실패 : ", error)
+      }
+    };
+    fetchUserProfile();
+  }, [token]);
 
   return (
     <Container>
@@ -46,11 +67,11 @@ const MyPage = () => {
       <Space />
 
       <SectionHeader header={"내 프로필"} />
-      <UserProfile imagePath={defaultProfileImage} name={"뽀삐엄마"} />
+      <UserProfile imagePath={defaultProfileImage} name={userProfile.nickname} />
       <br />
 
       <MyPetsHeader>
-        <SectionHeader header={"우리집 댕댕이들"} />
+        <SectionHeader header={`우리집 댕댕이들 ${pets.length}`} />
         <AddPet onClick={() => router.push("/dog/info")}>
           추가하기
           <StyledChevronRight />{" "}
@@ -74,6 +95,7 @@ export default MyPage;
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
+  height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

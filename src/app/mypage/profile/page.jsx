@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "@/components/common/Header/Header";
 import Button from "@/components/common/Button/Button";
@@ -10,6 +10,7 @@ import Input from "@/components/common/Input/Input";
 import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Image from "next/image";
+import axios from "axios";
 
 const MyProfilePage = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const MyProfilePage = () => {
     watch,
     trigger,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -31,6 +33,38 @@ const MyProfilePage = () => {
   const [profileImage, setProfileImage] = useState(
     "/assets/profile/default_profile.svg"
   );
+
+  // 프로필 데이터 가져오기 (GET)
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await axios.get("https://api.daengplace.com/members/profile", {
+          headers: {
+            "Accept" : "application/json",
+            "Content-type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        const {data} = response.data;
+
+        const formattedBirthDate = data.birthDate.slice(0,4) + data.birthDate.slice(5,7) + data.birthDate.slice(8,10);
+
+        // 폼 데이터 초기화
+        setValue("nickname", data.nickname);
+        setValue("birthdate", formattedBirthDate);
+        setValue("email", data.email);
+        setSelectedGender(data.gender === "MALE" ? "남성" : "여성");
+        setSelectedRegion({city: data.state, district: data.city});
+        setProfileImage(data.profileImageUrl || "/assets/profile/default_profile.svg");
+      } catch (error) {
+        console.error("프로필 조회 실패 : ",error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [setValue]);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -54,8 +88,32 @@ const MyProfilePage = () => {
   const handleSaveProfile = async () => {
     const isValid = await trigger(["nickname", "birthdate", "email"]);
     if (isValid) {
-      alert("프로필이 수정되었습니다!");
-      router.push("/main");
+      const token = localStorage.getItem("acceessToken");
+      const updatedData = {
+        nickname: watch("nickname"),
+        birthDate: watch("birthdate"),
+        email: watch("email"),
+        gender: selectedGender==="남성" ? "MALE" : "FEMALE",
+        state: selectedRegion.city,
+        city: selectedRegion.district,
+      };
+
+      try {
+        const response = await axios.put("https://api.daengplace.com/members/profile", {
+          headers: {
+            "Accept" : "application/json",
+            "Content-type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          updatedData,
+        });
+        alert("프로필 수정 성공");
+        router.push("/mypage");
+
+      } catch (error) {
+        console.error("프로필 수정 실패 : ",error);
+        alert("프로필 수정 실패")
+      }
     } else {
       alert("모든 필수 입력 항목을 올바르게 작성해 주세요.");
     }
@@ -165,13 +223,13 @@ const MyProfilePage = () => {
             rules={{
               required: "생년월일은 필수 입력입니다.",
               pattern: {
-                value: /^\d{2}\d{2}\d{2}$/,
-                message: "생년월일은 000101 형식으로 입력해야 합니다.",
+                value: /^\d{8}$/,
+                message: "생년월일은 20000101 형식으로 입력해야 합니다.",
               },
             }}
             render={({ field, fieldState }) => (
               <Input
-                placeholder="000101"
+                placeholder="20000101"
                 {...field}
                 value={field.value || ""}
                 isValid={!fieldState.invalid}

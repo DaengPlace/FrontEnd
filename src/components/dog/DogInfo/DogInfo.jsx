@@ -2,24 +2,46 @@
 
 import styled from "styled-components";
 import Image from "next/image";
+import { useDogStore } from "@/stores/dogStore";
 
-const DogInfo = ({ dog }) => {
+const DogInfo = () => {
+  const { dogData } = useDogStore();
+
+  const calculateAge = (birthDate) => {
+    if (!birthDate || birthDate.length !== 6) return "알 수 없음";
+    const year = parseInt(birthDate.slice(0, 2), 10) + 2000;
+    const month = parseInt(birthDate.slice(2, 4), 10);
+    const day = parseInt(birthDate.slice(4, 6), 10);
+
+    const today = new Date();
+    const birth = new Date(year, month - 1, day);
+
+    let ageYears = today.getFullYear() - birth.getFullYear();
+    let ageMonths = today.getMonth() - birth.getMonth();
+
+    if (ageMonths < 0) {
+      ageYears -= 1;
+      ageMonths += 12;
+    }
+    return `${ageYears}살 ${ageMonths}개월`;
+  };
+
   const dogDetails = [
-    { title: "견종", value: dog.type },
-    { title: "나이", value: dog.age },
-    { title: "성별", value: dog.gender },
-    { title: "중성화", value: dog.neutralization },
-    { title: "체중", value: dog.weight },
+    { title: "견종", value: dogData.breed || "알 수 없음" },
+    { title: "나이", value: calculateAge(dogData.birthDate) },
+    { title: "성별", value: dogData.gender || "알 수 없음" },
+    { title: "중성화", value: dogData.isNeutered ? "했어요" : "안했어요" },
+    { title: "체중", value: `${dogData.weight || "0"} kg` },
   ];
 
   return (
     <Container>
       <InfoContainer>
-        <DogName>{dog.name}</DogName>
+        <DogName>{dogData.name || "이름 없음"}</DogName>
         <DogDetailBox>
           {dogDetails.map((detail, index) => (
             <DogDetail key={index}>
-              <DetailTitle>{detail.title} </DetailTitle> {detail.value}
+              <DetailTitle>{detail.title}</DetailTitle> {detail.value}
             </DogDetail>
           ))}
         </DogDetailBox>

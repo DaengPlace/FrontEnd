@@ -8,7 +8,8 @@ import { CloseOutline } from "@styled-icons/evaicons-outline/CloseOutline";
 import { useRouter } from "next/navigation";
 import theme from "@/styles/theme.js";
 import Image from "next/image";
-import Logo from "@/../../public/assets/mainpage/Logo.png";
+import Logo from "@/../../public/assets/mainpage/Logo.svg";
+import AuthGuard from "../AuthGuard/AuthGuard";
 
 const Header = ({
   title,
@@ -27,8 +28,8 @@ const Header = ({
       <SmallContainer>
         {showLogo ? (
           <LogoWrapper onClick={() => router.push("/main")}>
-            <LogoImage src={Logo} width={30} height={30} alt="logo" />
-            <LogoTitle>댕댕플레이스</LogoTitle>
+            <LogoImage src={Logo} width={150} height={30} alt="logo" />
+            {/* <LogoTitle>댕댕플레이스</LogoTitle> */}
           </LogoWrapper>
         ) : (
           <>
@@ -47,9 +48,11 @@ const Header = ({
           </IconWrapper>
         )}
         {showFavoriteIcon && (
-          <IconWrapper onClick={() => router.push("/mypage/bookmark")}>
-            <StyledHeart size="28" />
-          </IconWrapper>
+          <AuthGuard>
+            <IconWrapper onClick={() => router.push("/mypage/bookmark")}>
+              <StyledHeart size="28" />
+            </IconWrapper>
+          </AuthGuard>
         )}
         {showHomeIcon && (
           <IconWrapper onClick={() => router.push("/main")}>
@@ -70,6 +73,7 @@ export default Header;
 
 const Container = styled.div`
   width: 100%;
+  max-width: 600px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -81,7 +85,7 @@ const Container = styled.div`
   left: 0;
 
   background-color: white;
-  z-index: 1000;
+  z-index: 500;
 `;
 
 const SmallContainer = styled.div`
@@ -101,7 +105,7 @@ const LogoWrapper = styled.div`
 `;
 
 const LogoImage = styled(Image)`
-  width: 30px;
+  width: 150px;
   height: 30px;
 `;
 
@@ -121,6 +125,7 @@ const RightIcons = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 `;
 
 const StyledPlace = styled(Place)`

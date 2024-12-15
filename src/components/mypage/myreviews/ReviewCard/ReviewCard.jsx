@@ -51,9 +51,9 @@ const ReviewCard = ({ review }) => {
             </TextContent>
           </AuthorInfo>
           <Actions>
-            <MoreVert onClick={handleDropdownToggle} />
+            <MoreVert ref={dropdownRef} onClick={handleDropdownToggle} />
             {isDropdownActive && (
-              <Dropdown ref={dropdownRef}>
+              <Dropdown>
                 <DropdownItem>수정</DropdownItem>
                 <DropdownItem>삭제</DropdownItem>
               </Dropdown>

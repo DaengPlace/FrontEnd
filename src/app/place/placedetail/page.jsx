@@ -14,6 +14,7 @@ import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { cards } from "@/data/cardsData";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
+import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 
 const PlaceDetailPage = () => {
   return (
@@ -25,7 +26,7 @@ const PlaceDetailPage = () => {
 
 const ActualPlaceDetailPage = () => {
   const searchParams = useSearchParams();
-  const id = parseInt(searchParams.get("id"), 10);
+  const placeId = parseInt(searchParams.get("placeId"), 10);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isMapBottomSheetOpen, setIsMapBottomSheetOpen] = useState(false);
@@ -36,7 +37,8 @@ const ActualPlaceDetailPage = () => {
   const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
   const { setPlaceName, setVisitDate, setCategory } = useReviewStore();
-  const selectedCard = cards.find((card) => card.id === id);
+  const [selectedCard, setSelectedCard] = useState(null); 
+  const [isLoading, setIsLoading] = useState(true); 
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -54,8 +56,6 @@ const ActualPlaceDetailPage = () => {
       if (data.status === "OK" && data.results.length > 0) {
         const { lat, lng } = data.results[0].geometry.location;
         setCenter({ lat, lng });
-      } else {
-        alert("주소에 대한 좌표를 가져올 수 없습니다.");
       }
     } catch (error) {
       console.error("Error fetching coordinates:", error);
@@ -63,12 +63,30 @@ const ActualPlaceDetailPage = () => {
   };
   
   useEffect(() => {
+    if (placeId) {
+      fetchPlaceDetails(placeId); 
+    }
+  }, [placeId]);
+  const fetchPlaceDetails = async (placeId) => {
+    try {
+      const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+      console.log(response.data);
+      setSelectedCard(response.data.data); 
+    } catch (error) {
+      console.error("Error fetching place details:", error);
+      setSelectedCard(null); 
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (selectedCard) {
-      setPlaceName(selectedCard.title);
+      setPlaceName(selectedCard.name);
       setCategory(selectedCard.category);
       setIsClient(true);
-      setAddress(selectedCard.address);
-      fetchCoordinates(selectedCard.address);
+      setAddress(selectedCard.location);
+      fetchCoordinates(selectedCard.location);
     }
   }, [selectedCard]);
   
@@ -168,15 +186,21 @@ const ActualPlaceDetailPage = () => {
           <PlaceInfo
             isLiked={isLiked}
             toggleLike={toggleLike}
-            address={selectedCard.address}
+            address={selectedCard.location}
             handleAddressClick={handleAddressClick}
             category={selectedCard.category}
-            placeName={selectedCard.title}
-            openingHours={selectedCard.hours}
-            features={selectedCard.features}
+            placeName={selectedCard.name}
+            openhours={selectedCard.operationHour}
+            features={{
+              inside: selectedCard.inside,
+              outside: selectedCard.outside,
+              isParking: selectedCard.is_parking,
+              petFee: selectedCard.pet_fee,
+              weightLimit: selectedCard.weight_limit,
+            }}
           />
           <ReviewSection />
-          <WriteReviewButton onClick={handleWriteReviewButtonClick} />
+          <AuthGuard><WriteReviewButton onClick={handleWriteReviewButtonClick} /></AuthGuard>
         </PageContainer>
         {isMapBottomSheetOpen && (
           <MapBottomSheet
@@ -188,10 +212,9 @@ const ActualPlaceDetailPage = () => {
         {isReviewBottomSheetOpen && (
           <>
             <BottomSheet
-              title="리뷰 작성을 위해"
               content={
                 <StyledContent>
-                  <p>해당 시설에서 발급받은 영수증을 스캔해주세요</p>
+                  <p>리뷰 작성을 위해<br />해당 시설에서 발급받은 영수증을 스캔해주세요</p>
                 </StyledContent>
               }
               onClose={() => setIsReviewBottomSheetOpen(false)}

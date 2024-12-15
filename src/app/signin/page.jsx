@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
+import { useAuthStore } from "@/stores/authStore";
+import { useSigninStore } from "@/stores/signinStore";
+import { postSendCode } from "@/apis/auth/email/postSendCode";
+import { postCheckCode } from "@/apis/auth/email/postCheckCode";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -17,6 +21,28 @@ const SigninPage = () => {
   const [timer, setTimer] = useState(180);
   const [timeExpired, setTimeExpired] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
+
+  const { setTokens } = useAuthStore();
+  const { setSigninData } = useSigninStore();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("accessToken");
+    const refreshToken = urlParams.get("refreshToken");
+
+    if (accessToken && refreshToken) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      setTokens({
+        accessToken,
+        refreshToken,
+      });
+
+      router.push("/signin");
+    } else {
+    }
+  }, [router]);
 
   const {
     control,
@@ -35,6 +61,13 @@ const SigninPage = () => {
 
   const onSubmit = (data) => {
     if (isVerified) {
+      console.log("Signin Data: ", data);
+
+      setSigninData({
+        name: data.name,
+        birthDate: data.birthdate,
+        email: data.email,
+      });
       router.push("/signin/info");
     } else if (isVerificationSent) {
       verifyCode();
@@ -63,7 +96,7 @@ const SigninPage = () => {
     if (step < 3) {
       return isCurrentStepValid();
     }
-    return isVerified; // 완료 버튼 활성화 조건을 인증확인 후로 변경
+    return isVerified;
   };
 
   const nextStep = async () => {
@@ -73,28 +106,39 @@ const SigninPage = () => {
     }
   };
 
-  const handleSendVerificationCode = () => {
+  const handleSendVerificationCode = async () => {
     const email = watch("email");
-    if (email && !errors.email) {
+    try {
+      const response = await postSendCode(email);
+      console.log("Verification Code Sent: ", response);
       setIsVerificationSent(true);
       setTimer(180);
       setTimeExpired(false);
       setVerificationCode("");
       setVerificationError(false);
       verificationRef.current?.focus();
+    } catch (error) {
+      console.error("Error sending verification code: ", error);
+      setVerificationError(true);
     }
   };
 
   const handleVerificationCodeChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
-    setVerificationCode(value);
+    setVerificationCode(e.target.value);
     setVerificationError(false);
   };
 
-  const verifyCode = () => {
-    if (verificationCode === "000000") {
-      setIsVerified(true);
-    } else {
+  const verifyCode = async () => {
+    const email = watch("email");
+    try {
+      const response = await postCheckCode(email, verificationCode);
+
+      if (response.data.success) {
+        setIsVerified(true);
+      } else {
+        setVerificationError(true);
+      }
+    } catch (error) {
       setVerificationError(true);
     }
   };
@@ -288,14 +332,14 @@ const SigninPage = () => {
                     ref={verificationRef}
                     value={verificationCode}
                     onChange={handleVerificationCodeChange}
-                    placeholder="인증번호 입력 (예: 000000)"
+                    placeholder="인증번호 입력 (예: ABC123)"
                     type="text"
                     isValid={!verificationError || timeExpired}
                   />
                   <Button
                     disabled={isVerified}
                     isActive={
-                      verificationCode.length === 6 &&
+                      verificationCode.length > 0 &&
                       !verificationError &&
                       !isVerified
                     }

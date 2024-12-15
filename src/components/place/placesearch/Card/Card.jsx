@@ -2,40 +2,81 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 
-const Card = ({ card, onCardClick, toggleLike }) => (
-  <CardContainer onClick={onCardClick}>
-    <HeartIconContainer onClick={(e) => toggleLike(e, card.id)} isliked={card.isLiked}>
-      {card.isLiked ? <Favorite /> : <FavoriteBorder />}
-    </HeartIconContainer>
-    <Image
-      src={card.image}
-      alt={card.title}
-      width={510}
-      height={300}
-      style={{
-        objectFit: "cover",
-        borderRadius: "10px",
-        margin: "10px 13px",
+const Card = ({ card, onCardClick, toggleLike }) => {
+  const features = [];
+  if (card.inside == true) features.push("실내공간"); 
+  if (card.outside == true) features.push("야외공간"); 
+  if (card.is_parking == true) features.push("주차 가능"); 
+  if (card.pet_fee === 0) features.push("애견 동반 요금 없음"); 
+  if (card.weight_limit === 0) features.push("무게 제한 없음"); 
+  
+  const getOperationHours = () => {
+    if (card.operationHour) {
+      const openTime = card.operationHour.todayOpen;
+      const closeTime = card.operationHour.todayClose;
+
+      if (openTime === "00:00:00" && closeTime === "00:00:00") {
+        return "24시간 영업";
+      }
+
+      return `${openTime || "N/A"} - ${closeTime || "N/A"}`;
+    }
+    return "운영 시간 정보 없음";
+  };
+
+  return (
+    <CardContainer
+      onClick={(e) => {
+        e.stopPropagation(); // 이벤트 전파 방지
+        onCardClick(card.id); // 카드 전체 클릭 시 실행
       }}
-    />
-    <CardDetails>
-      <Category>
-        <CategoryBadge>{card.category}</CategoryBadge>
-        <RatingContainer>
-          <Image src="/assets/star.png" alt="별" width={15} height={15} />
-          <Rating>{card.rating}</Rating>
-          <ReviewsCount>({card.reviewsCount})</ReviewsCount>
-        </RatingContainer>
-      </Category>
-      <PlaceName>{card.title}</PlaceName>
-      <Address>{card.address}</Address>
-      <OpeningHours>{card.hours}</OpeningHours>
-      <hr />
-    </CardDetails>
-    <Bottom>{card.features}</Bottom>
-  </CardContainer>
-);
+    >
+      <AuthGuard>
+        <HeartIconContainer 
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            toggleLike(e, card.placeId)
+          }}
+          isliked={card.isLiked}
+        >
+          {card.isLiked ? <Favorite /> : <FavoriteBorder />}
+        </HeartIconContainer>
+      </AuthGuard>
+
+      <Image
+        src={"/assets/image 19.svg"}
+        alt={card.name || "이미지 설명 없음"}
+        width={510}
+        height={300}
+        style={{
+          objectFit: "cover",
+          borderRadius: "10px",
+          margin: "10px 13px",
+        }}
+      />
+      <CardDetails>
+        <Category>
+          <CategoryBadge>{card.category}</CategoryBadge>
+          <RatingContainer>
+            <Image src="/assets/star.png" alt="별" width={15} height={15} />
+            <Rating>{card.rating || 0.0}</Rating>
+            <ReviewsCount>({card.review_count || 0})</ReviewsCount>
+          </RatingContainer>
+        </Category>
+        <PlaceName>{card.name}</PlaceName>
+        <Address>{card.location || "위치 정보 없음"}</Address>
+        <OpeningHours>{getOperationHours()}</OpeningHours>
+        <hr />
+      </CardDetails>
+      <Bottom>
+        {features.length > 0 ? features.join(" | ") : "특징 없음"}
+      </Bottom>
+    </CardContainer>
+  );
+};
 
 const CardContainer = styled.div`
   position: relative;
@@ -61,6 +102,9 @@ const HeartIconContainer = styled.div.withConfig({
   width: 32px;
   height: 32px;
   z-index: 10;
+
+  &.heart-icon-container {
+  }
 
   svg {
     font-size: 30px;

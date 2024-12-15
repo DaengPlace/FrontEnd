@@ -7,17 +7,58 @@ import { initialFacilities } from "@/data/facilities";
 import theme from "@/styles/theme.js";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection";
 import Divider from "@/components/common/Divider/Divider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
+import axios from "axios";
 
 const RecommendPage = () => {
 
   const router = useRouter();
 
-  const [age, setAge] = useState(20);
-  const [gender, setGender] = useState(1); // 0 : male, 1: female
+  const [userRecommended, setUserRecommended] = useState([]);
+  const [popularFacilities, setPopularFacilities] = useState([]);
+  const [genderAgePopular, setGenderAgePopular] = useState([]);
+  const [reviewsTopFacilities, setReviewsTopFacilities] = useState([]);
+
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState(""); // 0 : male, 1: female
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        
+        // 사용자 기준 추천 시설
+        const userRecommendedRes = await axios.get("https://api.daengplace.com/recommend", {
+          headers: { "Accept": "application/json", 'Authorization': `Bearer ${token}` },
+        });
+
+        // 최근 인기 시설
+        const popularRes = await axios.get("https://api.daengplace.com/places/popular", {
+          headers: { "Accept": "application/json" },
+          params: { sort: "popularity", size: 5 },
+        });
+
+        // 성별/연령대별 인기 시설
+        const genderAgeRes = await axios.get("https://api.daengplace.com/places/gender-popular", {
+          headers: { "Accept": "application/json" },
+        });
+
+        // 데이터 상태 업데이트
+        setUserRecommended(userRecommendedRes.data.data || []);
+        setPopularFacilities(popularRes.data.data.content || []);
+        setGenderAgePopular(genderAgeRes.data.data.popularPlaces || []);
+        setAge(genderAgeRes.data.data.age);
+        setGender(genderAgeRes.data.data.gender);
+      } catch (error) {
+        console.error("API 데이터 불러오기 실패: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Container>
@@ -37,11 +78,26 @@ const RecommendPage = () => {
           </AuthGuard>
         </TestBanner>
 
+        {/* 사용자 기준 추천 */}
         <Section>
-          <FacilitiesSection sectionTitle={<>최근 <span>인기 시설 🔥</span></>} facilities={initialFacilities} isCompact={true} />
-          <FacilitiesSection sectionTitle={<><span>{age}대 {gender===1 ? "여성" : "남성"}</span>들이 많이 찾는 👩🏻</>} facilities={initialFacilities} isCompact={true} />
-          <Divider />
+          <FacilitiesSection sectionTitle={<><span>보호자 </span>님을 위한 <span>추천 시설</span></>} facilities={userRecommended} isCompact={true} />
         </Section>
+
+        {/* 최근 인기 시설 */}
+        <Section>
+          <FacilitiesSection sectionTitle={<>최근 <span>인기 시설 🔥</span></>} facilities={popularFacilities} isCompact={true} />
+        </Section>
+
+        {/* 성별/연령대별 인기 시설 */}
+        <Section>
+          <FacilitiesSection 
+            sectionTitle={<><span>{age}대 {gender}</span>들이 많이 찾는 👩🏻</>} 
+            facilities={genderAgePopular} 
+            isCompact={true} 
+          />
+        </Section>
+
+        <Divider />
 
         <Banner>
           <BannerText>아직 <span>성향 테스트</span>를 하지 않으셨나요?</BannerText>
@@ -50,8 +106,7 @@ const RecommendPage = () => {
           </AuthGuard>
           <Divider />
         </Banner>
-
-
+  
         <Section>
         <FacilitiesSection sectionTitle={<><span>리뷰가 가장 많이 달린 </span>시설 🏢</>} facilities={initialFacilities} isCompact={true} />
         </Section>

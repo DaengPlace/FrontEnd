@@ -13,7 +13,24 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
     const [likedReviews, setLikedReviews] = useState({});
     const [likeCounts, setLikeCounts] = useState({});
     const [dropdownStates, setDropdownStates] = useState({});
+    const [currentUserNickname, setCurrentUserNickname] = useState("");
 
+    useEffect(() => {
+      const fetchProfile = async () => {
+          try {
+              const response = await axios.get("https://api.daengplace.com/members/profile", {
+                  headers: {
+                      "Authorization": `Bearer ${accessToken}`,
+                  },
+              });
+              setCurrentUserNickname(response.data.data.nickname); 
+          } catch (error) {
+              console.error("Error fetching profile:", error.response?.data || error.message);
+          }
+      };
+
+      fetchProfile();
+  }, [accessToken]);
     const NativeDate = global.Date;
 
     const formatDate = (dateString) => {
@@ -114,7 +131,7 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
         onClick={() => handleCardClick(review.reviewId, review.placeId)}
         >
           <CardHeader>
-          <AvatarWrapper>
+            <AvatarWrapper>
               <Image
                 src="/assets/image (1).png"
                 alt="사용자 프로필"
@@ -124,36 +141,44 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
               />
             </AvatarWrapper>
             <Author>{review.memberNickname}</Author>
-            <span style={{marginBottom:"20px"}}>|</span>
+            <span style={{ marginBottom: "20px" }}>|</span>
             <Date>{formatDate(review.createdAt)}</Date>
             <LikeButton
-                onClick={(event) => toggleLike(review.placeId, review.reviewId, event)}
+              onClick={(event) => toggleLike(review.placeId, review.reviewId, event)}
             >
-                {review.liked ? (
-                    <FavoriteIcon style={{ color: "red" }} />
-                ) : (
-                    <FavoriteBorderIcon style={{ color: "#ccc" }} />
-                )}
+              {review.liked ? (
+                <FavoriteIcon style={{ color: "red" }} />
+              ) : (
+                <FavoriteBorderIcon style={{ color: "#ccc" }} />
+              )}
             </LikeButton>
-            <IconButton onClick={(event) => toggleDropdown(review.reviewId, event)}>
-                <MoreVertIcon />
-            </IconButton>
-            {dropdownStates[review.reviewId] && (
-              <Menu>
-                <MenuItem
-                  onClick={(e) => handleEditClick(review.reviewId, review.placeId, e)}
+            {currentUserNickname === review.memberNickname && (
+              <>
+                <IconButton
+                  onClick={(event) => toggleDropdown(review.reviewId, event)}
                 >
-                  수정
-                </MenuItem>
-                <MenuItem onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteClick(review.reviewId);
-                }}>
-                  삭제
-                </MenuItem>
-              </Menu>
+                  <MoreVertIcon />
+                </IconButton>
+                {dropdownStates[review.reviewId] && (
+                  <Menu>
+                    <MenuItem
+                      onClick={(e) => handleEditClick(review.reviewId, review.placeId, e)}
+                    >
+                      수정
+                    </MenuItem>
+                    <MenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClick(review.reviewId);
+                      }}
+                    >
+                      삭제
+                    </MenuItem>
+                  </Menu>
+                )}
+              </>
             )}
-            </CardHeader>
+          </CardHeader>
             <RatingContainer>
             <Rating>
               {Array.from({ length: Math.round(review.rating) }).map((_, i) => (
@@ -165,7 +190,7 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
             <Text>{review.content}</Text>
             <ImageWrapper>
               <Image
-                src={review.image || "/assets/image.png"}
+                src={review.imageUrls[0] || "/assets/image.png"}
                 alt={`리뷰 이미지 ${review.id}`}
                 width={100} 
                 height={100} 
@@ -202,14 +227,13 @@ const ReviewCard = styled.div`
   margin-left: 10px;
   cursor: pointer;
 `;
-
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  position: relative;
   margin-bottom: 8px;
   width: 100%;
-`;
+`;    
 const AvatarWrapper = styled.div`
   width: 40px;
   height: 40px;
@@ -258,12 +282,13 @@ const ImageWrapper = styled.div`
 `;
 const LikeButton = styled.div`
   cursor: pointer;
-  margin-left: auto;
-  width:40px;
-  height:30px;
-  margin-right: -35px;
+  width: 40px;
+  height: 30px;
+  display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto; /* 왼쪽 여백 추가 */
+  margin-right: 10px; /* 수정/삭제 버튼과의 간격 */
   &:hover svg {
     transform: scale(1.2);
   }
@@ -272,9 +297,11 @@ const IconButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
   border-radius: 50%;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
   transform: translateX(10px) translateY(-2.7px);
   svg {
     color: #ABABAB; 

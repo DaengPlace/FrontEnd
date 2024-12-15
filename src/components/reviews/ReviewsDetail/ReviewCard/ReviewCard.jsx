@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -10,6 +10,24 @@ import axios from "axios";
 
 const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, accessToken }) => {
   const NativeDate = global.Date;
+  const [currentUserNickname, setCurrentUserNickname] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get("https://api.daengplace.com/members/profile", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setCurrentUserNickname(response.data.data.nickname); 
+      } catch (error) {
+        console.error("Error fetching profile:", error.response?.data || error.message);
+      }
+    };
+
+    fetchProfile();
+  }, [accessToken]);
 
   const formatDate = (dateString) => {
     const date = new NativeDate(dateString); 
@@ -77,9 +95,15 @@ const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, a
                     <FavoriteBorderIcon style={{ color: "#ccc" }} />
                 )}
           </LikeButton>
-        <DropdownMenu isOpen={isOpen} toggleDropdown={toggleDropdown} reviewId={review.reviewId} 
-          placeId={review.placeId} 
-          accessToken={accessToken} />
+        {currentUserNickname === review.memberNickname && (
+          <DropdownMenu
+            isOpen={isOpen}
+            toggleDropdown={toggleDropdown}
+            reviewId={review.reviewId}
+            placeId={review.placeId}
+            accessToken={accessToken}
+          />
+        )}
       </CardHeader>
       <RatingContainer>
         <Rating>
@@ -93,7 +117,7 @@ const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, a
       <CardContent>
         <ImageWrapper>
           <Image
-            src={review.image || "/assets/image.png"}
+            src={review.imageUrls?.[0]|| "/assets/image.png"}
             alt={`리뷰 이미지 ${review.reviewId}`}
             width={540}
             height={540}

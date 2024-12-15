@@ -41,6 +41,7 @@ const ReviewDetailPage = () => {
         );
         console.log("Review Detail:", response.data.data);
         setReview(response.data.data);
+        console.log("Review Data:", review.imageUrls);
         setLoading(false);
       } catch (error) {
         console.error("리뷰 상세 정보를 가져오는 데 실패했습니다:", error);

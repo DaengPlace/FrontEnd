@@ -266,8 +266,8 @@ const SigninPage = () => {
               rules={{
                 required: "생년월일은 필수 입력입니다.",
                 pattern: {
-                  value: /^\d{6}$/,
-                  message: "생년월일은 6자리 숫자여야 합니다.",
+                  value: /^\d{8}$/,
+                  message: "생년월일은 8자리 숫자여야 합니다.",
                 },
               }}
               render={({ field, fieldState }) => (
@@ -279,7 +279,7 @@ const SigninPage = () => {
                       field.ref(e);
                       birthdateRef.current = e;
                     }}
-                    placeholder="생년월일 (예: 000101)"
+                    placeholder="생년월일 (예: 20010101)"
                     type="text"
                     isValid={!fieldState.invalid}
                   />

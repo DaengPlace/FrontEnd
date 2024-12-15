@@ -33,12 +33,12 @@ const ActualPlaceDetailPage = () => {
   const [isReviewBottomSheetOpen, setIsReviewBottomSheetOpen] = useState(false);
   const [center, setCenter] = useState(null);
   const [address, setAddress] = useState("");
-  const [isLiked, setIsLiked] = useState(false);
   const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
   const { setPlaceName, setVisitDate, setCategory } = useReviewStore();
   const [selectedCard, setSelectedCard] = useState(null); 
   const [isLoading, setIsLoading] = useState(true); 
+  const accessToken = localStorage.getItem("accessToken");
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -69,7 +69,11 @@ const ActualPlaceDetailPage = () => {
   }, [placeId]);
   const fetchPlaceDetails = async (placeId) => {
     try {
-      const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
+      const response = await axios.get(`https://api.daengplace.com/places/${placeId}`,
+        {
+          headers: { Authorization : `Bearer ${accessToken}` },
+        }
+      );
       console.log(response.data);
       setSelectedCard(response.data.data); 
     } catch (error) {
@@ -98,7 +102,37 @@ const ActualPlaceDetailPage = () => {
     return null;
   }
 
-  const toggleLike = () => setIsLiked((prev) => !prev);
+  const toggleLike = async () => {
+    try {
+      if (selectedCard.is_favorite) {
+        await axios.delete("https://api.daengplace.com/favorite", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: { placeId },
+        });
+        console.log("즐겨찾기 삭제 성공");
+      } else {
+        await axios.put(
+          "https://api.daengplace.com/favorite",
+          { placeId },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        console.log("즐겨찾기 등록 성공");
+      }
+      setSelectedCard((prevCard) => ({
+        ...prevCard,
+        is_favorite: !prevCard.is_favorite, 
+      }));
+    } catch (error) {
+      console.error("즐겨찾기 상태 변경 실패:", error.response || error.message);
+      alert("즐겨찾기 상태를 변경하는 도중 오류가 발생했습니다.");
+    }
+  };
 
   const handleAddressClick = () => {
     fetchCoordinates(selectedCard.address);
@@ -184,7 +218,7 @@ const ActualPlaceDetailPage = () => {
         <PageContainer>
           <ImageContainer />
           <PlaceInfo
-            isLiked={isLiked}
+            isLiked={selectedCard.is_favorite}
             toggleLike={toggleLike}
             address={selectedCard.location}
             handleAddressClick={handleAddressClick}

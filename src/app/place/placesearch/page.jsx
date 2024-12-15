@@ -148,7 +148,11 @@ const ActualPlaceSearchPage = () => {
 
   const fetchPlaces = async (lat, lng, page, size) => {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.get("https://api.daengplace.com/places", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           latitude: lat,
           longitude: lng,
@@ -199,14 +203,7 @@ const ActualPlaceSearchPage = () => {
     router.push(`/place/placedetail?placeId=${placeId}`);
   };
 
-  const toggleLike = (e, placeId) => {
-    e.stopPropagation();
-    setCards((prevCards) =>
-      prevCards.map((card) =>
-        card.placeId === placeId ? { ...card, isLiked: !card.isLiked } : card
-      )
-    );
-  };
+  
 
   const handleMapView = () => {
     const location = searchedLocation || userLocation;
@@ -215,6 +212,39 @@ const ActualPlaceSearchPage = () => {
       router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
     } else {
       alert("위치를 가져올 수 없습니다.");
+    }
+  };
+
+  const toggleLike = async (placeId, isFavorite) => {
+    try {
+      let response;
+      if (isFavorite) {
+        response = await axios.delete("https://api.daengplace.com/favorite", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+          data: { placeId },
+        });
+        console.log("즐겨찾기 삭제 성공:", response.data);
+      } else {
+        response = await axios.put(
+          "https://api.daengplace.com/favorite",
+          { placeId },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+      }
+      console.log("즐겨찾기 추가 성공:", response.data);
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card.placeId === placeId ? { ...card, is_favorite: !isFavorite } : card
+        )
+      );
+    } catch (error) {
+      console.error("즐겨찾기 상태 변경 실패:", error);
     }
   };
   
@@ -303,7 +333,7 @@ const ActualPlaceSearchPage = () => {
         onFilterClick={handleFilterClick}
         onHover={handleHover2}
       />
-      <CardList cards={cards} onCardClick={(placeId) => handleCardClick(placeId)} toggleLike={toggleLike} keyExtractor={(card) => card.id || card.placeId} />
+      <CardList cards={cards} onCardClick={handleCardClick} toggleLike={toggleLike} keyExtractor={(card) => card.id || card.placeId} />
       {/* 리스트 마지막 감지용 */}
       <div ref={bottomRef} style={{ height: "1px" }}></div>
       <MapButton bottom={buttonBottom} onClick={handleMapView}>

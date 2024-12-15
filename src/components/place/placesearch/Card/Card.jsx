@@ -30,7 +30,7 @@ const Card = ({ card, onCardClick, toggleLike }) => {
     <CardContainer
       onClick={(e) => {
         e.stopPropagation(); // 이벤트 전파 방지
-        onCardClick(card.id); // 카드 전체 클릭 시 실행
+        onCardClick(card.placeId); // 카드 전체 클릭 시 실행
       }}
     >
       <AuthGuard>
@@ -38,11 +38,11 @@ const Card = ({ card, onCardClick, toggleLike }) => {
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            toggleLike(e, card.placeId)
+            toggleLike(card.placeId, card.is_favorite)
           }}
-          isliked={card.isLiked}
+          isliked={card.is_favorite}
         >
-          {card.isLiked ? <Favorite /> : <FavoriteBorder />}
+          {card.is_favorite ? <Favorite /> : <FavoriteBorder />}
         </HeartIconContainer>
       </AuthGuard>
 

@@ -9,6 +9,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true, // 빌드 중 ESLint 경고 무시
   },
+  images: {
+    domains: ['daeng-place-profile-s3.s3.ap-northeast-2.amazonaws.com'], // 이미지 호스트 추가
+  },
 };
 
 export default nextConfig;

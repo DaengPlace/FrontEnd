@@ -8,6 +8,7 @@ import Button from "@/components/common/Button/Button";
 import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Header from "@/components/signin/Header/Header";
 import { useSigninStore } from "@/stores/signinStore";
+import { sidoOptions, gunguOptions } from "@/data/data";
 
 const SigninInfoPage = () => {
   const router = useRouter();
@@ -23,7 +24,11 @@ const SigninInfoPage = () => {
   };
 
   const handleRegionChange = (key, value) => {
-    setSelectedRegion((prev) => ({ ...prev, [key]: value }));
+    setSelectedRegion((prev) => ({
+      ...prev,
+      [key]: value,
+      ...(key === "city" ? { district: null } : {}),
+    }));
   };
 
   const handleSubmit = () => {
@@ -33,7 +38,7 @@ const SigninInfoPage = () => {
       selectedRegion.district !== null
     ) {
       setSigninData({
-        gender: selectedGender === "여성" ? "FEMALE" : "MALE",
+        gender: selectedGender,
         state: selectedRegion.city,
         city: selectedRegion.district,
       });
@@ -70,23 +75,26 @@ const SigninInfoPage = () => {
           <BoxContainer>
             <SelectBox
               placeholder="시/도"
-              options={[
-                { value: "seoul", label: "서울" },
-                { value: "busan", label: "부산" },
-                { value: "incheon", label: "인천" },
-              ]}
+              options={sidoOptions.map((sido) => ({
+                value: sido,
+                label: sido,
+              }))}
               selectedValue={selectedRegion.city}
               onChange={(value) => handleRegionChange("city", value)}
             />
             <SelectBox
               placeholder="시/군/구"
-              options={[
-                { value: "gangnam", label: "강남구" },
-                { value: "bukgu", label: "북구" },
-                { value: "bupyeong", label: "부평구" },
-              ]}
+              options={
+                selectedRegion.city
+                  ? gunguOptions[selectedRegion.city]?.map((gungu) => ({
+                      value: gungu,
+                      label: gungu,
+                    }))
+                  : []
+              }
               selectedValue={selectedRegion.district}
               onChange={(value) => handleRegionChange("district", value)}
+              isDisabled={!selectedRegion.city}
             />
           </BoxContainer>
         </InputBox>

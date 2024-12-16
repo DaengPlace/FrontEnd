@@ -35,7 +35,6 @@ const MyPage = () => {
 
     fetchPets();
   }, []);
-  console.log(pets);
 
   useEffect(() => {
     const fetchUserProfile = async () => {

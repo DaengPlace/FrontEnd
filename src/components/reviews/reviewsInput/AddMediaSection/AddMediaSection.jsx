@@ -15,12 +15,12 @@ const AddMediaSection = ({ mediaFiles, onMediaFilesChange }) => {
         file,
         url: URL.createObjectURL(file),
       }));
-      onMediaFilesChange([...mediaFiles, ...filePreviews]); // 상위 컴포넌트에 전달
+      onMediaFilesChange([...mediaFiles, ...filePreviews]); 
     };
   
     const handleRemoveFile = (index) => {
       const updatedFiles = mediaFiles.filter((_, i) => i !== index);
-      onMediaFilesChange(updatedFiles); // 상위 컴포넌트에 전달
+      onMediaFilesChange(updatedFiles); 
     };
   
     return (

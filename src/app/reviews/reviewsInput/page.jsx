@@ -95,22 +95,33 @@ const ReviewsInputPage = () => {
       return;
     }
 
-    const reviewData = {
-      content: reviewText,
-      rating,
-      traitTags: tags,
-    };
+    const formData = new FormData();
 
+    formData.append(
+      "reviewData",
+      JSON.stringify({
+        content: reviewText,
+        rating,
+        traitTags: tags,
+      })
+    );
+    mediaFiles.forEach((fileObj) => {
+      formData.append("file", fileObj.file);
+    });
+  
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
     try {
       setLoading(true);
       let response;
       if (reviewId) {
         response = await axios.put(
           `https://api.daengplace.com/reviews/${reviewId}`,
-          reviewData,
+          formData,
           {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -118,10 +129,10 @@ const ReviewsInputPage = () => {
       } else {
         response = await axios.post(
           `https://api.daengplace.com/reviews/${placeId}`,
-          reviewData,
+          formData,
           {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${accessToken}`,
             },
           }

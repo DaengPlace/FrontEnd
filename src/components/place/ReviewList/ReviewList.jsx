@@ -37,7 +37,7 @@ const ReviewList = ({ reviews }) => {
             {index !== reviews.length - 1 && (
               <hr
                 style={{
-                  width: "138%",
+                  width: "113%",
                   marginLeft: "-35px",
                   marginTop: "15px",
                   color: "#ABABAB",
@@ -46,12 +46,14 @@ const ReviewList = ({ reviews }) => {
             )}
           </ReviewContent>
           <ReviewImageWrapper>
-            <StyledImage
-              src="/assets/image.png"
-              alt={`리뷰 이미지 ${review.id}`}
-              width={80}
-              height={80}
-            />
+            {review.imageUrls.length > 0 && (
+              <StyledImage
+                src={review.imageUrls[0]}
+                alt={`리뷰 이미지 ${review.reviewId}`}
+                width={80}
+                height={80}
+              />
+            )}
           </ReviewImageWrapper>
         </ReviewCard>
       ))}

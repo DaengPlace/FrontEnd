@@ -7,6 +7,7 @@ import { OnlyHomeIcon } from "@/components/common/Header/Header.stories";
 import { reviews } from "@/data/reviewData";
 import ReviewCard from "@/components/mypage/myreviews/ReviewCard/ReviewCard";
 import axios from "axios";
+import { getReviews } from "@/apis/reviews/getReviews";
 
 const MyReviews = () => {
 
@@ -16,15 +17,8 @@ const MyReviews = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.get("https://api.daengplace.com/reviews", {
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        setReviews(response.data.data);
+        const response = await getReviews();
+        setReviews(response.data);
       } catch (error) {
         console.error("리뷰 데이터를 가져오는 데 실패하였습니다 : ", error);
         setError("리뷰 데이터를 불러올 수 없습니다.");

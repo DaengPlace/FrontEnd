@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Suspense } from "react";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
@@ -10,9 +10,16 @@ import Checkbox from "@/components/common/Checkbox/Checkbox";
 import { putPetUpdate } from "@/apis/dog/putPetUpdate";
 import { getPetDetail } from "@/apis/dog/getPetDetail";
 import Header from "@/components/common/Header/Header";
-import Modal from "@/components/common/Modal/Modal";
 
 const EditPetPage = () => {
+  return (
+    <Suspense>
+      <ActualEditPetPage />
+    </Suspense>
+  )
+}
+
+const ActualEditPetPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const petId = searchParams.get("petId");

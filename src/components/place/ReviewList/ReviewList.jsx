@@ -37,7 +37,7 @@ const ReviewList = ({ reviews }) => {
             {index !== reviews.length - 1 && (
               <hr
                 style={{
-                  width: "113%",
+                  width: "138%",
                   marginLeft: "-35px",
                   marginTop: "15px",
                   color: "#ABABAB",

@@ -46,12 +46,14 @@ const ReviewList = ({ reviews }) => {
             )}
           </ReviewContent>
           <ReviewImageWrapper>
-            <StyledImage
-              src="/assets/image.png"
-              alt={`리뷰 이미지 ${review.id}`}
-              width={80}
-              height={80}
-            />
+            {review.imageUrls.length > 0 && (
+              <StyledImage
+                src={review.imageUrls[0]}
+                alt={`리뷰 이미지 ${review.reviewId}`}
+                width={80}
+                height={80}
+              />
+            )}
           </ReviewImageWrapper>
         </ReviewCard>
       ))}

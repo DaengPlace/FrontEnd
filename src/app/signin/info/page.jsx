@@ -38,7 +38,7 @@ const SigninInfoPage = () => {
       selectedRegion.district !== null
     ) {
       setSigninData({
-        gender: selectedGender,
+        gender: selectedGender === "여성" ? "FEMALE" : "MALE",
         state: selectedRegion.city,
         city: selectedRegion.district,
       });

@@ -15,8 +15,9 @@ const FacilitiesSection = ({sectionTitle, facilities, isCompact = false}) => {
           {facilities.slice(0, 5).map((fac, index) => (
             <FacilityCard
               key={fac.placeId || index}
+              placeId={fac.placeId}
               // image={fac.image}
-              image={fac.image || '/assets/mypage/facilityImage.png'}
+              image={'/assets/image 19.svg'}
               category={fac.type}
               name={fac.name}
               rating={fac.rating || 0}

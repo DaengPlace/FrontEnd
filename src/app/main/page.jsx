@@ -12,45 +12,28 @@ import Footer from "@/components/common/Footer/Footer.jsx";
 import Divider from "@/components/common/Divider/Divider.jsx";
 import Header from "@/components/common/Header/Header.jsx";
 import { DefaultHeader } from "@/components/common/Header/Header.stories.js";
-import { initialFacilities } from "@/data/facilities.js";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
+import { getGenderAgeFacilities, getPopularFacilities } from "@/apis/place/getPopularFacilities.jsx";
 
 const MainPage = () => {
   const router = useRouter();
   const { setTokens } = useAuthStore();
-  const [age, setAge] = useState(20);
-  const [gender, setGender] = useState(1); // 0 : male, 1: female
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState(""); // 0 : male, 1: female
   const [popularFacilities, setPopularFacilities] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [genderAgeFacilities, setGenderAgeFacilities] = useState([]);
 
-  useEffect(() => {
-    const fetchPopularFacilities = async () => {
-      try {
-        const response = await axios.get("https://api.daengplace.com/places/popular");
-        setPopularFacilities(response.data.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("인기 시설 데이터를 가져오는 데 실패했습니다 : ", error);
-        setLoading(false);
-      }
-    };
-
-    fetchPopularFacilities();
-  }, []);
-
+  // url에서 access Token 받아오기
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("accessToken");
-    const refreshToken = urlParams.get("refreshToken");
 
-    if (accessToken && refreshToken) {
+    if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
 
       setTokens({
         accessToken,
-        refreshToken,
       });
 
       router.push("/main");
@@ -58,6 +41,38 @@ const MainPage = () => {
       console.log("Access Token이 URL에 없습니다.");
     }
   }, [router]);
+
+  // 인기 시설 조회
+  useEffect(() => {
+    const fetchPopularFacilities = async () => {
+      try {
+        const response = await getPopularFacilities();
+        setPopularFacilities(response.data);
+      } catch (error) {
+        console.error("인기 시설 데이터를 가져오는 데 실패했습니다 : ", error);
+      }
+    };
+
+    fetchPopularFacilities();
+  }, []);
+
+  // 성별/연령대별 시설 조회
+  useEffect(() => {
+    const fetchGenderAgeFacilities = async () => {
+      try {
+        const response = await getGenderAgeFacilities();
+        console.log(response.data)
+        setGenderAgeFacilities(response.data.popularPlaces);
+        setAge(response.data.age);
+        setGender(response.data.gender);
+      } catch (error) {
+        console.error("성별/연령대별 인기 시설 데이터를 가져오는 데 실패했습니다 : ", error)
+      }
+    };
+
+    fetchGenderAgeFacilities();
+  }, []);
+
 
   return (
     <Container>
@@ -80,12 +95,12 @@ const MainPage = () => {
         sectionTitle={
           <>
             <span>
-              {age}대 {gender === 1 ? "여성" : "남성"}
+              {age} {gender}
             </span>
             들이 많이 찾는 👩🏻
           </>
         }
-        facilities={initialFacilities}
+        facilities={genderAgeFacilities}
       />
       <Divider />
       <Footer />

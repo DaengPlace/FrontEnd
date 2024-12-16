@@ -2,10 +2,10 @@ import Link from 'next/link';
 import React from 'react';
 import styled from "styled-components";
 
-const FacilityCard = ({image, category, name, rating, link}) => {
+const FacilityCard = ({image, category, name, rating, placeId}) => {
 
     return (
-        <Link href='/place/placedetail/?id=1'>
+        <Link href={`/place/placedetail/?placeId=${placeId}`}>
             <CardContainer>
                 <CardImage src={image} alt={name} />
                 <CardInfo>

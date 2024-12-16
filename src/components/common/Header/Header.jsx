@@ -80,8 +80,8 @@ const Container = styled.div`
 
   position: fixed;
   top: 0;
-  left: 0;
-
+  left: 50%;
+  transform: translateX(-50%);
   background-color: white;
   z-index: 500;
 `;

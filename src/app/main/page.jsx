@@ -59,7 +59,6 @@ const MainPage = () => {
     const fetchGenderAgeFacilities = async () => {
       try {
         const response = await getGenderAgeFacilities();
-        console.log(response.data)
         setGenderAgeFacilities(response.data.popularPlaces);
         setAge(response.data.age);
         setGender(response.data.gender);

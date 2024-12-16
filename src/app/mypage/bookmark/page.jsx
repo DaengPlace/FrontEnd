@@ -6,11 +6,8 @@ import theme from '@/styles/theme';
 
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import Header from '@/components/common/Header/Header';
-import { initialFacilities } from "@/data/facilities";
 import ScrollableContainer from '@/components/mypage/bookmark/ScrollableContainer/ScrollableContainer';
 import ButtonsContainer from '@/components/mypage/bookmark/ButtonsContainer/ButtonsContainer';
-import axios from 'axios';
-import { PlaceSelected } from '@/components/common/NavBottom/NavBottom.stories';
 import { getBookmarks } from '@/apis/favorite/getBookmarks';
 import { getPlacesByPlaceId } from '@/apis/places/getPlacesByPlaceId';
 

@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "@/components/common/Header/Header";
 import { OnlyHomeIcon } from "@/components/common/Header/Header.stories";
-import { reviews } from "@/data/reviewData";
 import ReviewCard from "@/components/mypage/myreviews/ReviewCard/ReviewCard";
-import axios from "axios";
 import { getReviews } from "@/apis/reviews/getReviews";
 
 const MyReviews = () => {

@@ -15,10 +15,13 @@ import { ChevronRight } from "styled-icons/bootstrap";
 import theme from "@/styles/theme.js";
 import { useRouter } from "next/navigation";
 import { getPets } from "@/apis/dog/getPets";
+import { getUserProfile } from "@/apis/user/getUserProfile";
+
 
 const MyPage = () => {
   const router = useRouter();
   const [pets, setPets] = useState([]);
+  const [userProfile, setUserProfile] = useState([]);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -33,7 +36,17 @@ const MyPage = () => {
     fetchPets();
   }, []);
 
-  console.log(pets);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await getUserProfile();
+        setUserProfile(response.data);
+      } catch (error) {
+        console.error("회원 조회 실패 : ", error)
+      }
+    };
+    fetchUserProfile();
+  }, []);
 
   return (
     <Container>
@@ -46,11 +59,11 @@ const MyPage = () => {
       <Space />
 
       <SectionHeader header={"내 프로필"} />
-      <UserProfile imagePath={defaultProfileImage} name={"뽀삐엄마"} />
+      <UserProfile imagePath={defaultProfileImage} name={userProfile.nickname} />
       <br />
 
       <MyPetsHeader>
-        <SectionHeader header={"우리집 댕댕이들"} />
+        <SectionHeader header={`우리집 댕댕이들 ${pets.length}`} />
         <AddPet onClick={() => router.push("/dog/info")}>
           추가하기
           <StyledChevronRight />{" "}
@@ -74,6 +87,7 @@ export default MyPage;
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
+  height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

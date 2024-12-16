@@ -6,44 +6,77 @@ import theme from '@/styles/theme';
 
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import Header from '@/components/common/Header/Header';
-import { initialFacilities } from "@/data/facilities";
 import ScrollableContainer from '@/components/mypage/bookmark/ScrollableContainer/ScrollableContainer';
 import ButtonsContainer from '@/components/mypage/bookmark/ButtonsContainer/ButtonsContainer';
+import { getBookmarks } from '@/apis/favorite/getBookmarks';
+import { getPlacesByPlaceId } from '@/apis/places/getPlacesByPlaceId';
 
 const BookmarkPage = () => {
 
-  const [facilities, setFacilities] = useState(initialFacilities);
+  const [facilities, setFacilities] = useState([]);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [buttonBottom, setButtonBottom] = useState(30);
   const bottomRef = useRef(null);
 
-  // 즐겨찾기 상태 변경 함수
-  const toggleLike = (id) => {
-    setFacilities((prev) => 
-      prev.map((fac) => 
-        fac.id === id ? {...fac, isLiked: !fac.isLiked} : fac
-      )
-    );
-  };
-
   useEffect(() => {
-    // Scroll 및 Intersection Observer 설정
-    const container = document.getElementById("scrollable-container");
-    const handleScroll = () => setShowScrollToTop(container.scrollTop > 10);
+    const fetchBookmarks = async () => {
+      try {
+        const bookmarkResponse = await getBookmarks();
 
-    container.addEventListener("scroll", handleScroll);
+        const placeIds = bookmarkResponse.data.places.map(
+          (favorite) => favorite.placeId
+        );
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setButtonBottom(entry.isIntersecting ? 20 : 30);
-    }, { root: container, threshold: 0.1 });
+        const placeRequests = placeIds.map((placeId) => getPlacesByPlaceId(placeId));
 
-    if (bottomRef.current) observer.observe(bottomRef.current);
+        const placeResponses = await Promise.all(placeRequests);
+        const places = placeResponses.map((res) => res.data.data);
 
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-      if (bottomRef.current) observer.unobserve(bottomRef.current);
+        setFacilities(
+          places.map((place) => ({
+            id: place.placeId,
+            name: place.name,
+            address: place.location,
+            image: "assets/place/image 19.svg",
+            category: place.category,
+            rating: place.rating,
+            reviewCnt: place.review_count,
+            isLiked: place.is_favorite,
+            tags: [
+              place.is_parking && "주차 가능",
+              place.inside && "실내공간",
+              place.outside && "야외공간",
+              place.weight_limit === 0 && "무게 제한 없음",
+              place.pet_fee === 0 && "애견 동반 요금 없음",
+            ].filter(Boolean),
+          }))
+        );
+      } catch (error) {
+        console.error("즐겨찾기 데이터를 가져오는 데 실패했습니다 : ", error)
+      }
     };
+
+    fetchBookmarks();
   }, []);
+
+  // useEffect(() => {
+  //   // Scroll 및 Intersection Observer 설정
+  //   const container = document.getElementById("scrollable-container");
+  //   const handleScroll = () => setShowScrollToTop(container.scrollTop > 10);
+
+  //   container.addEventListener("scroll", handleScroll);
+
+  //   const observer = new IntersectionObserver(([entry]) => {
+  //     setButtonBottom(entry.isIntersecting ? 20 : 30);
+  //   }, { root: container, threshold: 0.1 });
+
+  //   if (bottomRef.current) observer.observe(bottomRef.current);
+
+  //   return () => {
+  //     container.removeEventListener("scroll", handleScroll);
+  //     if (bottomRef.current) observer.unobserve(bottomRef.current);
+  //   };
+  // }, []);
 
   return (
     <Container>
@@ -54,8 +87,27 @@ const BookmarkPage = () => {
         showMapIcon={OnlyHomeIcon.args.showMapIcon}
       />
       <Space />
-      <ScrollableContainer facilities={facilities} toggleLike={toggleLike} bottomRef={bottomRef} />
-      <ButtonsContainer showScrollToTop={showScrollToTop} buttonBottom={buttonBottom} />
+      {facilities.length > 0 ? (
+        <>
+          <ScrollableContainer
+            facilities={facilities}
+            toggleLike={(id) =>
+              setFacilities((prev) =>
+                prev.map((fac) =>
+                  fac.id === id ? { ...fac, isLiked: !fac.isLiked } : fac
+                )
+              )
+            }
+            bottomRef={bottomRef}
+          />
+          <ButtonsContainer
+            showScrollToTop={showScrollToTop}
+            buttonBottom={buttonBottom}
+          />
+        </>
+      ) : (
+        <EmptyMessage>즐겨찾기에 등록된 시설이 없습니다.</EmptyMessage>
+      )}
     </Container>
   );
 };
@@ -65,6 +117,7 @@ export default BookmarkPage;
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
+  height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -74,4 +127,11 @@ const Container = styled.div`
 
 const Space = styled.div`
   margin-top: 50px;
+`;
+
+const EmptyMessage = styled.div`
+  margin-top: 50px;
+  font-size: 16px;
+  color: ${theme.colors.divider};
+  text-align: center;
 `;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import FacilityCard from '../FacilityCard/FacilityCard';
 import styled from 'styled-components';
 import theme from '../../../styles/theme.js';
@@ -7,11 +7,43 @@ import { useRouter } from 'next/navigation';
 const FacilitiesSection = ({sectionTitle, facilities, isCompact = false}) => {
 
   const router = useRouter();
+  const cardContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  // 마우스 드래그 시작
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - cardContainerRef.current.offsetLeft);
+    setScrollLeft(cardContainerRef.current.scrollLeft);
+  };
+
+  // 마우스 이동 중
+  const handleMouseMove = (e) => {
+    if (!isDragging) return; // 드래그 중이 아닐 때
+    e.preventDefault();
+    const x = e.pageX - cardContainerRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // 드래그 속도 조절
+    cardContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  // 드래그 종료
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
   return (
     <SectionContainer $isCompact={isCompact}>
       <SectionTitle>{sectionTitle}</SectionTitle>
-        <CardContainer $isCompact={isCompact}>
+        <CardContainer 
+          ref={cardContainerRef}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseUp}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          $isCompact={isCompact}
+        >
           {facilities.slice(0, 5).map((fac, index) => (
             <FacilityCard
               key={fac.placeId || index}
@@ -47,23 +79,23 @@ const SectionTitle = styled.div`
 `;
 
 const CardContainer = styled.div`
-    display: flex;
-    gap: 16px;
-    margin: 10px 0;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 5px 25px 10px 5px;
+  display: flex;
+  gap: 16px;
+  margin: 10px 0;
+  overflow-x: scroll;
+  white-space: nowrap;
+  padding: 5px 25px 10px 5px;
+  cursor: grab;
 
-    &::-webkit-scrollbar {
-        height: 8px;
-    }
+  /* 스크롤바 숨기기 */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background-color: ${theme.colors.divider};
-        border-radius: 10px;
-    }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 
-    &::-webkit-scrollbar-track {
-        background-color: ${theme.colors.defaultBackground}; /* 스크롤바 배경 */
-    }
+  &:active {
+    cursor: grabbing;
+  }
 `;

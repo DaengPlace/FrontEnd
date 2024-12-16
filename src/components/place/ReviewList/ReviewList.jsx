@@ -3,23 +3,37 @@ import Image from "next/image";
 import styled from "styled-components";
 
 const ReviewList = ({ reviews }) => {
+  const NativeDate = global.Date;
+  const formatDate = (dateString) => {
+    const date = new NativeDate(dateString); 
+    if (isNaN(date)) {
+      return "Invalid date";
+    }
+    const kstOffset = 9 * 60 * 60 * 1000; 
+    const localDate = new NativeDate(date.getTime() + kstOffset);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, "0");
+    const day = String(localDate.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+  const topReviews = reviews.slice(0, 3);
   return (
     <Container>
-      {reviews.map((review, index) => (
-        <ReviewCard key={review.id}>
-          <ReviewNumber>{review.id}</ReviewNumber>
+      {topReviews.map((review, index) => (
+        <ReviewCard key={review.reviewId}>
+          <ReviewNumber>{index + 1}</ReviewNumber>
           <ReviewContent>
             <CategoryBadge>{review.category}</CategoryBadge>
-            <ReviewTitle>{review.title}</ReviewTitle>
+            <ReviewTitle>{review.placeName}</ReviewTitle>
             <ReviewInfo>
-              {review.author} | {review.date} 작성
+              {review.memberName} | {formatDate(review.createdAt)} 작성
               <Rating>
                 {Array.from({ length: Math.round(review.rating) }, (_, i) => (
                   <Star key={i}>⭐</Star>
                 ))}
               </Rating> 
             </ReviewInfo>
-            <ReviewText>{review.review}</ReviewText>
+            <ReviewText>{review.content}</ReviewText>
             {index !== reviews.length - 1 && (
               <hr
                 style={{
@@ -32,12 +46,14 @@ const ReviewList = ({ reviews }) => {
             )}
           </ReviewContent>
           <ReviewImageWrapper>
-            <StyledImage
-              src={review.image}
-              alt={`리뷰 이미지 ${review.id}`}
-              width={80}
-              height={80}
-            />
+            {review.imageUrls.length > 0 && (
+              <StyledImage
+                src={review.imageUrls[0]}
+                alt={`리뷰 이미지 ${review.reviewId}`}
+                width={80}
+                height={80}
+              />
+            )}
           </ReviewImageWrapper>
         </ReviewCard>
       ))}

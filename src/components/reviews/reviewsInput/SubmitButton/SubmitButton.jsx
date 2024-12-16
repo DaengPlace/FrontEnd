@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-const SubmitButton = ({ children }) => (
-  <Button>{children}</Button>
+const SubmitButton = ({ onClick, children }) => (
+  <Button onClick={onClick}>{children}</Button>
 );
 
 export default SubmitButton;

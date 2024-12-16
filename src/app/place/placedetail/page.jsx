@@ -15,6 +15,8 @@ import { cards } from "@/data/cardsData";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
 import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
+import { getPlaceDetails } from "@/apis/place/places";
+import { addFavorite, removeFavorite } from "@/apis/place/favorite";
 
 const PlaceDetailPage = () => {
   return (
@@ -38,7 +40,6 @@ const ActualPlaceDetailPage = () => {
   const { setPlaceName, setVisitDate, setCategory } = useReviewStore();
   const [selectedCard, setSelectedCard] = useState(null); 
   const [isLoading, setIsLoading] = useState(true); 
-  const accessToken = localStorage.getItem("accessToken");
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -67,20 +68,15 @@ const ActualPlaceDetailPage = () => {
       fetchPlaceDetails(placeId); 
     }
   }, [placeId]);
-  const fetchPlaceDetails = async (placeId) => {
+  const fetchPlaceDetails = async () => {
     try {
-      const response = await axios.get(`https://api.daengplace.com/places/${placeId}`,
-        {
-          headers: { Authorization : `Bearer ${accessToken}` },
-        }
-      );
-      console.log(response.data);
-      setSelectedCard(response.data.data); 
+      const data = await getPlaceDetails(placeId);
+      setSelectedCard(data);
+      setPlaceName(data.name);
+      setCategory(data.category);
     } catch (error) {
       console.error("Error fetching place details:", error);
-      setSelectedCard(null); 
-    } finally {
-      setIsLoading(false);
+      setSelectedCard(null);
     }
   };
 
@@ -105,32 +101,19 @@ const ActualPlaceDetailPage = () => {
   const toggleLike = async () => {
     try {
       if (selectedCard.is_favorite) {
-        await axios.delete("https://api.daengplace.com/favorite", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: { placeId },
-        });
+        await removeFavorite(placeId); 
         console.log("즐겨찾기 삭제 성공");
       } else {
-        await axios.put(
-          "https://api.daengplace.com/favorite",
-          { placeId },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        await addFavorite(placeId); 
         console.log("즐겨찾기 등록 성공");
       }
+
       setSelectedCard((prevCard) => ({
         ...prevCard,
         is_favorite: !prevCard.is_favorite, 
       }));
     } catch (error) {
-      console.error("즐겨찾기 상태 변경 실패:", error.response || error.message);
-      alert("즐겨찾기 상태를 변경하는 도중 오류가 발생했습니다.");
+      console.error("Error toggling favorite status:", error);
     }
   };
 

@@ -11,6 +11,7 @@ import PhotoReviewContainer from "@/components/reviews/PhotoReviewContainer/Phot
 import ReviewList from "@/components/reviews/ReviewList/ReviewList";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { fetchPlaceReviews, fetchPlaceDetails } from "@/apis/review/reviewApi";
 
 const ReviewPage = () => {
   const searchParams = useSearchParams();
@@ -19,52 +20,32 @@ const ReviewPage = () => {
   const [placeData, setPlaceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const accessToken = localStorage.getItem("accessToken");
 
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const containerRef = useRef(null);
 
 
   useEffect(() => {
-    const fetchReviews = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `https://api.daengplace.com/reviews/places/${placeId}`,
-          {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            headers: { Authorization : `Bearer ${accessToken}` },
-          }
-          );
-          console.log("Fetched reviews:", response.data.data);
-          setReviews(response.data.data);
-      }catch (error) {
-        console.error("Error fetching reviews:", error);
-        setError(error.message || "Failed to fetch reviews.");
+
+        const reviewsData = await fetchPlaceReviews(placeId);
+        console.log("Fetched reviews:", reviewsData);
+        setReviews(reviewsData);
+
+        const placeDetails = await fetchPlaceDetails(placeId);
+        setPlaceData(placeDetails);
+
+      } catch (error) {
+        setError(error.message || "Failed to load data.");
       } finally {
         setLoading(false);
       }
     };
 
-    const fetchPlaceData = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.daengplace.com/places/${placeId}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` }, 
-          }
-        );
-        setPlaceData(response.data.data);
-      } catch (error) {
-        console.error("Error fetching place data:", error);
-        setError(error.message || "Failed to fetch place data.");
-      }
-    };
-
     if (placeId) {
-      fetchReviews();
-      fetchPlaceData();
+      loadData();
     } else {
       console.warn("placeId is undefined.");
     }
@@ -115,8 +96,8 @@ const ReviewPage = () => {
           reviewCount={reviews.length}
         />
         <TagSection reviews={reviews}/>
-        <PhotoReviewContainer reviews={reviews} />
-        <ReviewList reviews={reviews} setReviews={setReviews} accessToken={accessToken} />
+        <PhotoReviewContainer reviews={reviews} placeId={placeId} />
+        <ReviewList reviews={reviews} setReviews={setReviews}/>
       </Container>
       {showScrollToTop && (
         <ScrollToTopButton onClick={scrollToTop}>

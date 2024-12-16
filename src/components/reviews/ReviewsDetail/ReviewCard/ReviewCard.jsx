@@ -6,28 +6,27 @@ import Image from "next/image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
-import axios from "axios";
+import {
+  fetchUserProfile,
+  toggleReviewLike,
+} from "@/apis/review/reviewApi";
 
-const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, accessToken }) => {
+const ReviewCard = ({ review, setReview, isOpen, toggleDropdown }) => {
   const NativeDate = global.Date;
   const [currentUserNickname, setCurrentUserNickname] = useState("");
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const loadUserProfile = async () => {
       try {
-        const response = await axios.get("https://api.daengplace.com/members/profile", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setCurrentUserNickname(response.data.data.nickname); 
+        const profile = await fetchUserProfile();
+        setCurrentUserNickname(profile.nickname);
       } catch (error) {
         console.error("Error fetching profile:", error.response?.data || error.message);
       }
     };
 
-    fetchProfile();
-  }, [accessToken]);
+    loadUserProfile();
+  }, []);
 
   const formatDate = (dateString) => {
     const date = new NativeDate(dateString); 
@@ -45,23 +44,12 @@ const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, a
   const toggleLike = async (placeId, reviewId) => {
     try {
       const isCurrentlyLiked = review.liked;
+      const data = await toggleReviewLike(placeId, reviewId, isCurrentlyLiked);
 
-      const response = isCurrentlyLiked
-        ? await axios.delete(
-            `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
-            { headers: { Authorization: `Bearer ${accessToken}` } }
-          )
-        : await axios.post(
-            `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
-            {},
-            { headers: { Authorization: `Bearer ${accessToken}` } }
-          );
-
-      const { likeCount, liked } = response.data.data;
       setReview((prevReview) => ({
         ...prevReview,
-        liked,
-        likeCount,
+        liked: data.liked,
+        likeCount: data.likeCount,
       }));
     } catch (error) {
       console.error("Failed to toggle like:", error.response?.data || error.message);
@@ -101,7 +89,6 @@ const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, a
             toggleDropdown={toggleDropdown}
             reviewId={review.reviewId}
             placeId={review.placeId}
-            accessToken={accessToken}
           />
         )}
       </CardHeader>

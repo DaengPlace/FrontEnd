@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import { createReview, updateReview, fetchReviewDetail } from "@/apis/review/reviewApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import Modal from '@/components/common/Modal/Modal';
@@ -19,7 +19,6 @@ import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 
 const ReviewsInputPage = () => {
   const router = useRouter();
-  const accessToken = localStorage.getItem("accessToken");
   const searchParams = useSearchParams();
   const placeId = searchParams.get("placeId"); 
   const reviewId = searchParams.get("reviewId");
@@ -34,7 +33,6 @@ const ReviewsInputPage = () => {
 
   const containerRef = useRef(null);
 
-  console.log(accessToken);
   const handleTagClick = (tag) => {
     if (tags.includes(tag)) {
       setTags(tags.filter((t) => t !== tag));
@@ -64,26 +62,20 @@ const ReviewsInputPage = () => {
   };
   useEffect(() => {
     if (reviewId) {
-      const fetchReviewData = async () => {
+      const loadReviewData = async () => {
         try {
-          const response = await axios.get(
-            `https://api.daengplace.com/reviews/${placeId}/and/${reviewId}`,
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            }
-          );
-          const data = response.data.data;
+          const data = await fetchReviewDetail(placeId, reviewId);
           setReviewText(data.content);
           setRating(data.rating);
           setTags(data.traitTags.map((tag) => tag.content));
         } catch (error) {
-          console.error("기존 리뷰 데이터를 가져오는 데 실패했습니다:", error);
+          console.error("Failed to fetch review data:", error.message);
         }
       };
 
-      fetchReviewData();
+      loadReviewData();
     }
-  }, [reviewId, placeId, accessToken]);
+  }, [reviewId, placeId]);
 
   const handleSubmit = async () => {
     if (!placeId || !rating || !reviewText) {
@@ -114,37 +106,16 @@ const ReviewsInputPage = () => {
     }
     try {
       setLoading(true);
-      let response;
       if (reviewId) {
-        response = await axios.put(
-          `https://api.daengplace.com/reviews/${reviewId}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        await updateReview(reviewId, formData);
+        alert("리뷰가 수정되었습니다.");
       } else {
-        response = await axios.post(
-          `https://api.daengplace.com/reviews/${placeId}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        await createReview(placeId, formData);
+        alert("리뷰가 등록되었습니다.");
       }
-
-      if (response.status === 200 || response.status === 201) {
-        alert(reviewId ? "리뷰가 수정되었습니다." : "리뷰가 등록되었습니다.");
-        router.push(`/reviews?placeId=${placeId}`);
-      }
+      router.push(`/reviews?placeId=${placeId}`);
     } catch (error) {
-      console.error("리뷰 저장 실패:", error);
+      console.error("Failed to save review:", error.message);
       alert("리뷰 저장 중 문제가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setLoading(false);

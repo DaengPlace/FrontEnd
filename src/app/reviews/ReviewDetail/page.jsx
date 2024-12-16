@@ -7,15 +7,18 @@ import styled from "styled-components";
 import HeaderSection from "@/components/reviews/ReviewsDetail/HeaderSection/HeaderSection";
 import SubHeader from "@/components/reviews/ReviewsDetail/SubHeader/SubHeader";
 import ReviewCard from "@/components/reviews/ReviewsDetail/ReviewCard/ReviewCard";
+import {
+  fetchReviewDetail,
+  fetchPlaceDetails,
+} from "@/apis/review/reviewApi";
+
 
 const ReviewDetailPage = () => {
   const [likedReviews, setLikedReviews] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();
-  const accessToken = localStorage.getItem("accessToken");
   const reviewId = searchParams.get("reviewId");
   const placeId = searchParams.get("placeId");
-  console.log("Review ID:", reviewId, "Place ID:", placeId);
   const [place, setPlace] = useState(null); 
   const [review, setReview] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,35 +35,24 @@ const ReviewDetailPage = () => {
   };
 
   useEffect(() => {
-    const fetchReviewDetail = async () => {
+    const loadData = async () => {
       try {
-        const response = await axios.get(`https://api.daengplace.com/reviews/${placeId}/and/${reviewId}`,
-          {
-            headers: { Authorization : `Bearer ${accessToken}` },
-          }
-        );
-        console.log("Review Detail:", response.data.data);
-        setReview(response.data.data);
-        console.log("Review Data:", review.imageUrls);
-        setLoading(false);
-      } catch (error) {
-        console.error("리뷰 상세 정보를 가져오는 데 실패했습니다:", error);
-        setLoading(false);
-      }
-    };
+        setLoading(true);
+        const reviewData = await fetchReviewDetail(placeId, reviewId);
+        setReview(reviewData);
 
-    const fetchPlaceDetail = async () => {
-      try {
-        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
-        setPlace(response.data.data); 
+        const placeData = await fetchPlaceDetails(placeId);
+        setPlace(placeData);
+
+        setLoading(false);
       } catch (error) {
-        console.error("장소 정보를 가져오는 데 실패했습니다:", error);
+        console.error("Failed to load data:", error);
+        setLoading(false);
       }
     };
 
     if (reviewId && placeId) {
-      fetchReviewDetail();
-      fetchPlaceDetail(); 
+      loadData();
     }
   }, [reviewId, placeId]);
 
@@ -71,11 +63,8 @@ const ReviewDetailPage = () => {
       <Container>
         <ReviewCard
           review={review}
-          likedReviews={likedReviews}
-          toggleLike={toggleLike}
           isOpen={isOpen}
           toggleDropdown={toggleDropdown}
-          accessToken={accessToken}
           setReview={setReview}
         />
       </Container>

@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import { fetchUserProfile } from "@/apis/review/reviewApi";
 import Image from "next/image";
 
 const ProfileSection = () => {
   const [profile, setProfile] = useState("");
-  const token = localStorage.getItem("accessToken");
   useEffect(() => {
-    const fetchProfile = async () => {
+    const loadProfile = async () => {
       try {
-        console.log("Access Token:", token);
-        const response = await axios.get("https://api.daengplace.com/members/profile", {
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        console.log("Profile Response:", response.data); 
-        setProfile(response.data.data)
+        const profileData = await fetchUserProfile();
+        setProfile(profileData);
       } catch (error) {
-        console.error("Error fetching profile:", error.response?.data || error.message); 
+        console.error("Error fetching profile:", error.message);
       }
     };
 
-    fetchProfile();
+    loadProfile();
   }, []);
+  
   return (
   <Profile>
     <Avatar profileImageUrl={profile.profileImageUrl}/>

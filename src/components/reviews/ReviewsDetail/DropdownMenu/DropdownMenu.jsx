@@ -4,31 +4,25 @@ import React from "react";
 import styled from "styled-components";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { deleteReview } from "@/apis/review/reviewApi";
 
-const DropdownMenu = ({ isOpen, toggleDropdown, reviewId, placeId, accessToken, review }) => {
+const DropdownMenu = ({ isOpen, toggleDropdown, reviewId, placeId }) => {
   const router = useRouter();
   const handleEditClick = (reviewId, placeId, event) => {
     event.stopPropagation();
     router.push(`/reviews/reviewsInput?reviewId=${reviewId}&placeId=${placeId}`);
   };
 
-  const handleDeleteClick = (reviewId) => {
+  const handleDeleteClick = async (reviewId) => {
     if (confirm("정말로 삭제하시겠습니까?")) {
-      axios
-        .delete(`https://api.daengplace.com/reviews/${reviewId}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        )
-        .then(() => {
-          alert("리뷰가 삭제되었습니다.");
-          router.back();
-        })
-        .catch((error) => {
-          console.error("리뷰 삭제 실패:", error);
-          alert("리뷰 삭제에 실패했습니다.");
-        });
+      try {
+        await deleteReview(reviewId);
+        alert("리뷰가 삭제되었습니다.");
+        router.back(); 
+      } catch (error) {
+        console.error("리뷰 삭제 실패:", error.message);
+        alert("리뷰 삭제에 실패했습니다.");
+      }
     }
   };
   return (

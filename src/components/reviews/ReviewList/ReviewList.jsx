@@ -7,8 +7,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import {
+  fetchUserProfile,
+  toggleReviewLike,
+  deleteReview,
+} from "@/apis/review/reviewApi";
 
-const ReviewList = ({ reviews, setReviews, accessToken }) => {
+const ReviewList = ({ reviews, setReviews }) => {
     const router = useRouter();
     const [likedReviews, setLikedReviews] = useState({});
     const [likeCounts, setLikeCounts] = useState({});
@@ -16,21 +21,17 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
     const [currentUserNickname, setCurrentUserNickname] = useState("");
 
     useEffect(() => {
-      const fetchProfile = async () => {
-          try {
-              const response = await axios.get("https://api.daengplace.com/members/profile", {
-                  headers: {
-                      "Authorization": `Bearer ${accessToken}`,
-                  },
-              });
-              setCurrentUserNickname(response.data.data.nickname); 
-          } catch (error) {
-              console.error("Error fetching profile:", error.response?.data || error.message);
-          }
+      const loadUserProfile = async () => {
+        try {
+          const profile = await fetchUserProfile();
+          setCurrentUserNickname(profile.nickname);
+        } catch (error) {
+          console.error("Failed to load user profile:", error.message);
+        }
       };
+      loadUserProfile();
+    }, []);
 
-      fetchProfile();
-  }, [accessToken]);
     const NativeDate = global.Date;
 
     const formatDate = (dateString) => {
@@ -49,46 +50,42 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
         router.push(`/reviews/ReviewDetail?reviewId=${reviewId}&placeId=${placeId}`)
     }
     
-    const toggleLike = async (placeId, reviewId, event) => {
-      event.stopPropagation();
-    
+    const handleLikeToggle = async (placeId, reviewId, isLiked, event) => {
+    event.stopPropagation();
+    try {
+      await toggleReviewLike(placeId, reviewId, isLiked);
+      setReviews((prev) =>
+        prev.map((review) =>
+          review.reviewId === reviewId
+            ? {
+                ...review,
+                liked: !review.liked,
+                likeCount: review.liked
+                  ? review.likeCount - 1
+                  : review.likeCount + 1,
+              }
+            : review
+        )
+      );
+    } catch (error) {
+      console.error("Failed to toggle like:", error.message);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (confirm("정말로 삭제하시겠습니까?")) {
       try {
-        const reviewIndex = reviews.findIndex((review) => review.reviewId === reviewId);
-        if (reviewIndex === -1) {
-          console.error("Review not found in the reviews list.");
-          return;
-        }
-    
-        const isCurrentlyLiked = reviews[reviewIndex].liked;
-    
-        const response = isCurrentlyLiked
-          ? await axios.delete(
-              `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
-              { headers: { Authorization: `Bearer ${accessToken}` } }
-            )
-          : await axios.post(
-              `https://api.daengplace.com/reviews/likes/${placeId}/and/${reviewId}`,
-              {},
-              { headers: { Authorization: `Bearer ${accessToken}` } }
-            );
-    
-        const { likeCount, liked } = response.data.data;
-    
-        setReviews((prevReviews) => {
-          const updatedReviews = [...prevReviews];
-          updatedReviews[reviewIndex] = {
-            ...updatedReviews[reviewIndex],
-            liked,
-            likeCount,
-          };
-          console.log(updatedReviews);
-          return updatedReviews;
-        });
+        await deleteReview(reviewId);
+        alert("리뷰가 삭제되었습니다.");
+        setReviews((prev) =>
+          prev.filter((review) => review.reviewId !== reviewId)
+        );
       } catch (error) {
-        console.error("Failed to toggle like:", error.response?.data || error.message);
-        alert(error.response?.data?.message || "An error occurred while toggling like.");
+        console.error("리뷰 삭제 실패:", error.message);
+        alert("리뷰 삭제에 실패했습니다.");
       }
-    };
+    }
+  };
     
     
     const toggleDropdown = (id, event) => {
@@ -103,24 +100,6 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
       router.push(`/reviews/reviewsInput?reviewId=${reviewId}&placeId=${placeId}`);
     };
 
-    const handleDeleteClick = (reviewId) => {
-      if (confirm("정말로 삭제하시겠습니까?")) {
-        axios
-          .delete(`https://api.daengplace.com/reviews/${reviewId}`,
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            }
-          )
-          .then(() => {
-            alert("리뷰가 삭제되었습니다.");
-            router.refresh();
-          })
-          .catch((error) => {
-            console.error("리뷰 삭제 실패:", error);
-            alert("리뷰 삭제에 실패했습니다.");
-          });
-      }
-    };
   return (
     <ReviewListContainer>
       <Title>리뷰 ({reviews.length})</Title>
@@ -169,7 +148,7 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
                     <MenuItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteClick(review.reviewId);
+                        handleDeleteReview(review.reviewId);
                       }}
                     >
                       삭제

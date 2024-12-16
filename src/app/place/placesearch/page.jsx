@@ -14,6 +14,8 @@ import { Map, ArrowUp } from "@styled-icons/bootstrap";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { fetchPlaces } from "@/apis/place/places";
+import { addFavorite, removeFavorite } from "@/apis/place/favorite";
 
 const PlaceSearchPage = () => {
   return (
@@ -128,14 +130,14 @@ const ActualPlaceSearchPage = () => {
   
     if (!isNaN(lat) && !isNaN(lng)) {
       setUserLocation({ lat, lng }); 
-      fetchPlaces(lat, lng, page, size); 
+      loadPlaces(lat, lng, page, size); 
     } else {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
             setUserLocation({ lat: latitude, lng: longitude });
-            fetchPlaces(latitude, longitude, page, size); 
+            loadPlaces(latitude, longitude, page, size); 
           },
           () => {
             alert("현재 위치를 가져올 수 없습니다.");
@@ -146,21 +148,9 @@ const ActualPlaceSearchPage = () => {
     }
   }, [searchParams, page]);
 
-  const fetchPlaces = async (lat, lng, page, size) => {
+  const loadPlaces = async (lat, lng, page, size) => {
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get("https://api.daengplace.com/places", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          latitude: lat,
-          longitude: lng,
-          page,
-          size,
-        },
-      });
-      const places = response.data.data.places || [];
+      const places = await fetchPlaces(lat, lng, page, size);
       const mappedPlaces = places.map((place) => ({
         ...place,
         mainCategory: categoryMapping[place.category] || "기타",
@@ -217,27 +207,11 @@ const ActualPlaceSearchPage = () => {
 
   const toggleLike = async (placeId, isFavorite) => {
     try {
-      let response;
       if (isFavorite) {
-        response = await axios.delete("https://api.daengplace.com/favorite", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-          data: { placeId },
-        });
-        console.log("즐겨찾기 삭제 성공:", response.data);
+        await removeFavorite(placeId);
       } else {
-        response = await axios.put(
-          "https://api.daengplace.com/favorite",
-          { placeId },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
+        await addFavorite(placeId);
       }
-      console.log("즐겨찾기 추가 성공:", response.data);
       setCards((prevCards) =>
         prevCards.map((card) =>
           card.placeId === placeId ? { ...card, is_favorite: !isFavorite } : card

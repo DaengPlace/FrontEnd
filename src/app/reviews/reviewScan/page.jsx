@@ -9,6 +9,7 @@ import Header from "@/components/common/Header/Header";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
+import { fetchPlaceDetails } from "@/apis/review/reviewApi";
 
 const ReviewScanPage = ({ocrVisitDate}) => {
   const router = useRouter();
@@ -17,25 +18,19 @@ const ReviewScanPage = ({ocrVisitDate}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [placeData, setPlaceData] = useState(null);
   const { visitDate } = useReviewStore();
-  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    const fetchPlaceData = async () => {
+    const loadPlaceData = async () => {
       try {
-        const response = await axios.get(`https://api.daengplace.com/places/${placeId}`,
-          {
-            headers: { Authorization : `Bearer ${accessToken}` }
-          }
-        );
-        setPlaceData(response.data.data);
+        if (!placeId) throw new Error("Place ID is missing.");
+        const data = await fetchPlaceDetails(placeId);
+        setPlaceData(data);
       } catch (error) {
-        console.error("장소 데이터를 가져오는 데 실패했습니다:", error);
+        console.error("Failed to load place data:", error.message);
       }
     };
 
-    if (placeId) {
-      fetchPlaceData();
-    }
+    loadPlaceData();
   }, [placeId]);
 
   const handleConfirm = () => {

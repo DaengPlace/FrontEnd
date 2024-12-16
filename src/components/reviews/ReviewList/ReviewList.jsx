@@ -188,17 +188,22 @@ const ReviewList = ({ reviews, setReviews, accessToken }) => {
             </RatingContainer>
           <CardContent>
             <Text>{review.content}</Text>
-            <ImageWrapper>
-              <Image
-                src={review.imageUrls[0] || "/assets/image.png"}
-                alt={`리뷰 이미지 ${review.id}`}
-                width={100} 
-                height={100} 
-                objectFit="cover" 
-                style={{ borderRadius: "10px" }}
-                priority
-              />
-            </ImageWrapper>
+            <ImagesWrapper>
+            {review.imageUrls &&
+              review.imageUrls.map((url, index) => (
+                <ImageWrapper key={index}>
+                  <Image
+                    src={url || "/assets/image.png"}
+                    alt={`리뷰 이미지 ${index}`}
+                    width={100}
+                    height={100}
+                    objectFit="cover"
+                    style={{ borderRadius: "10px" }}
+                    priority
+                  />
+                </ImageWrapper>
+              ))}
+          </ImagesWrapper>
           </CardContent>
           <Hr2/>
         </ReviewCard>
@@ -334,4 +339,11 @@ const MenuItem = styled.div`
   &:hover {
     background-color: #f4f4f4;
   }
+`;
+
+const ImagesWrapper = styled.div`
+  display: flex;
+  gap: 8px; /* 이미지 간 간격 */
+  flex-wrap: wrap; 
+  margin-top: 8px;
 `;

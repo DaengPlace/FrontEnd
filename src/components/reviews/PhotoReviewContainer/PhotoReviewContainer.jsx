@@ -3,17 +3,17 @@ import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const PhotoReviewContainer = ({ reviews }) => {
+const PhotoReviewContainer = ({ reviews, placeId }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push("/reviews/PhotoReview");
+    router.push(`/reviews/PhotoReview?placeId=${placeId}`);
   };
 
   // reviews 데이터 미리 처리하여 기본 이미지를 설정
   const processedReviews = reviews.map((review) => ({
     ...review,
-    imageUrls: review.imageUrls?.length > 0 ? review.imageUrls : ["/assets/image.png"],
+    imageUrls: review.imageUrls?.length > 0 ? review.imageUrls.slice(0, 4) : ["/assets/image.png"],
   }));
 
   return (
@@ -24,18 +24,20 @@ const PhotoReviewContainer = ({ reviews }) => {
       </SectionHeader>
       <PhotoList>
         {processedReviews.slice(0, 5).map((review) => (
-          review.imageUrls[0] && ( // 이미지가 있는 경우에만 렌더링
-            <PhotoWrapper key={review.reviewId}>
-              <Image
-                src={review.imageUrls[0]} // URL이 없으면 기본 이미지 사용
-                alt={`리뷰 이미지 ${review.reviewId}`}
-                width={100}
-                height={100}
-                style={{ borderRadius: "10px" }}
-                priority
-              />
-            </PhotoWrapper>
-          )
+          <PhotoGroup key={review.reviewId}>
+            {review.imageUrls.map((url, index) => (
+              <PhotoWrapper key={index}>
+                <Image
+                  src={url}
+                  alt={`리뷰 이미지 ${review.reviewId} - ${index}`}
+                  width={100}
+                  height={100}
+                  style={{ borderRadius: "10px" }}
+                  priority
+                />
+              </PhotoWrapper>
+            ))}
+          </PhotoGroup>
         ))}
       </PhotoList>
     </Container>
@@ -70,10 +72,14 @@ const ViewMore = styled.button`
 
 const PhotoList = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
 `;
-
+const PhotoGroup = styled.div`
+  display: flex;
+  gap: 8px;
+`;
 const PhotoWrapper = styled.div`
   width: 100px;
   height: 100px;

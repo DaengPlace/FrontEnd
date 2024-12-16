@@ -115,17 +115,22 @@ const ReviewCard = ({ review, setReview, likedReviews, isOpen, toggleDropdown, a
         </Rating>
       </RatingContainer>
       <CardContent>
-        <ImageWrapper>
-          <Image
-            src={review.imageUrls?.[0]|| "/assets/image.png"}
-            alt={`리뷰 이미지 ${review.reviewId}`}
-            width={540}
-            height={540}
-            objectFit="cover"
-            style={{ borderRadius: "10px" }}
-            priority
-          />
-        </ImageWrapper>
+      <ImageContainer>
+        {review.imageUrls &&
+          review.imageUrls.map((url, index) => (
+            <ImageWrapper key={index}>
+              <Image
+                src={url}
+                alt={`리뷰 이미지 ${review.reviewId} - ${index}`}
+                width={540}
+                height={540}
+                objectFit="cover"
+                style={{ borderRadius: "10px" }}
+                priority
+              />
+            </ImageWrapper>
+          ))}
+      </ImageContainer>
         <Text>{review.content}</Text>
       </CardContent>
     </Card>
@@ -210,4 +215,10 @@ const ImageWrapper = styled.div`
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+`;
+const ImageContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+  margin-top: 15px;
 `;

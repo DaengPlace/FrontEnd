@@ -53,13 +53,16 @@ const ReviewSection = ({ placeId, rating, reviewCount, reviews}) => {
                     <ReviewText>{review.content}</ReviewText>
                 </Content>
                 <ImageContainer>
+                  {review.image && review.image.length > 0 && (
                     <Image
-                    src="/assets/image.png"
-                    width={90}
-                    height={90}
-                    alt="대체 이미지"
-                    ></Image>
-                  </ImageContainer>
+                      src={review.image[0]} 
+                      width={90}
+                      height={90}
+                      alt="리뷰 이미지"
+                      style={{ objectFit: "cover", borderRadius: "10px" }}
+                    />
+                  )}
+                </ImageContainer>
                 </Review>
             ))}
             </ReviewSlider>
@@ -193,4 +196,12 @@ const ReviewImage = styled(Image)`
   object-fit: cover;
   border-radius: 10px;
   margin-top: 30px;
+`;
+const ImageWrapper = styled.div`
+  width: 90px;
+  height: 90px;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-right: 8px;
+  position: relative;
 `;

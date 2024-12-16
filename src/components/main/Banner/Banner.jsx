@@ -22,8 +22,11 @@ export default Banner;
 const BannerContainer = styled.div`
   text-align: center;
   margin-top: 50px;
+  width: 100%;
+  max-width: 600px;
 `;
 
 const BannerImage = styled(Image)`
   width: 100%;
+  height: auto;
 `;

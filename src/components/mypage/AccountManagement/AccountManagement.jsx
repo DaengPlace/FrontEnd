@@ -81,7 +81,6 @@ export default AccountManagement;
 
 const Container = styled.div`
   width: 90%; 
-  margin-bottom: 30px;
 `;
 
 const ActivityBox = styled.div`

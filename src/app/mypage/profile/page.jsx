@@ -10,9 +10,9 @@ import Input from "@/components/common/Input/Input";
 import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Image from "next/image";
-import axios from "axios";
 import { getUserProfile } from "@/apis/user/getUserProfile";
 import { updatePets } from "@/apis/user/putUserUpdate";
+import theme from "@/styles/theme";
 
 const MyProfilePage = () => {
   const router = useRouter();
@@ -245,8 +245,10 @@ const MyProfilePage = () => {
             }}
             render={({ field, fieldState }) => (
               <Input
+                style={{"color": "gray"}}
                 placeholder="이메일 입력"
                 {...field}
+                readOnly
                 value={field.value || ""}
                 isValid={!fieldState.invalid}
                 onChange={async (e) => {
@@ -328,7 +330,7 @@ export default MyProfilePage;
 const Container = styled.div`
   margin: 0 auto;
   padding: 2rem;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;

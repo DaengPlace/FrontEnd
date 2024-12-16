@@ -13,6 +13,7 @@ import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
 import { useDogStore } from "@/stores/dogStore";
 
 const DogInfoPage = () => {
+
   const router = useRouter();
   const [step, setStep] = useState(1);
   const inputRefs = useRef([]);

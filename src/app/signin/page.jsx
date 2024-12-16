@@ -12,6 +12,7 @@ import { useSigninStore } from "@/stores/signinStore";
 import { postSendCode } from "@/apis/auth/email/postSendCode";
 import { postCheckCode } from "@/apis/auth/email/postCheckCode";
 import { postCheckDuplicate } from "@/apis/auth/email/postCheckDuplicate";
+import Modal from "@/components/common/Modal/Modal";
 
 const SigninPage = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const SigninPage = () => {
   const [timeExpired, setTimeExpired] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
   const [verificationErrorMessage, setVerificationErrorMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { setTokens } = useAuthStore();
   const { setSigninData } = useSigninStore();
@@ -221,7 +223,7 @@ const SigninPage = () => {
       <Header
         titleLines={getTitleLines()}
         onBack={() => router.push("/")}
-        onClose={() => router.push("/")}
+        onClose={() => setIsModalOpen(true)}
       />
       <Form onSubmit={handleSubmit(onSubmit)}>
         <InputBox>
@@ -400,6 +402,17 @@ const SigninPage = () => {
           {step < 3 ? "다음" : isVerified ? "완료" : "확인"}
         </Button>
       </Form>
+
+      {isModalOpen && (
+        <Modal
+          title="회원가입을 중단하시겠습니까?"
+          message={<>지금까지 작성된 정보는<br/>저장되지 않습니다.</>}
+          cancelText="계속 작성"
+          onCancel={()=> setIsModalOpen(false)}
+          confirmText="나가기"
+          onConfirm={()=> router.push("/")}
+        />
+      )}
     </Container>
   );
 };

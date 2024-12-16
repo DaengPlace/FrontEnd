@@ -4,29 +4,61 @@ import Button from '@/components/common/Button/Button';
 import Header from '@/components/common/Header/Header';
 import { NoTitleHeader } from '@/components/common/Header/Header.stories';
 import Modal from '@/components/common/Modal/Modal';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FeatureGroup from '@/components/recommend/FeatureGroup/FeatureGroup';
 import FeatureTitle from '@/components/recommend/FeatureTitle/FeatureTitle';
+import { getPetQuestions } from '@/apis/traits/getTraits';
+import { useTraitStore } from '@/stores/traitStore';
 
 const RecommendDogTest = () => {
+  return (
+    <Suspense>
+      <ActualRecommendDogTest />
+    </Suspense>
+  )
+}
 
+const ActualRecommendDogTest = () => {
+
+  const searchParams = useSearchParams();
+  const petId = searchParams.get("petId");
   const router = useRouter();
+  const { setPetTraits } = useTraitStore();
+  const [questions, setQuestions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTags, setSelectedTags] = useState({
-    activity: null,
-    sociality: null,
-    relation: null,
-  });
+  const [selectedTags, setSelectedTags] = useState({});
 
-  const isButtonActive = selectedTags.activity && selectedTags.sociality && selectedTags.relation;
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await getPetQuestions();
+        setQuestions(response.data);
+      } catch (error) {
+        console.error("반려견 성향 질문 불러오기 실패:", error);
+      }
+    };
 
-  const handleCheckboxClick = (type, value) => {
+    fetchQuestions();
+  }, []);
+
+  const isButtonActive = Object.keys(selectedTags).length === questions.length;
+
+  const handleCheckboxClick = (questionId, answerId) => {
     setSelectedTags((prev) => ({
       ...prev,
-      [type]: prev[type] === value? null:value, 
+      [questionId]: answerId,
     }));
+  };
+
+  const handleSubmit = () => {
+    const petTraits = Object.entries(selectedTags).map(([questionId, answerId]) => ({
+      traitQuestionId: Number(questionId),
+      traitAnswerId: answerId,
+    }));
+    setPetTraits(petTraits); // Zustand에 저장
+    router.push(`/recommend/usertest?petId=${petId}`);
   };
 
   return (
@@ -35,44 +67,25 @@ const RecommendDogTest = () => {
       <Content>
         <FeatureTitle title={
           <>
-            댕댕이의 성향을<br />
-            알려주세요
+            댕댕이의 성향을 <br/>알려주세요
           </>
         } />
-        <FeatureGroup
-          label="활동성"
-          options={["활발해요", "점잖아요"]}
-          selectedValue={selectedTags.activity}
-          onSelect={(value) => handleCheckboxClick("activity", value)}
-        />
-
-        <FeatureGroup
-          label="타견 사교성"
-          options={["다른 강아지와 잘 어울려요", "낯을 많이 가려요"]}
-          selectedValue={selectedTags.sociality}
-          onSelect={(value) => handleCheckboxClick("sociality", value)}
-        />
-
-        <FeatureGroup
-          label="대인관계"
-          options={["처음 보는 사람에게 잘 다가가요", "낯선 사람을 경계해요"]}
-          selectedValue={selectedTags.relation}
-          onSelect={(value) => handleCheckboxClick("relation", value)}
-        />
+        {questions.map((question) => (
+          <FeatureGroup
+            key={question.questionId}
+            label={question.content}
+            options={question.answers.map((ans) => ans.content)}
+            selectedValue={selectedTags[question.questionId]}
+            onSelect={(value) => {
+              const answerId = question.answers.find((ans) => ans.content === value)?.answerId;
+              handleCheckboxClick(question.questionId, answerId);
+            }}
+          />
+        ))}
       </Content>
 
       <Button 
-        isActive={isButtonActive}
-        onClick={() => {
-          if (isButtonActive) {
-            // submit action
-
-            //
-            router.push("/recommend/usertest");
-          }
-        }}
-        hasImage
-      > 확인
+        isActive={isButtonActive} onClick={handleSubmit} hasImage> 확인
       </Button>
 
       {isModalOpen && (

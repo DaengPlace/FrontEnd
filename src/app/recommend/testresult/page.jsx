@@ -7,28 +7,20 @@ import styled from 'styled-components';
 import theme from '@/styles/theme';
 import DogCard from '@/components/recommend/DogCard/DogCard';
 import axios from 'axios';
+import { getTraitsByPetId } from '@/apis/traits/getTraits';
 
 const RecommendTestResults = () => {
 
   const [dogs, setDogs] = useState([]);
   
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    console.log(token);
     const fetchDogData = async () => {
       try {
-        const response = await axios.get('https://api.daengplace.com/traits/', {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization' : `Bearer ${token}`,
-          }
-        });
-        console.log("API 응답 데이터 : ", response.data);
+        const response = await getTraitsByPetId();
 
         const data = response.data;
 
-        const formattedDogs = data.data.petTraits.map((petTrait) => {
+        const formattedDogs = data.petTraits.map((petTrait) => {
           const personality = petTrait.petTraits.reduce(
             (acc, trait) => {
               acc[trait.traitQuestion] = trait.traitAnswer;
@@ -37,7 +29,7 @@ const RecommendTestResults = () => {
             {activity: "", sociality: "", relation: ""}
           );
 
-          const tags = data.data.memberTraits.map(
+          const tags = data.memberTraits.map(
             (trait) => trait.traitAnswer
           );
 

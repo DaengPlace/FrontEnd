@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
+import reviews from "@/data/cardsData";
 
 const ReviewSummary = ({ averageRating, reviewCount }) => {
     const router = useRouter();
     const [isReviewBottomSheetOpen, setIsReviewBottomSheetOpen] = useState(false);
     const fileInputRef = useRef(null);
+    const searchParams = useSearchParams(); // 검색 매개변수 가져오기
+    const placeId = searchParams.get("placeId"); // placeId 가져오기
     const { placeName, setVisitDate } = useReviewStore();
-    
+    const roundedRating = Math.round(averageRating * 10) / 10;
     const handleWriteReviewClick = () => {
         setIsReviewBottomSheetOpen(true); 
       };
@@ -55,7 +58,7 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
                 setVisitDate(visitDate);
   
                 alert("영수증에 장소명이 확인되었습니다!");
-                router.push("/reviews/reviewScan");
+                router.push(`/reviews/reviewScan?placeId=${placeId}`);
               } else {
                 alert("영수증에 해당 장소명이 포함되어 있지 않습니다. 다시 촬영해주세요.");
                 setIsReviewBottomSheetOpen(false);
@@ -75,7 +78,7 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
   return (
     <SummaryContainer>
       <Rating>
-        ⭐ {averageRating.toFixed(1)}
+        ⭐ {roundedRating}
       </Rating>
       <WriteReviewButton onClick={handleWriteReviewClick}>리뷰 작성하기</WriteReviewButton>
       {isReviewBottomSheetOpen && (
@@ -91,7 +94,7 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
               onCancel={handleButtonClick}
               onConfirm={() => {
                 setIsReviewBottomSheetOpen(false);
-                router.push("/reviews/receiptCapture");
+                router.push(`/reviews/receiptCapture?placeId=${placeId}`);
               }}
               cancelText="사진 업로드"
               confirmText="영수증 촬영"

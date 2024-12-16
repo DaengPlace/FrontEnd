@@ -1,14 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
 import styled from "styled-components";
 import HeaderSection from "@/components/reviews/ReviewsDetail/HeaderSection/HeaderSection";
 import SubHeader from "@/components/reviews/ReviewsDetail/SubHeader/SubHeader";
 import ReviewCard from "@/components/reviews/ReviewsDetail/ReviewCard/ReviewCard";
+import {
+  fetchReviewDetail,
+  fetchPlaceDetails,
+} from "@/apis/review/reviewApi";
 
 const ReviewDetailPage = () => {
+  return (
+    <Suspense>
+      <ActualReviewDetailPage />
+    </Suspense>
+  )
+}
+
+const ActualReviewDetailPage = () => {
   const [likedReviews, setLikedReviews] = useState({});
   const [isOpen, setIsOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const reviewId = searchParams.get("reviewId");
+  const placeId = searchParams.get("placeId");
+  const [place, setPlace] = useState(null); 
+  const [review, setReview] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const toggleLike = (id) => {
     setLikedReviews((prev) => ({
@@ -21,32 +41,38 @@ const ReviewDetailPage = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const review = {
-    id: 1,
-    category: "반려동물용품점",
-    title: "간식곳간",
-    author: "뽀삐엄마",
-    date: "2024.11.01",
-    rating: 5,
-    image: "/assets/image.png",
-    review: `
-      야외 공간이 넓어서 뛰어놀기 참 좋네요!
-      재방문 의사 100% 입니다^^
-      음료 종류도 다양하고 아이들 간식도 정말 다양해요 ㅎㅎ
-    `,
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const reviewData = await fetchReviewDetail(placeId, reviewId);
+        setReview(reviewData);
+
+        const placeData = await fetchPlaceDetails(placeId);
+        setPlace(placeData);
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+        setLoading(false);
+      }
+    };
+
+    if (reviewId && placeId) {
+      loadData();
+    }
+  }, [reviewId, placeId]);
 
   return (
     <>
       <HeaderSection />
-      <SubHeader category={review.category} title={review.title} />
+      <SubHeader category={place?.category || "카테고리 없음"} title={place?.name || "제목 없음"} />
       <Container>
         <ReviewCard
           review={review}
-          likedReviews={likedReviews}
-          toggleLike={toggleLike}
           isOpen={isOpen}
           toggleDropdown={toggleDropdown}
+          setReview={setReview}
         />
       </Container>
     </>

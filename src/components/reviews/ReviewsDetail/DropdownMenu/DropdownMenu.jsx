@@ -3,8 +3,28 @@
 import React from "react";
 import styled from "styled-components";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useRouter } from "next/navigation";
+import { deleteReview } from "@/apis/review/reviewApi";
 
-const DropdownMenu = ({ isOpen, toggleDropdown }) => {
+const DropdownMenu = ({ isOpen, toggleDropdown, reviewId, placeId }) => {
+  const router = useRouter();
+  const handleEditClick = (reviewId, placeId, event) => {
+    event.stopPropagation();
+    router.push(`/reviews/reviewsInput?reviewId=${reviewId}&placeId=${placeId}`);
+  };
+
+  const handleDeleteClick = async (reviewId) => {
+    if (confirm("정말로 삭제하시겠습니까?")) {
+      try {
+        await deleteReview(reviewId);
+        alert("리뷰가 삭제되었습니다.");
+        router.back(); 
+      } catch (error) {
+        console.error("리뷰 삭제 실패:", error.message);
+        alert("리뷰 삭제에 실패했습니다.");
+      }
+    }
+  };
   return (
     <DropdownWrapper>
       <Button onClick={toggleDropdown}>
@@ -12,8 +32,17 @@ const DropdownMenu = ({ isOpen, toggleDropdown }) => {
       </Button>
       {isOpen && (
         <Menu>
-          <MenuItem>수정</MenuItem>
-          <MenuItem>삭제</MenuItem>
+          <MenuItem
+            onClick={(e) => handleEditClick(reviewId, placeId, e)}
+          >
+            수정
+          </MenuItem>
+          <MenuItem onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteClick(reviewId);
+          }}>
+            삭제
+          </MenuItem>
         </Menu>
       )}
     </DropdownWrapper>
@@ -23,8 +52,9 @@ const DropdownMenu = ({ isOpen, toggleDropdown }) => {
 export default DropdownMenu;
 
 const DropdownWrapper = styled.div`
-  position: relative; /* 부모 요소를 기준으로 드롭다운 위치를 설정 */
-  display: inline-block; /* 버튼과 드롭다운 메뉴를 같은 줄에 표시 */
+  position: relative;
+  display: inline-block;
+  margin-left: -15px;
 `;
 
 const Button = styled.button`

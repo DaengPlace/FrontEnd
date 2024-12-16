@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const RatingSection = () => {
-  const [rating, setRating] = useState(0);
+const RatingSection = ({ rating, onRatingChange }) => {
   const [hoverRating, setHoverRating] = useState(0);
 
   const handleStarClick = (index, isHalf) => {
-    setRating(index + (isHalf ? 0.5 : 1)); 
+    const newRating = index + (isHalf ? 0.5 : 1); 
+    onRatingChange(newRating);
   };
 
   const handleStarHover = (index, isHalf) => {

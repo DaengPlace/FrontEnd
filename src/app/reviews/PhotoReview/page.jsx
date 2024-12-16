@@ -1,18 +1,45 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, Suspense } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import HeaderSection from "@/components/reviews/PhotoReview/HeaderSection/HeaderSection";
 import SubHeader from "@/components/reviews/PhotoReview/SubHeader/SubHeader";
 import PhotoGrid from "@/components/reviews/PhotoReview/PhotoGrid/PhotoGrid";
 import ScrollToTop from "@/components/reviews/PhotoReview/ScrollToTop/ScrollToTop";
+import { axiosInstance } from "@/apis/axiosInstance";
 
 const PhotoReviewPage = () => {
-  const reviews = Array(50).fill("/assets/image.png");
+  return (
+    <Suspense>
+      <ActualPhotoReviewPage />
+    </Suspense>
+  )
+}
+
+const ActualPhotoReviewPage = () => {
+  const [reviews, setReviews] = useState([]);
   const containerRef = useRef(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get("placeId");
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        if (!placeId) return;
+
+        const response = await axiosInstance.get(`/reviews/places/${placeId}`);
+        const allImageUrls = response.data.data.flatMap((review) => review.imageUrls || []);
+        setReviews(allImageUrls);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, [placeId]);
 
   const handleImageClick = (index) => {
     router.push(`/reviews/ReviewDetail?id=${index + 1}`);

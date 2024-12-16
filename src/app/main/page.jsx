@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme.js";
-import axios from "axios";
-
 import Banner from "@/components/main/Banner/Banner.jsx";
 import Menu from "@/components/main/Menu/Menu.jsx";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection.jsx";

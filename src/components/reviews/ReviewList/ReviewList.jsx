@@ -60,7 +60,7 @@ const ReviewList = ({ reviews, setReviews }) => {
             ? {
                 ...review,
                 liked: !review.liked,
-                likeCount: review.liked
+                likeCount: isLiked
                   ? review.likeCount - 1
                   : review.likeCount + 1,
               }
@@ -123,7 +123,7 @@ const ReviewList = ({ reviews, setReviews }) => {
             <span style={{ marginBottom: "20px" }}>|</span>
             <Date>{formatDate(review.createdAt)}</Date>
             <LikeButton
-              onClick={(event) => handleLikeToggle(review.placeId, review.reviewId, review.isLiked, event)}
+              onClick={(event) => handleLikeToggle(review.placeId, review.reviewId, review.liked, event)}
             >
               {review.liked ? (
                 <FavoriteIcon style={{ color: "red" }} />

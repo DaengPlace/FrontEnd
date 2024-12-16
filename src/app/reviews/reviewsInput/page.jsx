@@ -38,6 +38,7 @@ const ReviewsInputPage = () => {
   const [loading, setLoading] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const maxLength = 500;
+  const [deletedMediaUrls, setDeletedMediaUrls] = useState([]);
 
   const containerRef = useRef(null);
 
@@ -76,6 +77,7 @@ const ReviewsInputPage = () => {
           setReviewText(data.content);
           setRating(data.rating);
           setTags(data.traitTags.map((tag) => tag.content));
+          setMediaFiles(data.imageUrls.map((url) => ({ file: null, url })));
         } catch (error) {
           console.error("Failed to fetch review data:", error.message);
         }
@@ -103,6 +105,7 @@ const ReviewsInputPage = () => {
         content: reviewText,
         rating,
         traitTags: tags,
+        deleteImageUrls: deletedMediaUrls,
       })
     );
     mediaFiles.forEach((fileObj) => {
@@ -159,7 +162,7 @@ const ReviewsInputPage = () => {
         <Divider />
         <ProfileSection />
         <RatingSection rating={rating} onRatingChange={handleRatingChange}/>
-        <AddMediaSection  mediaFiles={mediaFiles} onMediaFilesChange={handleMediaFilesChange}/>
+        <AddMediaSection  mediaFiles={mediaFiles} onMediaFilesChange={handleMediaFilesChange} onDeletedMediaUrlsChange={setDeletedMediaUrls}/>
         <ReviewTextSection
           reviewText={reviewText}
           onChange={handleReviewChange}

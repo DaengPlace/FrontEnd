@@ -20,7 +20,7 @@ const MainPage = () => {
   const router = useRouter();
   const { setTokens } = useAuthStore();
   const [age, setAge] = useState("");
-  const [gender, setGender] = useState(""); // 0 : male, 1: female
+  const [gender, setGender] = useState("");
   const [popularFacilities, setPopularFacilities] = useState([]);
   const [genderAgeFacilities, setGenderAgeFacilities] = useState([]);
 

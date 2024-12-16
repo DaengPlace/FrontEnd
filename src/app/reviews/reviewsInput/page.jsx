@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import styled from "styled-components";
-import { useRouter } from 'next/navigation';
+import { createReview, updateReview, fetchReviewDetail } from "@/apis/review/reviewApi";
+import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import Modal from '@/components/common/Modal/Modal';
 import CategorySection from "@/components/reviews/reviewsInput/CategorySection/CategorySection";
@@ -17,19 +18,33 @@ import Divider from "@/components/common/Divider/Divider";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 
 const ReviewsInputPage = () => {
+  return (
+      <Suspense>
+        <ActualReviewInputPage />
+      </Suspense>
+    )
+  }
+
+  const ActualReviewInputPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get("placeId"); 
+  const reviewId = searchParams.get("reviewId");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [tags, setTags] = useState([]);
+  const [rating, setRating] = useState(0);
+  const [mediaFiles, setMediaFiles] = useState([]); 
+  const [loading, setLoading] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const maxLength = 500;
 
-  const containerRef = useRef(null); 
+  const containerRef = useRef(null);
 
   const handleTagClick = (tag) => {
     if (tags.includes(tag)) {
       setTags(tags.filter((t) => t !== tag));
-    } else{
+    } else {
       setTags([...tags, tag]);
     }
   };
@@ -40,11 +55,81 @@ const ReviewsInputPage = () => {
     }
   };
 
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+  };
+
+  const handleMediaFilesChange = (files) => {
+    setMediaFiles(files);
+  };
+
   const scrollToTop = () => {
     if (containerRef.current) {
       containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+  useEffect(() => {
+    if (reviewId) {
+      const loadReviewData = async () => {
+        try {
+          const data = await fetchReviewDetail(placeId, reviewId);
+          setReviewText(data.content);
+          setRating(data.rating);
+          setTags(data.traitTags.map((tag) => tag.content));
+        } catch (error) {
+          console.error("Failed to fetch review data:", error.message);
+        }
+      };
+
+      loadReviewData();
+    }
+  }, [reviewId, placeId]);
+
+  const handleSubmit = async () => {
+    if (!placeId || !rating || !reviewText) {
+      alert("모든 필드를 입력해주세요.");
+      return;
+    }
+    if (tags.length < 3) {
+      alert("태그를 최소 3개 이상 선택해주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append(
+      "reviewData",
+      JSON.stringify({
+        content: reviewText,
+        rating,
+        traitTags: tags,
+      })
+    );
+    mediaFiles.forEach((fileObj) => {
+      formData.append("file", fileObj.file);
+    });
+  
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    try {
+      setLoading(true);
+      if (reviewId) {
+        await updateReview(reviewId, formData);
+        alert("리뷰가 수정되었습니다.");
+      } else {
+        await createReview(placeId, formData);
+        alert("리뷰가 등록되었습니다.");
+      }
+      router.push(`/reviews?placeId=${placeId}`);
+    } catch (error) {
+      console.error("Failed to save review:", error.message);
+      alert("리뷰 저장 중 문제가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,20 +153,20 @@ const ReviewsInputPage = () => {
 
   return (
     <>
-        <Header title="리뷰 작성" showX={NoTitleHeader.args.showX} onClose={() => setIsModalOpen(true)} />
+        <Header title={reviewId ? "리뷰 수정" : "리뷰 작성"} showX={NoTitleHeader.args.showX} onClose={() => setIsModalOpen(true)} />
       <MainContent ref={containerRef}>
         <CategorySection />
         <Divider />
         <ProfileSection />
-        <RatingSection />
-        <AddMediaSection />
+        <RatingSection rating={rating} onRatingChange={handleRatingChange}/>
+        <AddMediaSection  mediaFiles={mediaFiles} onMediaFilesChange={handleMediaFilesChange}/>
         <ReviewTextSection
           reviewText={reviewText}
           onChange={handleReviewChange}
           maxLength={maxLength}
         />
         <TagSection tags={tags} onTagClick={handleTagClick} />
-        <SubmitButton>등록</SubmitButton>
+        <SubmitButton onClick={handleSubmit}>{reviewId ? "수정" : "등록"}</SubmitButton>
         {isModalOpen && (
         <Modal
           title='리뷰작성을 중단하시겠습니까?'
@@ -93,7 +178,7 @@ const ReviewsInputPage = () => {
           }
           cancelText='나가기'
           confirmText='계속 작성'
-          onCancel={() => router.push("/reviews")}
+          onCancel={() => router.push(`/reviews?placeId=${placeId}`)}
           onConfirm={() => setIsModalOpen(false)}
         />
       )}
@@ -102,6 +187,7 @@ const ReviewsInputPage = () => {
     </>
   );
 };
+
 
 export default ReviewsInputPage;
 
@@ -115,4 +201,4 @@ const MainContent = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
+`

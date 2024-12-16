@@ -123,7 +123,7 @@ const ReviewList = ({ reviews, setReviews }) => {
             <span style={{ marginBottom: "20px" }}>|</span>
             <Date>{formatDate(review.createdAt)}</Date>
             <LikeButton
-              onClick={(event) => toggleLike(review.placeId, review.reviewId, event)}
+              onClick={(event) => handleLikeToggle(review.placeId, review.reviewId, review.isLiked, event)}
             >
               {review.liked ? (
                 <FavoriteIcon style={{ color: "red" }} />

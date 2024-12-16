@@ -44,12 +44,14 @@ const ReviewCard = ({ review, setReview, isOpen, toggleDropdown }) => {
   const toggleLike = async (placeId, reviewId) => {
     try {
       const isCurrentlyLiked = review.liked;
-      const data = await toggleReviewLike(placeId, reviewId, isCurrentlyLiked);
+      await toggleReviewLike(placeId, reviewId, isCurrentlyLiked);
 
       setReview((prevReview) => ({
         ...prevReview,
-        liked: data.liked,
-        likeCount: data.likeCount,
+        liked: !isCurrentlyLiked, 
+        likeCount: isCurrentlyLiked
+          ? prevReview.likeCount - 1 
+          : prevReview.likeCount + 1, 
       }));
     } catch (error) {
       console.error("Failed to toggle like:", error.response?.data || error.message);

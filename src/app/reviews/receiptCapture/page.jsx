@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 import axios from "axios";
@@ -10,6 +10,14 @@ import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 import useReviewStore from "@/stores/reviewStore";
 
 const ReceiptCapture = () => {
+  return (
+    <Suspense>
+      <ActualReceiptCapture />
+    </Suspense>
+  )
+}
+
+const ActualReceiptCapture = () => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const searchParams = useSearchParams();

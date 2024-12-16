@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import styled from "styled-components";
@@ -12,8 +12,15 @@ import {
   fetchPlaceDetails,
 } from "@/apis/review/reviewApi";
 
-
 const ReviewDetailPage = () => {
+  return (
+    <Suspense>
+      <ActualReviewDetailPage />
+    </Suspense>
+  )
+}
+
+const ActualReviewDetailPage = () => {
   const [likedReviews, setLikedReviews] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();

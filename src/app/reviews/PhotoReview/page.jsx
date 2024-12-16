@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, Suspense } from "react";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import HeaderSection from "@/components/reviews/PhotoReview/HeaderSection/HeaderSection";
@@ -10,6 +10,14 @@ import ScrollToTop from "@/components/reviews/PhotoReview/ScrollToTop/ScrollToTo
 import { axiosInstance } from "@/apis/axiosInstance";
 
 const PhotoReviewPage = () => {
+  return (
+    <Suspense>
+      <ActualPhotoReviewPage />
+    </Suspense>
+  )
+}
+
+const ActualPhotoReviewPage = () => {
   const [reviews, setReviews] = useState([]);
   const containerRef = useRef(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);

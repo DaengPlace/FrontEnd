@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import styled from "styled-components";
 import { createReview, updateReview, fetchReviewDetail } from "@/apis/review/reviewApi";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,6 +18,14 @@ import Divider from "@/components/common/Divider/Divider";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 
 const ReviewsInputPage = () => {
+  return (
+      <Suspense>
+        <ActualReviewInputPage />
+      </Suspense>
+    )
+  }
+
+  const ActualReviewInputPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const placeId = searchParams.get("placeId"); 
@@ -179,6 +187,7 @@ const ReviewsInputPage = () => {
     </>
   );
 };
+
 
 export default ReviewsInputPage;
 

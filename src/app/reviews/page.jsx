@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
@@ -14,6 +14,14 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { fetchPlaceReviews, fetchPlaceDetails } from "@/apis/review/reviewApi";
 
 const ReviewPage = () => {
+  return (
+    <Suspense>
+      <ActualReviewPage />
+    </Suspense>
+  )
+}
+
+  const ActualReviewPage = () => {
   const searchParams = useSearchParams();
   const placeId = searchParams.get("placeId");
   const [reviews, setReviews] = useState([]);
@@ -108,6 +116,7 @@ const ReviewPage = () => {
     </>
   );
 };
+
 
 export default ReviewPage;
 

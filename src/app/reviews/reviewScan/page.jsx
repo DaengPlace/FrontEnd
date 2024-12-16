@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import Button from "@/components/common/Button/Button";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,7 +11,15 @@ import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
 import { fetchPlaceDetails } from "@/apis/review/reviewApi";
 
-const ReviewScanPage = ({ocrVisitDate}) => {
+const ReviewScanPage = () => {
+  return (
+    <Suspense>
+      <ActualReviewScanPage />
+    </Suspense>
+  )
+}
+
+const ActualReviewScanPage = ({ocrVisitDate}) => {
   const router = useRouter();
   const searchParams = useSearchParams(); 
   const placeId = searchParams.get("placeId"); 

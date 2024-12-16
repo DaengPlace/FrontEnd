@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import AddIcon from '@mui/icons-material/Add';
 
-const AddMediaSection = ({ mediaFiles, onMediaFilesChange }) => {
+const AddMediaSection = ({ mediaFiles, onMediaFilesChange, onDeletedMediaUrlsChange }) => {
     const fileInputRef = useRef(null);
   
     const handleButtonClick = () => {
@@ -19,6 +19,10 @@ const AddMediaSection = ({ mediaFiles, onMediaFilesChange }) => {
     };
   
     const handleRemoveFile = (index) => {
+      const removedFile = mediaFiles[index];
+      if (removedFile.url && !removedFile.file) {
+        onDeletedMediaUrlsChange((prev) => [...prev, removedFile.url]);
+      }
       const updatedFiles = mediaFiles.filter((_, i) => i !== index);
       onMediaFilesChange(updatedFiles); 
     };
@@ -39,16 +43,15 @@ const AddMediaSection = ({ mediaFiles, onMediaFilesChange }) => {
           />
         </Media>
         <PreviewContainer>
-        {mediaFiles.map((file, index) => (
+        {mediaFiles.map((fileObj, index) => (
           <PreviewItem key={index}>
-            {file.file.type.startsWith("image") ? (
-              <PreviewImage src={file.url} alt="미리보기 이미지" />
-            ) : (
-              <PreviewVideo controls>
-                <source src={file.url} type={file.file.type} />
-                지원하지 않는 영상 형식입니다.
-              </PreviewVideo>
-            )}
+            {fileObj.url ? ( 
+              fileObj.file ? ( 
+                <PreviewImage src={fileObj.url} alt="새 이미지 미리보기" />
+              ) : (
+                <PreviewImage src={fileObj.url} alt="기존 이미지" />
+              )
+            ) : null}
             <RemoveButton onClick={() => handleRemoveFile(index)}>X</RemoveButton>
           </PreviewItem>
         ))}

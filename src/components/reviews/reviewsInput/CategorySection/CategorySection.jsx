@@ -1,25 +1,44 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import InfoIcon from "@mui/icons-material/Info";
+import { useSearchParams } from "next/navigation";
 import useReviewStore from "@/stores/reviewStore";
+import { fetchPlaceDetails } from "@/apis/review/reviewApi";
 
 const CategorySection = () => {
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get("placeId"); 
+  const [placeData, setPlaceData] = useState(null); 
   const [isPolicyVisible, setIsPolicyVisible] = useState(false);
-  const { placeName, category, visitDate } = useReviewStore();
   const togglePolicySheet = () => {
     setIsPolicyVisible((prev) => !prev);
   };
+  useEffect(() => {
+    const loadPlaceData = async () => {
+      try {
+        if (!placeId) throw new Error("Place ID is missing.");
+        const data = await fetchPlaceDetails(placeId);
+        setPlaceData(data);
+      } catch (error) {
+        console.error("Failed to fetch place data:", error.message);
+      }
+    };
 
+    loadPlaceData();
+  }, [placeId]);
+
+  if (!placeData) {
+    return <Section>로딩 중...</Section>;
+  }
   return (
     <>
       <Section>
         <HeaderRow>
           <div>
-            <CategoryBadge>{category}</CategoryBadge>
-            <SectionTitle>{placeName} 리뷰</SectionTitle>
-            <VisitDate>{visitDate} 방문</VisitDate>
+            <CategoryBadge>{placeData.category}</CategoryBadge>
+            <SectionTitle>{placeData.name} 리뷰</SectionTitle>
           </div>
           <PolicyButton onClick={togglePolicySheet}>
             <Span>리뷰 정책</Span>

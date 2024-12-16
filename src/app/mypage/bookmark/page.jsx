@@ -6,15 +6,14 @@ import theme from '@/styles/theme';
 
 import { OnlyHomeIcon } from '@/components/common/Header/Header.stories';
 import Header from '@/components/common/Header/Header';
-import { initialFacilities } from "@/data/facilities";
 import ScrollableContainer from '@/components/mypage/bookmark/ScrollableContainer/ScrollableContainer';
 import ButtonsContainer from '@/components/mypage/bookmark/ButtonsContainer/ButtonsContainer';
-import axios from 'axios';
-import { PlaceSelected } from '@/components/common/NavBottom/NavBottom.stories';
+import { getBookmarks } from '@/apis/favorite/getBookmarks';
+import { getPlacesByPlaceId } from '@/apis/places/getPlacesByPlaceId';
 
 const BookmarkPage = () => {
 
-  const [facilities, setFacilities] = useState(initialFacilities);
+  const [facilities, setFacilities] = useState([]);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [buttonBottom, setButtonBottom] = useState(30);
   const bottomRef = useRef(null);
@@ -22,25 +21,13 @@ const BookmarkPage = () => {
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        const bookmarkResponse = await axios.get("https://api.daengplace.com/favorite", {
-          headers: {
-            "Accept": "application/json",
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        const placeIds = bookmarkResponse.data.data.places.map(
+        const bookmarkResponse = await getBookmarks();
+
+        const placeIds = bookmarkResponse.data.places.map(
           (favorite) => favorite.placeId
         );
 
-        const placeRequests = placeIds.map((placeId) => 
-          axios.get(`https://api.daengplace.com/places/${placeId}`, {
-            headers: {
-              "Accept": "application/json",
-              'Authorization': `Bearer ${token}`,
-            },
-          })
-        );
+        const placeRequests = placeIds.map((placeId) => getPlacesByPlaceId(placeId));
 
         const placeResponses = await Promise.all(placeRequests);
         const places = placeResponses.map((res) => res.data.data);
@@ -72,24 +59,24 @@ const BookmarkPage = () => {
     fetchBookmarks();
   }, []);
 
-  useEffect(() => {
-    // Scroll 및 Intersection Observer 설정
-    const container = document.getElementById("scrollable-container");
-    const handleScroll = () => setShowScrollToTop(container.scrollTop > 10);
+  // useEffect(() => {
+  //   // Scroll 및 Intersection Observer 설정
+  //   const container = document.getElementById("scrollable-container");
+  //   const handleScroll = () => setShowScrollToTop(container.scrollTop > 10);
 
-    container.addEventListener("scroll", handleScroll);
+  //   container.addEventListener("scroll", handleScroll);
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setButtonBottom(entry.isIntersecting ? 20 : 30);
-    }, { root: container, threshold: 0.1 });
+  //   const observer = new IntersectionObserver(([entry]) => {
+  //     setButtonBottom(entry.isIntersecting ? 20 : 30);
+  //   }, { root: container, threshold: 0.1 });
 
-    if (bottomRef.current) observer.observe(bottomRef.current);
+  //   if (bottomRef.current) observer.observe(bottomRef.current);
 
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-      if (bottomRef.current) observer.unobserve(bottomRef.current);
-    };
-  }, []);
+  //   return () => {
+  //     container.removeEventListener("scroll", handleScroll);
+  //     if (bottomRef.current) observer.unobserve(bottomRef.current);
+  //   };
+  // }, []);
 
   return (
     <Container>

@@ -9,7 +9,7 @@ const CardList = memo(({ cards, onCardClick, toggleLike }) => (
         key={card.id || card.placeId}
         card={card}
         onCardClick={() => onCardClick(card.placeId)}
-        toggleLike={(e) => toggleLike(e, card.placeId)}
+        toggleLike={() => toggleLike(card.placeId, card.is_favorite)}
       />
     ))}
   </CardListContainer>

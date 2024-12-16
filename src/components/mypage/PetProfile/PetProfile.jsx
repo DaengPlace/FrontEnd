@@ -21,7 +21,7 @@ const PetProfile = ({pets}) => {
             <ProfileInfo>{pet.breed} | {pet.age} | {pet.gender === 1? "여아" : "남아"} | {pet.weight}kg</ProfileInfo>
             <ProfileIsNeutered>{pet.isNeutered === true? "중성화 수술 완료" : "중성화 수술 전"}</ProfileIsNeutered>
           </PetInfo>
-          <EditButton onClick={() => router.push(`/dog/edit?petId=${pet.petId}`)}>편집</EditButton>
+          <EditButton onClick={() => router.push(`/mypage/editpet?petId=${pet.petId}`)}>편집</EditButton>
 
         </SectionBox>
       ))}

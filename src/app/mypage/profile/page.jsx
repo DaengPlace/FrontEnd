@@ -11,6 +11,8 @@ import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Image from "next/image";
 import axios from "axios";
+import { getUserProfile } from "@/apis/user/getUserProfile";
+import { updatePets } from "@/apis/user/putUserUpdate";
 
 const MyProfilePage = () => {
   const router = useRouter();
@@ -37,18 +39,10 @@ const MyProfilePage = () => {
   // 프로필 데이터 가져오기 (GET)
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const token = localStorage.getItem("accessToken");
       try {
-        const response = await axios.get("https://api.daengplace.com/members/profile", {
-          headers: {
-            "Accept" : "application/json",
-            "Content-type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-
-        const {data} = response.data;
-
+        const response = await getUserProfile();
+        const data = response.data;
+        console.log(data);
         const formattedBirthDate = data.birthDate.slice(0,4) + data.birthDate.slice(5,7) + data.birthDate.slice(8,10);
 
         // 폼 데이터 초기화
@@ -88,7 +82,6 @@ const MyProfilePage = () => {
   const handleSaveProfile = async () => {
     const isValid = await trigger(["nickname", "birthdate", "email"]);
     if (isValid) {
-      const token = localStorage.getItem("acceessToken");
       const updatedData = {
         nickname: watch("nickname"),
         birthDate: watch("birthdate"),
@@ -99,14 +92,7 @@ const MyProfilePage = () => {
       };
 
       try {
-        const response = await axios.put("https://api.daengplace.com/members/profile", {
-          headers: {
-            "Accept" : "application/json",
-            "Content-type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-          updatedData,
-        });
+        const response = await updatePets(updatedData);
         alert("프로필 수정 성공");
         router.push("/mypage");
 

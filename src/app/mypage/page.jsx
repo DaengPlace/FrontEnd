@@ -15,12 +15,13 @@ import { ChevronRight } from "styled-icons/bootstrap";
 import theme from "@/styles/theme.js";
 import { useRouter } from "next/navigation";
 import { getPets } from "@/apis/dog/getPets";
-import axios from 'axios';
+import { getUserProfile } from "@/apis/user/getUserProfile";
 
 
 const MyPage = () => {
   const router = useRouter();
   const [pets, setPets] = useState([]);
+  const [userProfile, setUserProfile] = useState([]);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -34,27 +35,18 @@ const MyPage = () => {
 
     fetchPets();
   }, []);
-  console.log(pets);
-  const [userProfile, setUserProfile] = useState([]);
-  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('https://api.daengplace.com/members/profile', {
-          headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-          },
-        });
-        setUserProfile(response.data.data);
+        const response = await getUserProfile();
+        setUserProfile(response.data);
       } catch (error) {
         console.error("회원 조회 실패 : ", error)
       }
     };
     fetchUserProfile();
-  }, [token]);
+  }, []);
 
   return (
     <Container>

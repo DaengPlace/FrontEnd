@@ -51,7 +51,8 @@ const MenuContainer = styled.div`
     margin: 10px 0;
     padding: 20px 30px;
     background-color: white;
-    width: 550px;
+    max-width: 600px;
+    width: 90%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 

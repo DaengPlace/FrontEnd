@@ -26,11 +26,9 @@ const BottomSheet = ({
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    if (isOpen) {
       onClose();
-    }
   }, [searchParams.toString()]);
-
+  
   if (!isOpen) return null;
   
   const handleReset = () => {

@@ -4,11 +4,11 @@ import React from "react";
 import styled from "styled-components";
 import Divider from "@/components/common/Divider/Divider";
 
-const SubHeader = ({ category, title, photoCount }) => {
+const SubHeader = ({ category, name, photoCount }) => {
   return (
     <Wrapper>
       <CategoryBadge>{category}</CategoryBadge>
-      <Subtitle>{title}</Subtitle>
+      <Subtitle>{name}</Subtitle>
       <Divider />
       <PhotoCount>포토 {photoCount}개</PhotoCount>
     </Wrapper>

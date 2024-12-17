@@ -14,12 +14,14 @@ import {
 const ReviewCard = ({ review, setReview, isOpen, toggleDropdown }) => {
   const NativeDate = global.Date;
   const [currentUserNickname, setCurrentUserNickname] = useState("");
+  const [profile, setProfile] = useState("");
 
   useEffect(() => {
     const loadUserProfile = async () => {
       try {
-        const profile = await fetchUserProfile();
-        setCurrentUserNickname(profile.nickname);
+        const profiledata = await fetchUserProfile();
+        setCurrentUserNickname(profiledata.nickname);
+        setProfile(profiledata);
       } catch (error) {
         console.error("Error fetching profile:", error.response?.data || error.message);
       }
@@ -63,13 +65,14 @@ const ReviewCard = ({ review, setReview, isOpen, toggleDropdown }) => {
     <Card>
       <CardHeader>
         <AvatarWrapper>
+        {profile.profileImageUrl ? (
           <Image
-            src="/assets/image (1).png"
+            src={profile.profileImageUrl}
             alt="사용자 프로필"
             width={60}
             height={60}
-            style={{ borderRadius: "50%" }}
           />
+        ) : null}
         </AvatarWrapper>
         <UserInfo>
           <Author>{review.memberNickname}</Author>

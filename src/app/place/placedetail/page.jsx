@@ -2,6 +2,7 @@
 import React, { useState, useEffect, Suspense, useRef } from "react";
 import styled from "styled-components";
 import { useJsApiLoader } from "@react-google-maps/api";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import ImageContainer from "@/components/place/placedetail/ImageContainer/ImageContainer";
 import PlaceInfo from "@/components/place/placedetail/PlaceInfo/PlaceInfo";
 import ReviewSection from "@/components/place/placedetail/ReviewSection/ReviewSection";
@@ -35,8 +36,11 @@ const ActualPlaceDetailPage = () => {
   const [isReviewBottomSheetOpen, setIsReviewBottomSheetOpen] = useState(false);
   const [center, setCenter] = useState(null);
   const [address, setAddress] = useState("");
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState("");
   const { setPlaceName, setVisitDate, setCategory } = useReviewStore();
   const [selectedCard, setSelectedCard] = useState(null); 
   const [isLoading, setIsLoading] = useState(true); 
@@ -169,13 +173,15 @@ const ActualPlaceDetailPage = () => {
             console.log("Extracted texts:", combinedText);
   
             if (combinedText.includes(placeName)) {
+              setIsConfirmModalOpen(true);
               const visitDateMatch = combinedText.match(/\d{4}[./-]\d{2}[./-]\d{2}/); 
               const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
               console.log("Extracted visit date:", visitDate);
               setVisitDate(visitDate);
-              router.push(`/reviews/reviewScan?placeId=${placeId}`);
             } else {
-              alert("해당 장소 방문 기록이 확인되지 않았습니다.");
+              setErrorMessage("영수증에 해당 장소명이 포함되어 있지 않습니다. <br />다시 촬영해주세요.");
+              setIsErrorModalOpen(true);
+              setIsReviewBottomSheetOpen(false);
             }
           } else {
             console.error("Failed to analyze text:", analyzeResponse.statusText);
@@ -231,7 +237,7 @@ const ActualPlaceDetailPage = () => {
             closeBottomSheet={() => setIsMapBottomSheetOpen(false)}
           />
         )}
-        {isReviewBottomSheetOpen && (
+        {isReviewBottomSheetOpen && !isConfirmModalOpen && (
           <>
             <BottomSheet
               content={
@@ -256,6 +262,28 @@ const ActualPlaceDetailPage = () => {
             onChange={handleFileChange}
           />
           </>
+        )}
+        {isConfirmModalOpen && (
+          <ConfirmModal
+            title="알림"
+            message="장소명이 확인되었습니다."
+            confirmText="확인"
+            onClose={() => {
+              setIsConfirmModalOpen(false);
+              setIsReviewBottomSheetOpen(false);
+              router.push(`/reviews/reviewScan?placeId=${placeId}`);
+            }}
+          />
+        )}
+        {isErrorModalOpen && (
+          <ConfirmModal
+            title="알림"
+            message={errorMessage}
+            confirmText="확인"
+            onClose={() => {
+              setIsErrorModalOpen(false);
+            }}
+          />
         )}
       </ScrollContainer>
     </>

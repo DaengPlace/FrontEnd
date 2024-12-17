@@ -47,6 +47,7 @@ const ActualPlaceSearchPage = () => {
   const searchParams = useSearchParams();
   const [page, setpage] = useState(1);
   const size = 20;
+  const [searchTerm, setSearchTerm] = useState("");
   
   const handleOpenBottomSheet = () => setIsBottomSheetOpen(true);
   const handleCloseBottomSheet = () => setIsBottomSheetOpen(false);
@@ -274,7 +275,6 @@ const ActualPlaceSearchPage = () => {
       }
     };
   }, [cards]);
-  
   return (
     <>
       <Header
@@ -307,7 +307,16 @@ const ActualPlaceSearchPage = () => {
         onFilterClick={handleFilterClick}
         onHover={handleHover2}
       />
-      <CardList cards={cards} onCardClick={handleCardClick} toggleLike={toggleLike} keyExtractor={(card) => card.id || card.placeId} />
+      {cards.length === 0 ? (
+        <NoDataMessage>주변에 해당 시설이 없습니다.</NoDataMessage>
+      ) : (
+        <CardList
+          cards={cards}
+          onCardClick={handleCardClick}
+          toggleLike={toggleLike}
+          keyExtractor={(card) => card.id || card.placeId}
+        />
+      )}
       {/* 리스트 마지막 감지용 */}
       <div ref={bottomRef} style={{ height: "1px" }}></div>
       <MapButton bottom={buttonBottom} onClick={handleMapView}>
@@ -410,5 +419,14 @@ const ScrollToTopButton = styled.button`
   }
 
 `;
-
+const NoDataMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; // 원하는 높이로 조절
+  font-size: 18px;
+  color: ${({ theme }) => theme.colors.divider || "#888"};
+  text-align: center;
+  font-weight: bold;
+`;
 export default PlaceSearchPage;

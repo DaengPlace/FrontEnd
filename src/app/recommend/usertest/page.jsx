@@ -4,31 +4,74 @@ import Button from '@/components/common/Button/Button';
 import Header from '@/components/common/Header/Header';
 import { NoTitleHeader } from '@/components/common/Header/Header.stories';
 import Modal from '@/components/common/Modal/Modal';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FeatureGroup from '@/components/recommend/FeatureGroup/FeatureGroup';
 import FeatureTitle from '@/components/recommend/FeatureTitle/FeatureTitle';
 import BottomSheet from '@/components/common/BottomSheet/BottomSheet';
+import { useTraitStore } from '@/stores/traitStore';
+import { getUserQuestions } from '@/apis/traits/getTraits';
+import { postPetTraits, registerUserTraits } from '@/apis/traits/postTraits';
 
 const RecommendUserTest = () => {
+  return (
+    <Suspense>
+      <ActualRecommendUserTest />
+    </Suspense>
+  )
+}
 
+const ActualRecommendUserTest = () => {
+
+  const searchParams = useSearchParams();
+  const petId = searchParams.get("petId");
   const router = useRouter();
+  const { petTraits, setMemberTraits } = useTraitStore();
+  const [questions, setQuestions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSavedBottomSheetOpen, setIsSavedBottomSheetOpen] = useState(false);
-  const [selectedTags, setSelectedTags] = useState({
-    activity: null,
-    sociality: null,
-    relation: null,
-  });
+  const [selectedTags, setSelectedTags] = useState({});
 
-  const isButtonActive = selectedTags.activity && selectedTags.sociality && selectedTags.relation;
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await getUserQuestions();
+        console.log(response)
+        setQuestions(response.data);
+      } catch (error) {
+        console.error("보호자 성향 질문 불러오기 실패:", error);
+      }
+    };
 
-  const handleCheckboxClick = (type, value) => {
+    fetchQuestions();
+  }, []);
+
+  const handleCheckboxClick = (questionId, answerId) => {
     setSelectedTags((prev) => ({
       ...prev,
-      [type]: prev[type] === value? null:value, 
+      [questionId]: answerId,
     }));
+  };
+
+  const isButtonActive = Object.keys(selectedTags).length === questions.length;
+
+  const handleSubmit = async () => {
+    const memberTraits = Object.entries(selectedTags).map(([questionId, answerId]) => ({
+      traitQuestionId: Number(questionId),
+      traitAnswerId: answerId,
+    }));
+    setMemberTraits(memberTraits);
+
+    try {
+      // 서버로 반려견 성향과 보호자 성향 보내기
+      await postPetTraits(petId, {petTraitResponseRequestList: petTraits})
+      await registerUserTraits({memberTraitResponseRequestList: memberTraits })
+
+      setIsSavedBottomSheetOpen(true);
+    } catch (error) {
+      console.error("성향 데이터 저장 실패:", error);
+    }
   };
 
   return (
@@ -37,42 +80,26 @@ const RecommendUserTest = () => {
       <Content>
         <FeatureTitle title={
           <>
-            보호자 님은<br />
-            어떤 시설을 원하시나요?
+            보호자 님은 <br />어떤 시설을 원하시나요?
           </>
         } />
-        <FeatureGroup
-          label="가성비"
-          options={["가성비가 중요해요", "가격은 중요하지 않아요"]}
-          selectedValue={selectedTags.activity}
-          onSelect={(value) => handleCheckboxClick("activity", value)}
-        />
-
-        <FeatureGroup
-          label="주차 공간"
-          options={["필요해요", "필요하지 않아요"]}
-          selectedValue={selectedTags.sociality}
-          onSelect={(value) => handleCheckboxClick("sociality", value)}
-        />
-
-        <FeatureGroup
-          label="취향"
-          options={["특색 있는 곳이 좋아요", "깔끔하고 평범한 곳이 좋아요"]}
-          selectedValue={selectedTags.relation}
-          onSelect={(value) => handleCheckboxClick("relation", value)}
-        />
+        {questions.map((question) => (
+          <FeatureGroup
+            key={question.questionId}
+            label={question.content}
+            options={question.answers.map((ans) => ans.content)}
+            selectedValue={selectedTags[question.questionId]}
+            onSelect={(value) => {
+              const answerId = question.answers.find((ans) => ans.content === value)?.answerId;
+              handleCheckboxClick(question.questionId, answerId);
+            }}
+          />
+        ))}
       </Content>
 
       <Button 
         isActive={isButtonActive}
-        onClick={() => {
-          if (isButtonActive) {
-            // submit action
-
-            //
-            setIsSavedBottomSheetOpen(true);
-          }
-        }}
+        onClick={handleSubmit}
         hasImage
       > 확인
       </Button>

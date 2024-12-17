@@ -14,6 +14,7 @@ import FloatingButton from "@/components/place/placemap/FloatingButton/FloatingB
 import { CircularProgress } from "@mui/material";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
+import { fetchPlaces } from "@/apis/place/places";
 
 const PlaceMap = () => {
   return (
@@ -64,17 +65,26 @@ const ActualPlaceMap = () => {
     }
   }, [userLocation]);
   
-    useEffect(() => {
+  useEffect(() => {
+    const fetchMarkers = async () => {
       if (searchname) {
-        fetchPlaces(null, null, searchname); 
+        const places = await fetchPlaces(null, null, 1, 20, searchname);
+        handleMarkersUpdate(places, searchname);
       } else if (!isNaN(lat) && !isNaN(lng)) {
         setCenter({ lat, lng });
-        fetchPlaces(lat, lng); 
+        const places = await fetchPlaces(lat, lng, 1, 20);
+        handleMarkersUpdate(places);
       } else if (userLocation) {
         setSelectedCategory("전체");
-        fetchPlaces(userLocation.lat, userLocation.lng); 
+        const places = await fetchPlaces(userLocation.lat, userLocation.lng, 1, 20);
+        handleMarkersUpdate(places);
       }
-    }, [lat, lng, searchname, userLocation]);
+    };
+
+    if (userLocation || (!isNaN(lat) && !isNaN(lng)) || searchname) {
+      fetchMarkers();
+    }
+  }, [lat, lng, searchname, userLocation]);
   
   useEffect(() => {
     if (!userLocation) {
@@ -93,62 +103,43 @@ const ActualPlaceMap = () => {
   }, []);
   useEffect(() => {
     if (searchname) {
-      setSearchTerm(searchname); // 검색어를 상태로 저장
+      setSearchTerm(searchname); 
     }
   }
 )
-  const fetchPlaces = async (latitude, longitude, searchname = null) => {
-    try {
-      const params = {
-        page: 1,
-        size: 20,
-      };
-      if (latitude && longitude) {
-        params.latitude = latitude;
-        params.longitude = longitude;
-      }
+const handleMarkersUpdate = (places, searchTerm = "") => {
+  const formattedMarkers = places.map((place) => ({
+    id: place.placeId,
+    position: { lat: place.latitude, lng: place.longitude },
+    name: place.name,
+    category: place.category,
+    is_parking: place.is_parking,
+    inside: place.inside,
+    outside: place.outside,
+    weight_limit: place.weight_limit,
+    pet_fee: place.pet_fee,
+    is_favorite: place.is_favorite || false,
+    operationHour: place.operationHour,
+  }));
 
-      if (searchname) {
-        params.search = searchname; 
-      }
-  
-      const response = await axios.get("https://api.daengplace.com/places", { params });
-      const places = response.data.data.places || [];
-      const fetchedMarkers = places.map((place) => ({
-        id: place.placeId,
-        position: { lat: place.latitude, lng: place.longitude },
-        name: place.name,
-        category: place.category,
-        is_parking: place.is_parking,
-        inside: place.inside,
-        outside: place.outside,
-        weight_limit: place.weight_limit,
-        pet_fee: place.pet_fee,
-        operationHour: place.operationHour,
-      }));
-      console.log("Fetched Markers:", fetchedMarkers);
-      if (searchname) {
-        const filteredMarkers = fetchedMarkers.filter((marker) =>
-          marker.name.includes(searchname)
-        );
-  
-        if (filteredMarkers.length > 0) {
-          setMarkers(filteredMarkers);
-          const { lat, lng } = filteredMarkers[0].position;
-          setCenter({ lat, lng });
-          setZoom(16);
-        } else {
-          alert(`${searchname}에 대한 결과를 찾을 수 없습니다.`);
-          setMarkers(allMarkers); 
-        }
-      } else {
-        setAllMarkers(fetchedMarkers);
-        setMarkers(fetchedMarkers);
-      }
-    } catch (error) {
-      console.error("Error fetching places:", error);
+  if (searchTerm) {
+    const filteredMarkers = formattedMarkers.filter((marker) =>
+      marker.name.includes(searchTerm)
+    );
+    if (filteredMarkers.length > 0) {
+      setMarkers(filteredMarkers);
+      setCenter(filteredMarkers[0].position);
+      setZoom(16);
+    } else {
+      alert(`${searchTerm}에 대한 결과를 찾을 수 없습니다.`);
+      setMarkers(allMarkers);
     }
-  };
+  } else {
+    setAllMarkers(formattedMarkers);
+    setMarkers(formattedMarkers);
+  }
+};
+
   const handleSidoChange = (event) => {
     const value = event.target.value;
     setSelectedSido(value);

@@ -11,7 +11,7 @@ const DogInfo = ({dog}) => {
 
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
   const router = useRouter();
-
+  
   return (
     <Container>
       <DogNameImage>
@@ -29,7 +29,7 @@ const DogInfo = ({dog}) => {
       ) : (
         <>
           <NoInfoText>아직 성향에 대한 정보가 없어요!</NoInfoText>
-          <ActionButton onClick={() => router.push("/recommend/dogtest")}>성향 테스트 하러가기</ActionButton>
+          <ActionButton onClick={() => router.push(`/recommend/dogtest?petId=${dog.id}`)}>성향 테스트 하러가기</ActionButton>
         </>
       )}
 

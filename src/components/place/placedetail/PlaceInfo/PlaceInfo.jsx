@@ -103,7 +103,7 @@ const PlaceInfo = ({
       <PlaceName>{placeName}</PlaceName>
 
       <AuthGuard>
-        <HeartIconContainer isliked={isLiked} onClick={toggleLike}>
+        <HeartIconContainer isliked={isLiked} onClick={() => toggleLike()}>
           {isLiked ? <Favorite /> : <FavoriteBorder />}
         </HeartIconContainer>
 

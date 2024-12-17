@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import axios from "axios";
 import Banner from "@/components/place/Banner/Banner";
 import Footer from "@/components/common/Footer/Footer.jsx";
 import CategorySelector from "@/components/place/CategorySelector/CategorySelector";
@@ -15,22 +16,63 @@ import Hr from "@/components/place/Hr/Hr";
 import Hr2 from "@/components/place/Hr2/Hr2";
 
 const BottomSheet = dynamic(() => import("@/components/common/BottomSheet/BottomSheet"), { ssr: false });
-
+const categoryMapping = {
+  미용: "서비스",
+  반려동물용품: "서비스",
+  위탁관리: "서비스",
+  식당: "음식점",
+  카페: "음식점",
+  문예회관: "문화시설",
+  박물관: "문화시설",
+  미술관: "문화시설",
+  여행지: "문화시설",
+  동물병원: "의료시설",
+  동물약국: "의료시설",
+};
 const PlacePage = () => {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const router = useRouter();
+  const [popularReviews, setPopularReviews] = useState([]);
+  const [filteredReviews, setFilteredReviews] = useState([]);
 
   useEffect(() => {
     setHasMounted(true);
   }, []);
 
+  useEffect(() => {
+    const fetchPopularReviews = async () => {
+      try {
+        const response = await axios.get("https://api.daengplace.com/reviews/popular");
+        console.log(response.data)
+        setPopularReviews(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch popular reviews:", error);
+      }
+    };
+
+    fetchPopularReviews();
+  }, []);
+  useEffect(() => {
+    if (selectedCategory === "전체") {
+      setFilteredReviews(popularReviews); 
+    } else {
+      const matchingCategories = Object.keys(categoryMapping).filter(
+        (key) => categoryMapping[key] === selectedCategory
+      );
+  
+      const filtered = popularReviews.filter((review) =>
+        matchingCategories.includes(review.category)
+      );
+  
+      setFilteredReviews(filtered);
+    }
+  }, [selectedCategory, popularReviews]);
   if (!hasMounted) {
     return null;
   }
-
   const handleImageClick = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -102,7 +144,7 @@ const PlacePage = () => {
           setHoveredCategory={setHoveredCategory}
         />
         <Hr />
-        <ReviewList reviews={reviews} />
+        <ReviewList reviews={filteredReviews} />
       </CategorySection>
       </CategoryWrapper>
       <Hr2 />

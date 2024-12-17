@@ -15,6 +15,8 @@ import { cards } from "@/data/cardsData";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
 import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
+import { getPlaceDetails } from "@/apis/place/places";
+import { addFavorite, removeFavorite } from "@/apis/place/favorite";
 
 const PlaceDetailPage = () => {
   return (
@@ -33,7 +35,6 @@ const ActualPlaceDetailPage = () => {
   const [isReviewBottomSheetOpen, setIsReviewBottomSheetOpen] = useState(false);
   const [center, setCenter] = useState(null);
   const [address, setAddress] = useState("");
-  const [isLiked, setIsLiked] = useState(false);
   const [isUploadAction, setIsUploadAction] = useState(false);
   const fileInputRef = useRef(null);
   const { setPlaceName, setVisitDate, setCategory } = useReviewStore();
@@ -67,16 +68,15 @@ const ActualPlaceDetailPage = () => {
       fetchPlaceDetails(placeId); 
     }
   }, [placeId]);
-  const fetchPlaceDetails = async (placeId) => {
+  const fetchPlaceDetails = async () => {
     try {
-      const response = await axios.get(`https://api.daengplace.com/places/${placeId}`);
-      console.log(response.data);
-      setSelectedCard(response.data.data); 
+      const data = await getPlaceDetails(placeId);
+      setSelectedCard(data);
+      setPlaceName(data.name);
+      setCategory(data.category);
     } catch (error) {
       console.error("Error fetching place details:", error);
-      setSelectedCard(null); 
-    } finally {
-      setIsLoading(false);
+      setSelectedCard(null);
     }
   };
 
@@ -98,7 +98,24 @@ const ActualPlaceDetailPage = () => {
     return null;
   }
 
-  const toggleLike = () => setIsLiked((prev) => !prev);
+  const toggleLike = async () => {
+    try {
+      if (selectedCard.is_favorite) {
+        await removeFavorite(placeId); 
+        console.log("즐겨찾기 삭제 성공");
+      } else {
+        await addFavorite(placeId); 
+        console.log("즐겨찾기 등록 성공");
+      }
+
+      setSelectedCard((prevCard) => ({
+        ...prevCard,
+        is_favorite: !prevCard.is_favorite, 
+      }));
+    } catch (error) {
+      console.error("Error toggling favorite status:", error);
+    }
+  };
 
   const handleAddressClick = () => {
     fetchCoordinates(selectedCard.address);
@@ -156,7 +173,7 @@ const ActualPlaceDetailPage = () => {
               const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
               console.log("Extracted visit date:", visitDate);
               setVisitDate(visitDate);
-              router.push("/reviews/reviewScan");
+              router.push(`/reviews/reviewScan?placeId=${placeId}`);
             } else {
               alert("해당 장소 방문 기록이 확인되지 않았습니다.");
             }
@@ -184,7 +201,7 @@ const ActualPlaceDetailPage = () => {
         <PageContainer>
           <ImageContainer />
           <PlaceInfo
-            isLiked={isLiked}
+            isLiked={selectedCard.is_favorite}
             toggleLike={toggleLike}
             address={selectedCard.location}
             handleAddressClick={handleAddressClick}
@@ -199,7 +216,12 @@ const ActualPlaceDetailPage = () => {
               weightLimit: selectedCard.weight_limit,
             }}
           />
-          <ReviewSection />
+          <ReviewSection
+            placeId={placeId}
+            rating={selectedCard.rating}
+            reviewCount={selectedCard.review_count}
+            reviews={selectedCard.reviews}
+           />
           <AuthGuard><WriteReviewButton onClick={handleWriteReviewButtonClick} /></AuthGuard>
         </PageContainer>
         {isMapBottomSheetOpen && (
@@ -221,7 +243,7 @@ const ActualPlaceDetailPage = () => {
               onCancel={handleButtonClick}
               onConfirm={() => {
                 setIsReviewBottomSheetOpen(false);
-                router.push("/reviews/receiptCapture");
+                router.push(`/reviews/receiptCapture?placeId=${placeId}`);
               }}
               cancelText="사진 업로드"
               confirmText="영수증 촬영"

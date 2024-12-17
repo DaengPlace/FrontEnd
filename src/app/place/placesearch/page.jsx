@@ -14,6 +14,8 @@ import { Map, ArrowUp } from "@styled-icons/bootstrap";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { fetchPlaces } from "@/apis/place/places";
+import { addFavorite, removeFavorite } from "@/apis/place/favorite";
 
 const PlaceSearchPage = () => {
   return (
@@ -128,14 +130,14 @@ const ActualPlaceSearchPage = () => {
   
     if (!isNaN(lat) && !isNaN(lng)) {
       setUserLocation({ lat, lng }); 
-      fetchPlaces(lat, lng, page, size); 
+      loadPlaces(lat, lng, page, size); 
     } else {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
             setUserLocation({ lat: latitude, lng: longitude });
-            fetchPlaces(latitude, longitude, page, size); 
+            loadPlaces(latitude, longitude, page, size); 
           },
           () => {
             alert("현재 위치를 가져올 수 없습니다.");
@@ -146,17 +148,9 @@ const ActualPlaceSearchPage = () => {
     }
   }, [searchParams, page]);
 
-  const fetchPlaces = async (lat, lng, page, size) => {
+  const loadPlaces = async (lat, lng, page, size) => {
     try {
-      const response = await axios.get("https://api.daengplace.com/places", {
-        params: {
-          latitude: lat,
-          longitude: lng,
-          page,
-          size,
-        },
-      });
-      const places = response.data.data.places || [];
+      const places = await fetchPlaces(lat, lng, page, size);
       const mappedPlaces = places.map((place) => ({
         ...place,
         mainCategory: categoryMapping[place.category] || "기타",
@@ -199,14 +193,7 @@ const ActualPlaceSearchPage = () => {
     router.push(`/place/placedetail?placeId=${placeId}`);
   };
 
-  const toggleLike = (e, placeId) => {
-    e.stopPropagation();
-    setCards((prevCards) =>
-      prevCards.map((card) =>
-        card.placeId === placeId ? { ...card, isLiked: !card.isLiked } : card
-      )
-    );
-  };
+  
 
   const handleMapView = () => {
     const location = searchedLocation || userLocation;
@@ -215,6 +202,23 @@ const ActualPlaceSearchPage = () => {
       router.push(`/place/placemap?lat=${lat}&lng=${lng}`);
     } else {
       alert("위치를 가져올 수 없습니다.");
+    }
+  };
+
+  const toggleLike = async (placeId, isFavorite) => {
+    try {
+      if (isFavorite) {
+        await removeFavorite(placeId);
+      } else {
+        await addFavorite(placeId);
+      }
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card.placeId === placeId ? { ...card, is_favorite: !isFavorite } : card
+        )
+      );
+    } catch (error) {
+      console.error("즐겨찾기 상태 변경 실패:", error);
     }
   };
   
@@ -303,7 +307,7 @@ const ActualPlaceSearchPage = () => {
         onFilterClick={handleFilterClick}
         onHover={handleHover2}
       />
-      <CardList cards={cards} onCardClick={(placeId) => handleCardClick(placeId)} toggleLike={toggleLike} keyExtractor={(card) => card.id || card.placeId} />
+      <CardList cards={cards} onCardClick={handleCardClick} toggleLike={toggleLike} keyExtractor={(card) => card.id || card.placeId} />
       {/* 리스트 마지막 감지용 */}
       <div ref={bottomRef} style={{ height: "1px" }}></div>
       <MapButton bottom={buttonBottom} onClick={handleMapView}>

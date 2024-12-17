@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme.js";
+import axios from "axios";
 
 import Banner from "@/components/main/Banner/Banner.jsx";
 import Menu from "@/components/main/Menu/Menu.jsx";
@@ -11,16 +12,22 @@ import Footer from "@/components/common/Footer/Footer.jsx";
 import Divider from "@/components/common/Divider/Divider.jsx";
 import Header from "@/components/common/Header/Header.jsx";
 import { DefaultHeader } from "@/components/common/Header/Header.stories.js";
-import { initialFacilities } from "@/data/facilities.js";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
+import {
+  getGenderAgeFacilities,
+  getPopularFacilities,
+} from "@/apis/place/getPopularFacilities.jsx";
 
 const MainPage = () => {
   const router = useRouter();
   const { setTokens } = useAuthStore();
-  const [age, setAge] = useState(20);
-  const [gender, setGender] = useState(1); // 0 : male, 1: female
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [popularFacilities, setPopularFacilities] = useState([]);
+  const [genderAgeFacilities, setGenderAgeFacilities] = useState([]);
 
+  // url에서 access Token 받아오기
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("accessToken");
@@ -35,6 +42,40 @@ const MainPage = () => {
       console.log("Access Token이 URL에 없습니다.");
     }
   }, [router]);
+
+  // 인기 시설 조회
+  useEffect(() => {
+    const fetchPopularFacilities = async () => {
+      try {
+        const response = await getPopularFacilities();
+        setPopularFacilities(response.data);
+      } catch (error) {
+        console.error("인기 시설 데이터를 가져오는 데 실패했습니다 : ", error);
+      }
+    };
+
+    fetchPopularFacilities();
+  }, []);
+
+  // 성별/연령대별 시설 조회
+  useEffect(() => {
+    const fetchGenderAgeFacilities = async () => {
+      try {
+        const response = await getGenderAgeFacilities();
+        console.log(response.data);
+        setGenderAgeFacilities(response.data.popularPlaces);
+        setAge(response.data.age);
+        setGender(response.data.gender);
+      } catch (error) {
+        console.error(
+          "성별/연령대별 인기 시설 데이터를 가져오는 데 실패했습니다 : ",
+          error
+        );
+      }
+    };
+
+    fetchGenderAgeFacilities();
+  }, []);
 
   return (
     <Container>
@@ -51,18 +92,18 @@ const MainPage = () => {
             최근 <span>인기 시설 🔥</span>
           </>
         }
-        facilities={initialFacilities}
+        facilities={popularFacilities}
       />
       <FacilitiesSection
         sectionTitle={
           <>
             <span>
-              {age}대 {gender === 1 ? "여성" : "남성"}
+              {age} {gender}
             </span>
             들이 많이 찾는 👩🏻
           </>
         }
-        facilities={initialFacilities}
+        facilities={genderAgeFacilities}
       />
       <Divider />
       <Footer />

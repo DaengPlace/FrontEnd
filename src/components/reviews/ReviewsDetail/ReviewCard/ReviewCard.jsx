@@ -1,12 +1,64 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
-import LikeButton from "../LikeButton/LikeButton";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
+import {
+  fetchUserProfile,
+  toggleReviewLike,
+} from "@/apis/review/reviewApi";
 
-const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown }) => {
+const ReviewCard = ({ review, setReview, isOpen, toggleDropdown }) => {
+  const NativeDate = global.Date;
+  const [currentUserNickname, setCurrentUserNickname] = useState("");
+
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      try {
+        const profile = await fetchUserProfile();
+        setCurrentUserNickname(profile.nickname);
+      } catch (error) {
+        console.error("Error fetching profile:", error.response?.data || error.message);
+      }
+    };
+
+    loadUserProfile();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const date = new NativeDate(dateString); 
+    if (isNaN(date)) {
+      return "Invalid date";
+    }
+    const kstOffset = 9 * 60 * 60 * 1000; 
+    const localDate = new NativeDate(date.getTime() + kstOffset);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, "0");
+    const day = String(localDate.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+
+  const toggleLike = async (placeId, reviewId) => {
+    try {
+      const isCurrentlyLiked = review.liked;
+      await toggleReviewLike(placeId, reviewId, isCurrentlyLiked);
+
+      setReview((prevReview) => ({
+        ...prevReview,
+        liked: !isCurrentlyLiked, 
+        likeCount: isCurrentlyLiked
+          ? prevReview.likeCount - 1 
+          : prevReview.likeCount + 1, 
+      }));
+    } catch (error) {
+      console.error("Failed to toggle like:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "An error occurred while toggling like.");
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -20,12 +72,27 @@ const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown }
           />
         </AvatarWrapper>
         <UserInfo>
-          <Author>{review.author}</Author>
+          <Author>{review.memberNickname}</Author>
           <span style={{ marginBottom: "20px" }}>|</span>
-          <Date>{review.date}</Date>
+          <Date>{formatDate(review.createdAt)}</Date>
         </UserInfo>
-        <LikeButton isLiked={likedReviews[review.id]} onClick={() => toggleLike(review.id)} />
-        <DropdownMenu isOpen={isOpen} toggleDropdown={toggleDropdown} />
+        <LikeButton
+                onClick={(event) => toggleLike(review.placeId, review.reviewId, event)}
+            >
+                {review.liked ? (
+                    <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                    <FavoriteBorderIcon style={{ color: "#ccc" }} />
+                )}
+          </LikeButton>
+        {currentUserNickname === review.memberNickname && (
+          <DropdownMenu
+            isOpen={isOpen}
+            toggleDropdown={toggleDropdown}
+            reviewId={review.reviewId}
+            placeId={review.placeId}
+          />
+        )}
       </CardHeader>
       <RatingContainer>
         <Rating>
@@ -37,18 +104,23 @@ const ReviewCard = ({ review, likedReviews, toggleLike, isOpen, toggleDropdown }
         </Rating>
       </RatingContainer>
       <CardContent>
-        <ImageWrapper>
-          <Image
-            src={review.image}
-            alt={`리뷰 이미지 ${review.id}`}
-            width={540}
-            height={540}
-            objectFit="cover"
-            style={{ borderRadius: "10px" }}
-            priority
-          />
-        </ImageWrapper>
-        <Text>{review.review}</Text>
+      <ImageContainer>
+        {review.imageUrls &&
+          review.imageUrls.map((url, index) => (
+            <ImageWrapper key={index}>
+              <Image
+                src={url}
+                alt={`리뷰 이미지 ${review.reviewId} - ${index}`}
+                width={540}
+                height={540}
+                objectFit="cover"
+                style={{ borderRadius: "10px" }}
+                priority
+              />
+            </ImageWrapper>
+          ))}
+      </ImageContainer>
+        <Text>{review.content}</Text>
       </CardContent>
     </Card>
   );
@@ -62,7 +134,17 @@ const Card = styled.div`
   margin-left: 10px;
   margin-top: -20px;
 `;
-
+const LikeButton = styled.div`
+  cursor: pointer;
+  margin-left: auto;
+  width:40px;
+  height:30px;
+  align-items: center;
+  justify-content: center;
+  &:hover svg {
+    transform: scale(1.2);
+  }
+`;
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
@@ -94,6 +176,7 @@ const Author = styled.span`
 const Date = styled.span`
   font-size: 15px;
   margin-left: 4px;
+  margin-top: 2px;
 `;
 
 const RatingContainer = styled.div`
@@ -121,4 +204,10 @@ const ImageWrapper = styled.div`
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+`;
+const ImageContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+  margin-top: 15px;
 `;

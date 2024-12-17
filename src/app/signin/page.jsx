@@ -314,8 +314,8 @@ const SigninPage = () => {
                       type="email"
                       isValid={!fieldState.invalid}
                       onChange={(e) => {
-                        field.onChange(e);
                         setVerificationErrorMessage("");
+                        field.onChange(e);
                       }}
                     />
                   )}

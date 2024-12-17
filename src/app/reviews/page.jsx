@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
-import { reviews } from "@/data/reviewData";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import PageHeader from "@/components/reviews/PageHeader/PageHeader";
 import ReviewSummary from "@/components/reviews/ReviewSummary/ReviewSummary";
@@ -11,14 +11,53 @@ import PhotoReviewContainer from "@/components/reviews/PhotoReviewContainer/Phot
 import ReviewList from "@/components/reviews/ReviewList/ReviewList";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { fetchPlaceReviews, fetchPlaceDetails } from "@/apis/review/reviewApi";
 
 const ReviewPage = () => {
-  const router = useRouter();
-  const averageRating =
-    reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+  return (
+    <Suspense>
+      <ActualReviewPage />
+    </Suspense>
+  )
+}
+
+  const ActualReviewPage = () => {
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get("placeId");
+  const [reviews, setReviews] = useState([]);
+  const [placeData, setPlaceData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const containerRef = useRef(null);
+
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+
+        const reviewsData = await fetchPlaceReviews(placeId);
+        console.log("Fetched reviews:", reviewsData);
+        setReviews(reviewsData);
+
+        const placeDetails = await fetchPlaceDetails(placeId);
+        setPlaceData(placeDetails);
+
+      } catch (error) {
+        setError(error.message || "Failed to load data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (placeId) {
+      loadData();
+    } else {
+      console.warn("placeId is undefined.");
+    }
+  }, [placeId]);
 
   const scrollToTop = () => {
     if (containerRef.current) {
@@ -55,14 +94,18 @@ const ReviewPage = () => {
           showMapIcon={WithMapIcon.args.showMapIcon}
         />
       <Container ref={containerRef}>
-        <PageHeader reviewCount={reviews.length} />
+        <PageHeader placeName={placeData?.name || "장소 이름 없음"}
+          category={placeData?.category || "카테고리 없음"} reviewCount={reviews.length} />
         <ReviewSummary
-          averageRating={averageRating}
+          averageRating={
+            reviews.reduce((sum, review) => sum + review.rating, 0) /
+            (reviews.length || 0.0)
+          }
           reviewCount={reviews.length}
         />
-        <TagSection />
-        <PhotoReviewContainer reviews={reviews} />
-        <ReviewList reviews={reviews} />
+        <TagSection reviews={reviews}/>
+        <PhotoReviewContainer reviews={reviews} placeId={placeId} />
+        <ReviewList reviews={reviews} setReviews={setReviews}/>
       </Container>
       {showScrollToTop && (
         <ScrollToTopButton onClick={scrollToTop}>
@@ -73,6 +116,7 @@ const ReviewPage = () => {
     </>
   );
 };
+
 
 export default ReviewPage;
 

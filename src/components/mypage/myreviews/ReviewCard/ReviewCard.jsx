@@ -29,21 +29,21 @@ const ReviewCard = ({ review }) => {
     <Card>
       <CardHeader>
         <Category>{review.category}</Category>
-        <FacilityTitle>{review.title}</FacilityTitle>
+        <FacilityTitle>{review.placeName}</FacilityTitle>
       </CardHeader>
 
       <ContentWrapper>
         <ReviewHeader>
           <AuthorInfo>
             <AuthorImage
-              src="/assets/mypage/defaultProfileImage.png"
-              alt={review.title}
+              src={review.profileImageUrl || "/assets/mypage/defaultProfileImage.png"}
+              alt={review.nickname}
               width={50}
               height={50}
             />
             <TextContent>
               <Author>
-                {review.author} | <Date>{review.date}</Date>
+                {review.nickname} | <Date>{review.createdAt.split("T")[0]}</Date>
               </Author>
               <Rating>
                 <span>★</span> {review.rating.toFixed(1)}
@@ -61,10 +61,12 @@ const ReviewCard = ({ review }) => {
           </Actions>
         </ReviewHeader>
 
-        <ReviewContent>{review.review}</ReviewContent>
-        <VisualSection>
-          <ReviewImage src={review.image} alt={review.title} width={120} height={120} />
-        </VisualSection>
+        <ReviewContent>{review.content}</ReviewContent>
+        <Tags>
+          {review.traitTags.map((tag) => (
+            <Tag key={tag.traitTagId}>{tag.content}</Tag>
+          ))}
+        </Tags>
       </ContentWrapper>
     </Card>
   );
@@ -179,10 +181,17 @@ const ReviewContent = styled.div`
   padding-top: 10px;
 `;
 
-const VisualSection = styled.div`
+const Tags = styled.div`
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
   margin-top: 10px;
 `;
 
-const ReviewImage = styled(Image)`
-  border-radius: 8px;
+const Tag = styled.div`
+  background-color: ${theme.colors.divider};
+  color: white;
+  font-size: 12px;
+  border-radius: 12px;
+  padding: 5px 10px;
 `;

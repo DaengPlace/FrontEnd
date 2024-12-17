@@ -23,6 +23,7 @@ const SigninPage = () => {
   const [timeExpired, setTimeExpired] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
   const [verificationErrorMessage, setVerificationErrorMessage] = useState("");
+  const [isEmailDisabled, setIsEmailDisabled] = useState(false);
 
   const { setTokens } = useAuthStore();
   const { setSigninData } = useSigninStore();
@@ -117,6 +118,7 @@ const SigninPage = () => {
       const response = await postSendCode(email);
 
       setIsVerificationSent(true);
+      setIsEmailDisabled(true);
       setTimer(180);
       setTimeExpired(false);
       setVerificationCode("");
@@ -274,7 +276,7 @@ const SigninPage = () => {
                       field.ref(e);
                       birthdateRef.current = e;
                     }}
-                    placeholder="생년월일 (예: 20010101)"
+                    placeholder="생년월일 (예: 20000101)"
                     type="text"
                     isValid={!fieldState.invalid}
                   />
@@ -317,6 +319,7 @@ const SigninPage = () => {
                         setVerificationErrorMessage("");
                         field.onChange(e);
                       }}
+                      disabled={isEmailDisabled}
                     />
                   )}
                 />

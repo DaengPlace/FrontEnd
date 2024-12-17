@@ -13,6 +13,7 @@ import Image from "next/image";
 import { getUserProfile } from "@/apis/user/getUserProfile";
 import { sidoOptions, gunguOptions } from "@/data/data";
 import { putUserUpdate } from "@/apis/user/putUserUpdate";
+import { postCheckDuplicateNickname } from "@/apis/auth/postCheckDuplicateNickname";
 
 const MyProfilePage = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const MyProfilePage = () => {
     setValue,
   } = useForm();
 
+  const [initialNickname, setInitialNickname] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [nickname, setNickname] = useState("");
@@ -55,6 +57,7 @@ const MyProfilePage = () => {
         setProfileImage(
           data.profileImageUrl || "/assets/profile/default_profile.svg"
         );
+        setInitialNickname(data.nickname);
       } catch (error) {
         console.error("프로필 조회 실패 : ", error);
       }
@@ -75,12 +78,23 @@ const MyProfilePage = () => {
     }
   };
 
-  const handleCheckDuplicate = () => {
+  const handleCheckDuplicate = async () => {
     const currentNickname = watch("nickname");
-    const isNameDuplicate = currentNickname === "사용중인닉네임";
-    setIsDuplicate(isNameDuplicate);
-    setIsChecked(true);
     setNickname(currentNickname);
+
+    try {
+      const data = await postCheckDuplicateNickname(currentNickname);
+      if (!data.data.isValid) {
+        setIsDuplicate(true);
+      } else {
+        setIsDuplicate(false);
+      }
+      setIsChecked(true);
+    } catch (error) {
+      console.error("닉네임 중복 확인 실패:", error);
+      setIsChecked(true);
+      setIsDuplicate(true);
+    }
   };
 
   const handleSaveProfile = async () => {
@@ -189,8 +203,20 @@ const MyProfilePage = () => {
               )}
             />
             <Button
-              isActive={!errors.nickname && watch("nickname")?.length > 0}
-              onClick={handleCheckDuplicate}
+              isActive={
+                !errors.nickname &&
+                watch("nickname")?.length > 0 &&
+                watch("nickname") !== initialNickname
+              }
+              onClick={() => {
+                if (
+                  !errors.nickname &&
+                  watch("nickname")?.length > 0 &&
+                  watch("nickname") !== initialNickname
+                ) {
+                  handleCheckDuplicate();
+                }
+              }}
             >
               중복확인
             </Button>
@@ -313,7 +339,14 @@ const MyProfilePage = () => {
         </InputBox>
 
         <ButtonContainer>
-          <Button isActive={true} onClick={handleSaveProfile}>
+          <Button
+            isActive={!isDuplicate && watch("nickname")?.length > 0}
+            onClick={() => {
+              if (!isDuplicate && watch("nickname")?.length > 0) {
+                handleSaveProfile();
+              }
+            }}
+          >
             저장하기
           </Button>
         </ButtonContainer>

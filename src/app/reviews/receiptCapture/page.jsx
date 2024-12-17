@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 import useReviewStore from "@/stores/reviewStore";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 const ReceiptCapture = () => {
   return (
@@ -25,6 +26,9 @@ const ActualReceiptCapture = () => {
   const [facingMode, setFacingMode] = useState("user");
   const router = useRouter();
   const { placeName, setVisitDate } = useReviewStore();
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const userAgent = navigator.userAgent || navigator.userAgentData;
@@ -71,19 +75,14 @@ const ActualReceiptCapture = () => {
           console.log("Extracted texts:", combinedText);
           console.log("Stored place name:", placeName);
         if (combinedText.includes(placeName)) {
+          setIsConfirmModalOpen(true);
           const visitDateMatch = combinedText.match(/\d{4}[./-]\d{2}[./-]\d{2}/);
           const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
-
           console.log("Extracted visit date:", visitDate);
-
           setVisitDate(visitDate);
-
-          alert("영수증에 장소명이 확인되었습니다!");
-          setTimeout(() => {
-            router.push("/reviews/reviewScan");
-          }, 0);
         } else {
-          alert("영수증에 해당 장소명이 포함되어 있지 않습니다.");
+          setErrorMessage("영수증에 해당 장소명이 포함되어 있지 않습니다. <br />다시 촬영해주세요.");
+          setIsErrorModalOpen(true);
           setCapturedImage(null);
         }
       } else {
@@ -124,7 +123,7 @@ const ActualReceiptCapture = () => {
               <Button className="retry" onClick={() => setCapturedImage(null)}>
                 다시 찍기
               </Button>
-              <Button className="confirm" onClick={() => router.push("/reviews/reviewScan")}>
+              <Button className="confirm" onClick={() => setIsConfirmModalOpen(true)}>
                 확인
               </Button>
             </ButtonContainer>
@@ -144,6 +143,27 @@ const ActualReceiptCapture = () => {
             </WebcamFullContainer>
             <CaptureButton onClick={captureImage}>촬영</CaptureButton>
           </>
+        )}
+        {isConfirmModalOpen && (
+          <ConfirmModal
+            title="알림"
+            message="장소명이 확인되었습니다."
+            confirmText="확인"
+            onClose={() => {
+              setIsConfirmModalOpen(false);
+              router.push(`/reviews/reviewScan?placeId=${placeId}`);
+            }}
+          />
+        )}
+        {isErrorModalOpen && (
+          <ConfirmModal
+            title="알림"
+            message={errorMessage}
+            confirmText="확인"
+            onClose={() => {
+              setIsErrorModalOpen(false);
+            }}
+          />
         )}
       </Container>
     </>

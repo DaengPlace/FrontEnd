@@ -5,14 +5,18 @@ import BottomSheet from "@/components/common/BottomSheet/BottomSheet";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
 import reviews from "@/data/cardsData";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 const ReviewSummary = ({ averageRating, reviewCount }) => {
     const router = useRouter();
     const [isReviewBottomSheetOpen, setIsReviewBottomSheetOpen] = useState(false);
     const fileInputRef = useRef(null);
-    const searchParams = useSearchParams(); // 검색 매개변수 가져오기
-    const placeId = searchParams.get("placeId"); // placeId 가져오기
+    const searchParams = useSearchParams(); 
+    const placeId = searchParams.get("placeId");
     const { placeName, setVisitDate } = useReviewStore();
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); 
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const roundedRating = Math.round(averageRating * 10) / 10;
     const handleWriteReviewClick = () => {
         setIsReviewBottomSheetOpen(true); 
@@ -52,16 +56,14 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
               console.log("Extracted texts:", combinedText);
   
               if (combinedText.includes(placeName)) {
+                setIsConfirmModalOpen(true);
                 const visitDateMatch = combinedText.match(/\d{4}[./-]\d{2}[./-]\d{2}/);
                 const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
                 console.log("Extracted visit date:", visitDate);
                 setVisitDate(visitDate);
-  
-                alert("영수증에 장소명이 확인되었습니다!");
-                router.push(`/reviews/reviewScan?placeId=${placeId}`);
               } else {
-                alert("영수증에 해당 장소명이 포함되어 있지 않습니다. 다시 촬영해주세요.");
-                setIsReviewBottomSheetOpen(false);
+                setErrorMessage("영수증에 해당 장소명이 포함되어 있지 않습니다. 다시 촬영해주세요.");
+                setIsErrorModalOpen(true);
               }
             } else {
               console.error("Failed to analyze text:", analyzeResponse.statusText);
@@ -81,7 +83,7 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
         ⭐ {roundedRating}
       </Rating>
       <WriteReviewButton onClick={handleWriteReviewClick}>리뷰 작성하기</WriteReviewButton>
-      {isReviewBottomSheetOpen && (
+      {isReviewBottomSheetOpen && !isConfirmModalOpen && (
           <>
             <BottomSheet
               title="리뷰 작성을 위해"
@@ -108,6 +110,30 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
           />
           </>
         )}
+        {isConfirmModalOpen && (
+            <ConfirmModal
+              title="알림"
+              message="장소명이 확인되었습니다."
+              confirmText="확인"
+              onClose={() => {
+                setIsConfirmModalOpen(false);
+                setIsReviewBottomSheetOpen(false);
+                router.push(`/reviews/reviewScan?placeId=${placeId}`);
+              }}
+            />
+          )}
+          {isErrorModalOpen && (
+            <ConfirmModal
+              title="알림"
+              message={errorMessage}
+              confirmText="확인"
+              onClose={() => {
+                setIsErrorModalOpen(false);
+                setIsReviewBottomSheetOpen(false);
+              }}
+            />
+          )}
+
     </SummaryContainer>
   );
 };

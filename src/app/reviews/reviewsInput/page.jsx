@@ -16,6 +16,7 @@ import SubmitButton from "@/components/reviews/reviewsInput/SubmitButton/SubmitB
 import ScrollToTopButton from "@/components/reviews/reviewsInput/ScrollToTopButton/ScrollToTopButton";
 import Divider from "@/components/common/Divider/Divider";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 const ReviewsInputPage = () => {
   return (
@@ -39,6 +40,8 @@ const ReviewsInputPage = () => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const maxLength = 500;
   const [deletedMediaUrls, setDeletedMediaUrls] = useState([]);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmModalMessage, setConfirmModalMessage] = useState("");
 
   const containerRef = useRef(null);
 
@@ -119,12 +122,12 @@ const ReviewsInputPage = () => {
       setLoading(true);
       if (reviewId) {
         await updateReview(reviewId, formData);
-        alert("리뷰가 수정되었습니다.");
+        setConfirmModalMessage("리뷰가 수정되었습니다.");
       } else {
         await createReview(placeId, formData);
-        alert("리뷰가 등록되었습니다.");
+        setConfirmModalMessage("리뷰가 등록되었습니다.");
       }
-      router.push(`/reviews?placeId=${placeId}`);
+      setIsConfirmModalOpen(true);
     } catch (error) {
       console.error("Failed to save review:", error.message);
       alert("리뷰 저장 중 문제가 발생했습니다. 다시 시도해주세요.");
@@ -187,6 +190,17 @@ const ReviewsInputPage = () => {
       )}
       </MainContent>
       {showScrollToTop && <ScrollToTopButton onClick={scrollToTop} />}
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          title="알림"
+          message={confirmModalMessage}
+          confirmText="확인"
+          onClose={() => {
+            setIsConfirmModalOpen(false);
+            router.push(`/reviews?placeId=${placeId}`);
+          }}
+        />
+      )}
     </>
   );
 };

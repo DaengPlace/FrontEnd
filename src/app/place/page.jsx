@@ -14,6 +14,7 @@ import Image from "next/image";
 import { reviews } from "@/data/reviewData";
 import Hr from "@/components/place/Hr/Hr";
 import Hr2 from "@/components/place/Hr2/Hr2";
+import ScrollToTopButton from "@/components/common/ScrollToTopButton/ScrollToTopButton";
 
 const BottomSheet = dynamic(() => import("@/components/common/BottomSheet/BottomSheet"), { ssr: false });
 const categoryMapping = {

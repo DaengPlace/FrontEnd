@@ -418,6 +418,16 @@ const ScrollToTopButton = styled.button`
     margin-bottom: 10px;
   }
 
+  @media (max-width: 600px) {
+    bottom: 20px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+
+    span {
+      font-size: 10px;
+    }
+  }
 `;
 const NoDataMessage = styled.div`
   display: flex;

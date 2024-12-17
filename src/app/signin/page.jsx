@@ -276,7 +276,7 @@ const SigninPage = () => {
                       field.ref(e);
                       birthdateRef.current = e;
                     }}
-                    placeholder="생년월일 (예: 20010101)"
+                    placeholder="생년월일 (예: 20000101)"
                     type="text"
                     isValid={!fieldState.invalid}
                   />

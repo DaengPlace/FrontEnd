@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { NoTitle, Danger } from "@/components/common/Modal/Modal.stories";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { postLogout } from '@/apis/user/postLogout';
 const Modal = dynamic(() => import("@/components/common/Modal/Modal"), {ssr: false});
 
 const AccountManagement = () => {
@@ -27,7 +28,17 @@ const AccountManagement = () => {
   const handleLogout = () => {
     logout();
     router.push("/");
-  } 
+  }
+
+  // const handleLogout = async () => {
+  //   try {
+  //     logout();
+  //     await postLogout();
+  //     router.push("/");
+  //   } catch (error) {
+  //     console.error("로그아웃 실패 : ", error);
+  //   }
+  // } 
 
   return (
     <Container>

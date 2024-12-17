@@ -11,9 +11,8 @@ import SelectBox from "@/components/common/SelectBox/SelectBox";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
 import Image from "next/image";
 import { getUserProfile } from "@/apis/user/getUserProfile";
-import { updatePets } from "@/apis/user/putUserUpdate";
-import theme from "@/styles/theme";
 import { sidoOptions, gunguOptions } from "@/data/data";
+import { putUserUpdate } from "@/apis/user/putUserUpdate";
 
 const MyProfilePage = () => {
   const router = useRouter();
@@ -36,13 +35,13 @@ const MyProfilePage = () => {
   const [profileImage, setProfileImage] = useState(
     "/assets/profile/default_profile.svg"
   );
+  const [profileImageFile, setProfileImageFile] = useState(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await getUserProfile();
         const data = response.data;
-        console.log(data);
         const formattedBirthDate =
           data.birthDate.slice(0, 4) +
           data.birthDate.slice(5, 7) +
@@ -66,6 +65,7 @@ const MyProfilePage = () => {
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
+    setProfileImageFile(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -84,6 +84,8 @@ const MyProfilePage = () => {
   };
 
   const handleSaveProfile = async () => {
+    const formData = new FormData();
+
     const isValid = await trigger(["nickname", "birthdate", "email"]);
     if (isValid) {
       const updatedData = {
@@ -94,10 +96,13 @@ const MyProfilePage = () => {
         state: selectedRegion.city,
         city: selectedRegion.district,
       };
+      formData.append("memberData", JSON.stringify(updatedData));
+      if (profileImageFile) {
+        formData.append("file", profileImageFile);
+      }
 
       try {
-        const response = await updatePets(updatedData);
-        alert("프로필 수정 성공");
+        const response = await putUserUpdate(formData);
         router.push("/mypage");
       } catch (error) {
         console.error("프로필 수정 실패 : ", error);

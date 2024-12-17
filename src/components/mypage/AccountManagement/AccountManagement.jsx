@@ -7,6 +7,7 @@ import { NoTitle, Danger } from "@/components/common/Modal/Modal.stories";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { postLogout } from '@/apis/user/postLogout';
+import { deleteUser } from '@/apis/user/deleteUser';
 const Modal = dynamic(() => import("@/components/common/Modal/Modal"), {ssr: false});
 
 const AccountManagement = () => {
@@ -21,9 +22,15 @@ const AccountManagement = () => {
     setLogoutModalOpen(false);
   };
 
-  const closeQuitModal = () => {
-    setQuitModalOpen(false);
-  };
+  const onDeleteUser = async () => {
+    try {
+      const response = await deleteUser();
+      logout();
+      router.push("/");
+    } catch (error) {
+      console.error("회원 탈퇴에 실패하였습니다 : ", error)
+    }
+  }
 
   const handleLogout = () => {
     logout();
@@ -77,9 +84,9 @@ const AccountManagement = () => {
           cancelText={Danger.args.cancelText}
           confirmText={Danger.args.confirmText}
           isDanger={Danger.args.isDanger}
-          onCancel={closeQuitModal}
+          onCancel={() => setQuitModalOpen(false)}
           onConfirm={() => {
-            closeQuitModal();
+            onDeleteUser();
           }}
         />
       )}

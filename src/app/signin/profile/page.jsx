@@ -11,6 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useSigninStore } from "@/stores/signinStore";
 import { usePostSignin } from "@/hooks/auth/usePostSignin";
 import Image from "next/image";
+import { postProfileImage } from "@/apis/auth/postProfileImage";
 
 const SigninProfilePage = () => {
   const router = useRouter();
@@ -40,14 +41,16 @@ const SigninProfilePage = () => {
     setNickname(currentNickname);
   };
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const profileImageUrl = await postProfileImage(file);
+        setProfileImage(profileImageUrl);
+      } catch (error) {
+        console.error("프로필 이미지 업로드 실패:", error);
+      }
     }
   };
 

@@ -110,7 +110,7 @@ const ActualReceiptCapture = () => {
   };
 
   const handleCloseClick = () => {
-    router.push(`/reviews?placeId=${placeId}`);
+    router.push(`/place/placedetail?placeId=${placeId}`);
   };
 
   return (

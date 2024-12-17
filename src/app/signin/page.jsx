@@ -30,17 +30,12 @@ const SigninPage = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("accessToken");
-    const refreshToken = urlParams.get("refreshToken");
 
-    if (accessToken && refreshToken) {
+    if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
       setTokens({
         accessToken,
-        refreshToken,
       });
-
       router.push("/signin");
     } else {
     }
@@ -319,8 +314,8 @@ const SigninPage = () => {
                       type="email"
                       isValid={!fieldState.invalid}
                       onChange={(e) => {
-                        field.onChange(e);
                         setVerificationErrorMessage("");
+                        field.onChange(e);
                       }}
                     />
                   )}

@@ -10,6 +10,8 @@ import Checkbox from "@/components/common/Checkbox/Checkbox";
 import { putPetUpdate } from "@/apis/dog/putPetUpdate";
 import { getPetDetail } from "@/apis/dog/getPetDetail";
 import Header from "@/components/common/Header/Header";
+import { deletePet } from "@/apis/dog/deletePet";
+import Modal from "@/components/common/Modal/Modal";
 
 const EditPetPage = () => {
   return (
@@ -25,6 +27,7 @@ const ActualEditPetPage = () => {
   const petId = searchParams.get("petId");
   const inputRefs = useRef([]);
   const [birthDateError, setBirthDateError] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [petInfo, setPetInfo] = useState({
     name: "",
@@ -122,6 +125,15 @@ const ActualEditPetPage = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const response = await deletePet(petId);
+      router.push('/mypage')
+    } catch (error) {
+      console.error("반려견 삭제 요청 중 오류가 발생하였습니다.")
+    }
+  }
+
   return (
     <Container>
       <Header title={"강아지 정보 수정"} backbuttonPath={"/mypage"} />
@@ -218,11 +230,31 @@ const ActualEditPetPage = () => {
           </InputBox>
         </InputContainer>
         <FixedButtonContainer>
-          <Button isActive={isFormValid()} disabled={!isFormValid()} type="submit">
-            저장 
-          </Button>
+          <DeleteButtonWrapper>
+            <StyledDeleteButton
+              isActive={true}
+              onClick={() => setIsDeleteModalOpen(true)}
+              type="button"
+            >삭제</StyledDeleteButton>
+          </DeleteButtonWrapper>
+          <SaveButtonWrapper>
+            <Button isActive={isFormValid()} disabled={!isFormValid()} type="submit">
+              저장 
+            </Button>
+          </SaveButtonWrapper>
         </FixedButtonContainer>
       </form>
+
+      {isDeleteModalOpen && (
+        <Modal
+          title="반려견 정보를 삭제하시겠습니까?"
+          cancelText="취소"
+          confirmText="확인"
+          onCancel={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDelete}
+          isDanger={true}
+        />
+      )}
 
     </Container>
   );
@@ -253,6 +285,7 @@ const InputBox = styled.div`
   p {
     font-size: 1.1rem;
     font-weight: 500;
+    margin-bottom: 5px;
     color: ${({ theme }) => theme.colors.primary};
   }
 `;
@@ -279,6 +312,22 @@ const FixedButtonContainer = styled.div`
   padding: 0 2rem;
   display: flex;
   justify-content: center;
+  gap: 10px;
+`;
+
+const SaveButtonWrapper = styled.div`
+  flex: 1;
+  width: 50%;
+`;
+
+const DeleteButtonWrapper = styled.div`
+  flex: 1;
+  max-width: 50%;
+`;
+
+const StyledDeleteButton = styled(Button)`
+  background-color: ${({ theme }) => theme.colors.caution};
+  color: white;
 `;
 
 const ErrorText = styled.span`

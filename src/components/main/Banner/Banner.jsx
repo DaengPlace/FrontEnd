@@ -100,7 +100,6 @@ const Slide = styled.div`
 const StyledImage = styled(Image)`
   width: 100%;
   height: auto;
-  border-radius: 10px;
 `;
 
 const ArrowButton = styled.div`

@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 import { getPets } from "@/apis/dog/getPets";
 import { getUserProfile } from "@/apis/user/getUserProfile";
 
-
 const MyPage = () => {
   const router = useRouter();
   const [pets, setPets] = useState([]);
@@ -42,7 +41,7 @@ const MyPage = () => {
         const response = await getUserProfile();
         setUserProfile(response.data);
       } catch (error) {
-        console.error("회원 조회 실패 : ", error)
+        console.error("회원 조회 실패 : ", error);
       }
     };
     fetchUserProfile();
@@ -59,7 +58,10 @@ const MyPage = () => {
       <Space />
 
       <SectionHeader header={"내 프로필"} />
-      <UserProfile imagePath={defaultProfileImage} name={userProfile.nickname} />
+      <UserProfile
+        imagePath={userProfile.profileImageUrl || defaultProfileImage}
+        name={userProfile.nickname}
+      />
       <br />
 
       <MyPetsHeader>

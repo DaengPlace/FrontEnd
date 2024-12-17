@@ -13,6 +13,7 @@ import Image from "next/image";
 import { getUserProfile } from "@/apis/user/getUserProfile";
 import { updatePets } from "@/apis/user/putUserUpdate";
 import theme from "@/styles/theme";
+import { sidoOptions, gunguOptions } from "@/data/data";
 
 const MyProfilePage = () => {
   const router = useRouter();
@@ -36,24 +37,27 @@ const MyProfilePage = () => {
     "/assets/profile/default_profile.svg"
   );
 
-  // 프로필 데이터 가져오기 (GET)
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await getUserProfile();
         const data = response.data;
         console.log(data);
-        const formattedBirthDate = data.birthDate.slice(0,4) + data.birthDate.slice(5,7) + data.birthDate.slice(8,10);
+        const formattedBirthDate =
+          data.birthDate.slice(0, 4) +
+          data.birthDate.slice(5, 7) +
+          data.birthDate.slice(8, 10);
 
-        // 폼 데이터 초기화
         setValue("nickname", data.nickname);
         setValue("birthdate", formattedBirthDate);
         setValue("email", data.email);
         setSelectedGender(data.gender === "MALE" ? "남성" : "여성");
-        setSelectedRegion({city: data.state, district: data.city});
-        setProfileImage(data.profileImageUrl || "/assets/profile/default_profile.svg");
+        setSelectedRegion({ city: data.state, district: data.city });
+        setProfileImage(
+          data.profileImageUrl || "/assets/profile/default_profile.svg"
+        );
       } catch (error) {
-        console.error("프로필 조회 실패 : ",error);
+        console.error("프로필 조회 실패 : ", error);
       }
     };
 
@@ -86,7 +90,7 @@ const MyProfilePage = () => {
         nickname: watch("nickname"),
         birthDate: watch("birthdate"),
         email: watch("email"),
-        gender: selectedGender==="남성" ? "MALE" : "FEMALE",
+        gender: selectedGender === "남성" ? "MALE" : "FEMALE",
         state: selectedRegion.city,
         city: selectedRegion.district,
       };
@@ -95,10 +99,9 @@ const MyProfilePage = () => {
         const response = await updatePets(updatedData);
         alert("프로필 수정 성공");
         router.push("/mypage");
-
       } catch (error) {
-        console.error("프로필 수정 실패 : ",error);
-        alert("프로필 수정 실패")
+        console.error("프로필 수정 실패 : ", error);
+        alert("프로필 수정 실패");
       }
     } else {
       alert("모든 필수 입력 항목을 올바르게 작성해 주세요.");
@@ -282,41 +285,32 @@ const MyProfilePage = () => {
           <BoxContainer>
             <SelectBox
               placeholder="시/도"
-              options={[
-                { value: "seoul", label: "서울" },
-                { value: "busan", label: "부산" },
-                { value: "incheon", label: "인천" },
-              ]}
+              options={sidoOptions.map((sido) => ({
+                value: sido,
+                label: sido,
+              }))}
               selectedValue={selectedRegion.city}
               onChange={(value) => handleRegionChange("city", value)}
             />
             <SelectBox
               placeholder="시/군/구"
-              options={[
-                { value: "gangnam", label: "강남구" },
-                { value: "bukgu", label: "북구" },
-                { value: "bupyeong", label: "부평구" },
-              ]}
+              options={
+                selectedRegion.city
+                  ? gunguOptions[selectedRegion.city]?.map((gungu) => ({
+                      value: gungu,
+                      label: gungu,
+                    }))
+                  : []
+              }
               selectedValue={selectedRegion.district}
               onChange={(value) => handleRegionChange("district", value)}
+              isDisabled={!selectedRegion.city}
             />
           </BoxContainer>
         </InputBox>
 
         <ButtonContainer>
-          <Button
-            isActive={
-              !errors.nickname &&
-              !errors.birthdate &&
-              !errors.email &&
-              isChecked &&
-              !isDuplicate &&
-              selectedGender !== null &&
-              selectedRegion.city !== null &&
-              selectedRegion.district !== null
-            }
-            onClick={handleSaveProfile}
-          >
+          <Button isActive={true} onClick={handleSaveProfile}>
             저장하기
           </Button>
         </ButtonContainer>

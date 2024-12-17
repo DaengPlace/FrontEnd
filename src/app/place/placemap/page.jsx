@@ -105,8 +105,7 @@ const ActualPlaceMap = () => {
     if (searchname) {
       setSearchTerm(searchname); 
     }
-  }
-)
+  }, [searchname]);
 const handleMarkersUpdate = (places, searchTerm = "") => {
   const formattedMarkers = places.map((place) => ({
     id: place.placeId,
@@ -145,9 +144,13 @@ const handleMarkersUpdate = (places, searchTerm = "") => {
     setSelectedSido(value);
     setShowGunguDropdown(value && value !== "전국");
     if (!value) setSelectedGungu("");
+    handleSearchTermUpdate();
   };
 
-  const handleGunguChange = (event) => setSelectedGungu(event.target.value);
+  const handleGunguChange = (event) => {
+    setSelectedGungu(event.target.value);
+    handleSearchTermUpdate();
+  }
 
   const handleBackToList = () => {
     const searchname = searchParams.get("name");
@@ -250,7 +253,7 @@ const handleMarkersUpdate = (places, searchTerm = "") => {
     setMarkers(filteredMarkers);
 
   };
-
+  
   if (!isLoaded) {
     return (
       <LoadingContainer>
@@ -260,10 +263,13 @@ const handleMarkersUpdate = (places, searchTerm = "") => {
     );
   }
 
-  const handleSearchTermUpdate = (term) => {
-    setSearchTerm(term || "내 위치 주변"); 
+  const handleSearchTermUpdate = () => {
+    if (!searchname) { 
+      const searchTerm = `${selectedSido || ""} ${selectedGungu || ""}`.trim();
+      setSearchTerm(searchTerm || "내 위치 주변");
+    }
   };
-
+  
   return (
     <>
     <Header

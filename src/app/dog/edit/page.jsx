@@ -87,8 +87,8 @@ const DogEditPage = () => {
             rules={{
               required: "생년월일은 필수 입력입니다.",
               pattern: {
-                value: /^\d{6}$/,
-                message: "생년월일은 6자리 숫자여야 합니다. (예: 980918)",
+                value: /^\d{8}$/,
+                message: "생년월일은 8자리 숫자여야 합니다. (예: 20010101)",
               },
             }}
             render={({ field }) => (
@@ -96,9 +96,9 @@ const DogEditPage = () => {
                 <Input
                   {...field}
                   ref={(el) => (inputRefs.current[2] = el)}
-                  placeholder="생년월일 (예: 980918)"
+                  placeholder="생년월일 (예: 20010101)"
                   type="text"
-                  value={field.value || ""}
+                  value={dogInfo.birthDate || field.value}
                   onChange={(e) => {
                     field.onChange(e);
                     handleInputChange("birthDate", e.target.value);

@@ -27,7 +27,6 @@ const MainPage = () => {
   const [popularFacilities, setPopularFacilities] = useState([]);
   const [genderAgeFacilities, setGenderAgeFacilities] = useState([]);
 
-  // url에서 access Token 받아오기
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("accessToken");

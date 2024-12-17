@@ -49,7 +49,11 @@ const SectionBox = styled.div`
 
 const ProfileImage = styled(Image)`
   width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
   padding: 15px;
+
 `;
 
 const ProfileName = styled.div`

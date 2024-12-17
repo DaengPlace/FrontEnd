@@ -30,14 +30,14 @@ const BookmarkPage = () => {
         const placeRequests = placeIds.map((placeId) => getPlacesByPlaceId(placeId));
 
         const placeResponses = await Promise.all(placeRequests);
-        const places = placeResponses.map((res) => res.data.data);
-
+        const places = placeResponses.map((res) => res.data);
+        console.log(places);
         setFacilities(
           places.map((place) => ({
             id: place.placeId,
             name: place.name,
             address: place.location,
-            image: "assets/place/image 19.svg",
+            image: "/assets/image 19.svg",
             category: place.category,
             rating: place.rating,
             reviewCnt: place.review_count,

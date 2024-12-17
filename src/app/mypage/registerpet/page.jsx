@@ -12,7 +12,7 @@ import Modal from "@/components/common/Modal/Modal";
 import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
 import { useDogStore } from "@/stores/dogStore";
 
-const DogInfoPage = () => {
+const DogRegisterPage = () => {
 
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -102,7 +102,7 @@ const DogInfoPage = () => {
           isNeutered: dogInfo.neutered === "했어요",
           weight: parseFloat(`${dogInfo.weightWhole}.${dogInfo.weightDecimal}`),
         });
-        router.push("/dog/confirm");
+        router.push("/mypage/registerpet/confirm");
       }
     }
   };
@@ -112,7 +112,7 @@ const DogInfoPage = () => {
   };
 
   const confirmModal = () => {
-    router.push("/main");
+    router.push("/mypage");
   };
 
   useEffect(() => {
@@ -174,7 +174,7 @@ const DogInfoPage = () => {
                 required: "생년월일은 필수 입력입니다.",
                 pattern: {
                   value: /^\d{8}$/,
-                  message: "생년월일은 8자리 숫자여야 합니다. (예: 20000101)",
+                  message: "생년월일은 8자리 숫자여야 합니다. (예: 20240101)",
                 },
               }}
               render={({ field }) => (
@@ -182,7 +182,7 @@ const DogInfoPage = () => {
                   <Input
                     {...field}
                     ref={(el) => (inputRefs.current[2] = el)}
-                    placeholder="생년월일 (예: 20000101)"
+                    placeholder="생년월일 (예: 20240101)"
                     type="text"
                     value={field.value || ""}
                     onChange={(e) => {
@@ -299,7 +299,7 @@ const DogInfoPage = () => {
   );
 };
 
-export default DogInfoPage;
+export default DogRegisterPage;
 
 const Container = styled.div`
   margin: 0 auto;

@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import theme from "../../styles/theme.js";
-import axios from "axios";
-
 import Banner from "@/components/main/Banner/Banner.jsx";
 import Menu from "@/components/main/Menu/Menu.jsx";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection.jsx";
@@ -61,7 +59,6 @@ const MainPage = () => {
     const fetchGenderAgeFacilities = async () => {
       try {
         const response = await getGenderAgeFacilities();
-        console.log(response.data);
         setGenderAgeFacilities(response.data.popularPlaces);
         setAge(response.data.age);
         setGender(response.data.gender);
@@ -113,6 +110,7 @@ const MainPage = () => {
 export default MainPage;
 
 const Container = styled.div`
+  width: 100%;
   max-width: 600px;
   margin: 0 auto;
   display: flex;

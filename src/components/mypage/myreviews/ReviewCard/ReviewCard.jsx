@@ -3,10 +3,12 @@ import styled from "styled-components";
 import theme from "@/styles/theme";
 import Image from "next/image";
 import { MoreVert } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 const ReviewCard = ({ review }) => {
   const [isDropdownActive, setIsDropdownActive] = useState(false);
   const dropdownRef = useRef(null);
+  const router = useRouter();
 
   const handleDropdownToggle = () => {
     setIsDropdownActive(!isDropdownActive);
@@ -26,7 +28,7 @@ const ReviewCard = ({ review }) => {
   }, []);
 
   return (
-    <Card>
+    <Card onClick={() => router.push(`/reviews/ReviewDetail?reviewId=${review.reviewId}&placeId=${review.placeId}`)}>
       <CardHeader>
         <Category>{review.category}</Category>
         <FacilityTitle>{review.placeName}</FacilityTitle>
@@ -50,15 +52,6 @@ const ReviewCard = ({ review }) => {
               </Rating>
             </TextContent>
           </AuthorInfo>
-          <Actions>
-            <MoreVert ref={dropdownRef} onClick={handleDropdownToggle} />
-            {isDropdownActive && (
-              <Dropdown>
-                <DropdownItem>수정</DropdownItem>
-                <DropdownItem>삭제</DropdownItem>
-              </Dropdown>
-            )}
-          </Actions>
         </ReviewHeader>
 
         <ReviewContent>{review.content}</ReviewContent>

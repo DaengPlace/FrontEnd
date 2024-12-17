@@ -35,11 +35,9 @@ const SigninPage = () => {
 
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-
       setTokens({
         accessToken,
       });
-
       router.push("/signin");
     } else {
     }
@@ -318,8 +316,8 @@ const SigninPage = () => {
                       type="email"
                       isValid={!fieldState.invalid}
                       onChange={(e) => {
-                        field.onChange(e);
                         setVerificationErrorMessage("");
+                        field.onChange(e);
                       }}
                     />
                   )}

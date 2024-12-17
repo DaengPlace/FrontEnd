@@ -77,8 +77,7 @@ const BottomSheet = ({
       router.push(`/place/placemap?name=${encodeURIComponent(inputValue)}`);
     } else if (selectedSido || selectedGungu) {
       const location = `${selectedSido} ${selectedGungu || ""}`.trim();
-      setSearchTerm(location || "내 위치 주변");
-      console.log(location);
+
       try {
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(

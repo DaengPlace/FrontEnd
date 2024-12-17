@@ -63,8 +63,11 @@ const BottomSheet = ({
         alert("브라우저가 현재 위치 기능을 지원하지 않습니다.");
       }
     } else if (inputValue) {
+      console.log("Search Term:", inputValue);
       router.push(`/place/placemap?name=${encodeURIComponent(inputValue)}`);
     } else if (selectedSido || selectedGungu) {
+      const location = `${selectedSido} ${selectedGungu || ""}`.trim();
+  
       try {
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(

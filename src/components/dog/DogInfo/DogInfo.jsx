@@ -8,7 +8,7 @@ const DogInfo = () => {
   const { dogData } = useDogStore();
 
   const calculateAge = (birthDate) => {
-    if (!birthDate || birthDate.length !== 6) return "알 수 없음";
+    if (!birthDate || birthDate.length !== 8) return "알 수 없음";
     const year = parseInt(birthDate.slice(0, 2), 10) + 2000;
     const month = parseInt(birthDate.slice(2, 4), 10);
     const day = parseInt(birthDate.slice(4, 6), 10);

@@ -12,7 +12,7 @@ import Modal from "@/components/common/Modal/Modal";
 import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
 import { useDogStore } from "@/stores/dogStore";
 
-const DogInfoPage = () => {
+const DogRegisterPage = () => {
 
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -102,7 +102,7 @@ const DogInfoPage = () => {
           isNeutered: dogInfo.neutered === "했어요",
           weight: parseFloat(`${dogInfo.weightWhole}.${dogInfo.weightDecimal}`),
         });
-        router.push("/dog/confirm");
+        router.push("/mypage/registerpet/confirm");
       }
     }
   };
@@ -112,7 +112,7 @@ const DogInfoPage = () => {
   };
 
   const confirmModal = () => {
-    router.push("/main");
+    router.push("/mypage");
   };
 
   useEffect(() => {
@@ -299,7 +299,7 @@ const DogInfoPage = () => {
   );
 };
 
-export default DogInfoPage;
+export default DogRegisterPage;
 
 const Container = styled.div`
   margin: 0 auto;

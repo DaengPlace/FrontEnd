@@ -64,7 +64,7 @@ const MyPage = () => {
 
       <MyPetsHeader>
         <SectionHeader header={`우리집 댕댕이들 ${pets.length}`} />
-        <AddPet onClick={() => router.push("/dog/info")}>
+        <AddPet onClick={() => router.push("/mypage/registerpet")}>
           추가하기
           <StyledChevronRight />{" "}
         </AddPet>

@@ -262,13 +262,6 @@ const handleMarkersUpdate = (places, searchTerm = "") => {
       </LoadingContainer>
     );
   }
-
-  const handleSearchTermUpdate = () => {
-    if (!searchname) { 
-      const searchTerm = `${selectedSido || ""} ${selectedGungu || ""}`.trim();
-      setSearchTerm(searchTerm || "내 위치 주변");
-    }
-  };
   
   return (
     <>
@@ -310,7 +303,6 @@ const handleMarkersUpdate = (places, searchTerm = "") => {
         showGunguDropdown={showGunguDropdown}
         onSidoChange={handleSidoChange}
         onGunguChange={handleGunguChange}
-        setSearchTerm={handleSearchTermUpdate}
       />
     </MapContainerWrapper>
     </>

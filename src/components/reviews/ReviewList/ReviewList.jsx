@@ -19,12 +19,14 @@ const ReviewList = ({ reviews, setReviews }) => {
     const [likeCounts, setLikeCounts] = useState({});
     const [dropdownStates, setDropdownStates] = useState({});
     const [currentUserNickname, setCurrentUserNickname] = useState("");
+    const [profile, setProfile] = useState("");
 
     useEffect(() => {
       const loadUserProfile = async () => {
         try {
-          const profile = await fetchUserProfile();
-          setCurrentUserNickname(profile.nickname);
+          const profiledata = await fetchUserProfile();
+          setCurrentUserNickname(profiledata.nickname);
+          setProfile(profiledata);
         } catch (error) {
           console.error("Failed to load user profile:", error.message);
         }
@@ -112,11 +114,10 @@ const ReviewList = ({ reviews, setReviews }) => {
           <CardHeader>
             <AvatarWrapper>
               <Image
-                src="/assets/image (1).png"
+                src={profile.profileImageUrl}
                 alt="사용자 프로필"
                 width={40}
                 height={40}
-                style={{ borderRadius: "50%" }}
               />
             </AvatarWrapper>
             <Author>{review.memberNickname}</Author>
@@ -222,7 +223,6 @@ const AvatarWrapper = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #f4f4f4;
   margin-right: 8px;
   flex-shrink: 0;
 `;

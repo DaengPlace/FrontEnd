@@ -24,7 +24,7 @@ const DogEditPage = () => {
     name: dogData.name || "",
     breed: dogData.breed || "",
     birthDate: dogData.birthDate || "",
-    gender: dogData.gender || null,
+    gender: dogData.gender === "여아" ? "여아" : "남아",
     neutered: dogData.isNeutered ? "했어요" : "안했어요",
     weightWhole: dogData.weight ? String(Math.floor(dogData.weight)) : "",
     weightDecimal: dogData.weight
@@ -44,7 +44,7 @@ const DogEditPage = () => {
       name: dogInfo.name,
       breed: dogInfo.breed,
       birthDate: dogInfo.birthDate,
-      gender: dogInfo.gender === "여아",
+      gender: dogInfo.gender,
       isNeutered: dogInfo.neutered === "했어요",
       weight: updatedWeight,
     });

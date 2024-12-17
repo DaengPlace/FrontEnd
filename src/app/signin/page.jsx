@@ -23,6 +23,7 @@ const SigninPage = () => {
   const [timeExpired, setTimeExpired] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
   const [verificationErrorMessage, setVerificationErrorMessage] = useState("");
+  const [isEmailDisabled, setIsEmailDisabled] = useState(false);
 
   const { setTokens } = useAuthStore();
   const { setSigninData } = useSigninStore();
@@ -117,6 +118,7 @@ const SigninPage = () => {
       const response = await postSendCode(email);
 
       setIsVerificationSent(true);
+      setIsEmailDisabled(true);
       setTimer(180);
       setTimeExpired(false);
       setVerificationCode("");
@@ -317,6 +319,7 @@ const SigninPage = () => {
                         setVerificationErrorMessage("");
                         field.onChange(e);
                       }}
+                      disabled={isEmailDisabled}
                     />
                   )}
                 />

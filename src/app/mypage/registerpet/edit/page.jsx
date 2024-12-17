@@ -9,6 +9,7 @@ import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
+import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
 
 const RegisterEditPage = () => {
   const router = useRouter();
@@ -20,6 +21,8 @@ const RegisterEditPage = () => {
   } = useForm({
     mode: "onChange",
   });
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
   const [dogInfo, setDogInfo] = useState({
     name: dogData.name || "",
     breed: dogData.breed || "",
@@ -44,19 +47,18 @@ const RegisterEditPage = () => {
       name: dogInfo.name,
       breed: dogInfo.breed,
       birthDate: dogInfo.birthDate,
-      gender: dogInfo.gender === "여아",
+      gender: dogInfo.gender,
       isNeutered: dogInfo.neutered === "했어요",
       weight: updatedWeight,
     });
-    router.push("/dog/confirm");
+    router.push("/mypage/registerpet/confirm");
   };
 
   return (
     <Container>
       <Header
         titleLines={["우리 댕댕이의", "정보를 수정해주세요"]}
-        onBack={() => router.push("/dog/info")}
-        onClose={() => router.push("/")}
+        onClose={() => router.back()}
       />
       <InputContainer>
         <InputBox>
@@ -77,6 +79,7 @@ const RegisterEditPage = () => {
             placeholder="견종을 입력하세요"
             value={dogInfo.breed}
             onChange={(e) => handleInputChange("breed", e.target.value)}
+            onClick={() => setIsBottomSheetOpen(true)}
           />
         </InputBox>
         <InputBox>
@@ -84,11 +87,12 @@ const RegisterEditPage = () => {
           <Controller
             name="birthDate"
             control={control}
+            defaultValue={dogInfo.birthDate}
             rules={{
               required: "생년월일은 필수 입력입니다.",
               pattern: {
-                value: /^\d{6}$/,
-                message: "생년월일은 6자리 숫자여야 합니다. (예: 980918)",
+                value: /^\d{8}$/,
+                message: "생년월일은 8자리 숫자여야 합니다. (예: 20240101)",
               },
             }}
             render={({ field }) => (
@@ -96,9 +100,9 @@ const RegisterEditPage = () => {
                 <Input
                   {...field}
                   ref={(el) => (inputRefs.current[2] = el)}
-                  placeholder="생년월일 (예: 980918)"
+                  placeholder="생년월일 (예: 20240101)"
                   type="text"
-                  value={field.value || ""}
+                  value={field.value || ""} 
                   onChange={(e) => {
                     field.onChange(e);
                     handleInputChange("birthDate", e.target.value);
@@ -171,6 +175,17 @@ const RegisterEditPage = () => {
           확인
         </Button>
       </FixedButtonContainer>
+
+      {isBottomSheetOpen && (
+        <DogBottomSheet
+          onClose={() => setIsBottomSheetOpen(false)}
+          onSelect={(breed) => {
+            handleInputChange("breed", breed.breedType);
+            setIsBottomSheetOpen(false);
+          }}
+        />
+      )}
+
     </Container>
   );
 };

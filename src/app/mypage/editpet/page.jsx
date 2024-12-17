@@ -25,7 +25,6 @@ const ActualEditPetPage = () => {
   const petId = searchParams.get("petId");
   const inputRefs = useRef([]);
   const [birthDateError, setBirthDateError] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [petInfo, setPetInfo] = useState({
     name: "",
@@ -117,6 +116,7 @@ const ActualEditPetPage = () => {
 
     try {
       await putPetUpdate(petId, updatedData);
+      router.push("/mypage")
     } catch (error) {
       console.error("반려견 정보 수정에 실패했습니다.", error);
     }
@@ -140,10 +140,11 @@ const ActualEditPetPage = () => {
           <InputBox>
             <p>견종</p>
             <Input
+              style={{"color": "gray"}}
               type="text"
               placeholder="견종 입력"
               value={petInfo.breed || ""}
-              onChange={(e) => handleInputChange("breed", e.target.value)}
+              readOnly
             />
           </InputBox>
           <InputBox>

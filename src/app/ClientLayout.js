@@ -23,6 +23,8 @@ export default function ClientLayout({ children }) {
     "/mypage/profile",
     "/mypage/editpet",
     "/mypage/registerpet",
+    "/mypage/registerpet/confirm",
+    "/mypage/registerpet/edit",
     "/place/placesearch",
     "/place/placemap",
     "/place/placedetail",

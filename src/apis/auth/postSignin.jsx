@@ -1,29 +1,10 @@
 import { axiosInstance as axios } from "@/apis/axiosInstance";
 
-export const postSignin = async (signinData) => {
-  const {
-    name,
-    nickname,
-    profileImageUrl,
-    gender,
-    state,
-    city,
-    birthDate,
-    locationStatus,
-    email,
-  } = signinData;
-
-  const response = await axios.post(`/members`, {
-    name,
-    nickname,
-    profileImageUrl,
-    gender,
-    state,
-    city,
-    birthDate,
-    locationStatus,
-    email,
+export const postSignin = async (formData) => {
+  const response = await axios.post(`/members`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
-
   return response.data;
 };

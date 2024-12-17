@@ -11,7 +11,6 @@ import { useForm, Controller } from "react-hook-form";
 import { useSigninStore } from "@/stores/signinStore";
 import { usePostSignin } from "@/hooks/auth/usePostSignin";
 import Image from "next/image";
-import { postProfileImage } from "@/apis/auth/postProfileImage";
 import { postCheckDuplicateNickname } from "@/apis/auth/postCheckDuplicateNickname";
 
 const SigninProfilePage = () => {
@@ -24,6 +23,7 @@ const SigninProfilePage = () => {
   const [profileImage, setProfileImage] = useState(
     "/assets/profile/default_profile.svg"
   );
+  const [profileImageFile, setProfileImageFile] = useState(null);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [isLocationBottomSheetVisible, setIsLocationBottomSheetVisible] =
     useState(false);
@@ -40,7 +40,7 @@ const SigninProfilePage = () => {
 
     try {
       const data = await postCheckDuplicateNickname(currentNickname);
-      if (!data.isValid) {
+      if (!data.data.isValid) {
         setIsDuplicate(true);
       } else {
         setIsDuplicate(false);
@@ -55,28 +55,29 @@ const SigninProfilePage = () => {
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      try {
-        const profileImageUrl = await postProfileImage(file);
-        setProfileImage(profileImageUrl);
-      } catch (error) {
-        console.error("프로필 이미지 업로드 실패:", error);
-      }
-    }
+    const imageUrl = URL.createObjectURL(file);
+    setProfileImage(imageUrl);
+    setProfileImageFile(file);
   };
 
   const handleLocationSubmit = async (status) => {
+    const formData = new FormData();
+
     const updatedData = {
       ...signinData,
       nickname,
-      profileImageUrl: profileImage,
       locationStatus: status,
     };
-    setSigninData(updatedData);
+    formData.append("memberData", JSON.stringify(updatedData));
+    if (profileImageFile) {
+      formData.append("file", profileImageFile);
+    }
 
-    const response = await postSignin(updatedData);
+    setSigninData(updatedData);
     setIsLocationBottomSheetVisible(false);
     setIsBottomSheetVisible(true);
+
+    const response = await postSignin(formData);
   };
 
   const handleSubmit = () => {

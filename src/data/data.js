@@ -1,5 +1,4 @@
 export const sidoOptions = [
-    "전국",
     "서울특별시",
     "부산광역시",
     "대구광역시",

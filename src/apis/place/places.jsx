@@ -8,6 +8,7 @@ export const fetchPlaces = async (lat, lng, page, size, searchname = null) => {
         longitude: lng,
         page,
         size,
+        search: searchname,
       },
     });
     return response.data.data.places || [];

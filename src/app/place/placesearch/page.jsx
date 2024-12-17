@@ -275,10 +275,6 @@ const ActualPlaceSearchPage = () => {
       }
     };
   }, [cards]);
-  const handleSearchTermUpdate = () => {
-      const searchTerm = `${selectedSido || ""} ${selectedGungu || ""}`.trim();
-      setSearchTerm(searchTerm || "내 위치 주변");
-    }
   return (
     <>
       <Header
@@ -347,7 +343,6 @@ const ActualPlaceSearchPage = () => {
         onSidoChange={handleSidoChange}
         onGunguChange={handleGunguChange}
         showGunguDropdown={showGunguDropdown}
-        setSearchTerm={handleSearchTermUpdate}
       />
     </ScrollableContainer>
     </>

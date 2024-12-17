@@ -11,7 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useSigninStore } from "@/stores/signinStore";
 import { usePostSignin } from "@/hooks/auth/usePostSignin";
 import Image from "next/image";
-import { postProfileImage } from "@/apis/auth/postProfileImage";
+import { postCheckDuplicateNickname } from "@/apis/auth/postCheckDuplicateNickname";
 
 const SigninProfilePage = () => {
   const router = useRouter();
@@ -23,6 +23,7 @@ const SigninProfilePage = () => {
   const [profileImage, setProfileImage] = useState(
     "/assets/profile/default_profile.svg"
   );
+  const [profileImageFile, setProfileImageFile] = useState(null);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [isLocationBottomSheetVisible, setIsLocationBottomSheetVisible] =
     useState(false);
@@ -33,39 +34,50 @@ const SigninProfilePage = () => {
     formState: { errors },
   } = useForm();
 
-  const handleCheckDuplicate = () => {
+  const handleCheckDuplicate = async () => {
     const currentNickname = watch("nickname");
-    const isNameDuplicate = currentNickname === "사용중인닉네임";
-    setIsDuplicate(isNameDuplicate);
-    setIsChecked(true);
     setNickname(currentNickname);
+
+    try {
+      const data = await postCheckDuplicateNickname(currentNickname);
+      if (!data.data.isValid) {
+        setIsDuplicate(true);
+      } else {
+        setIsDuplicate(false);
+      }
+      setIsChecked(true);
+    } catch (error) {
+      console.error("닉네임 중복 확인 실패:", error);
+      setIsChecked(true);
+      setIsDuplicate(true);
+    }
   };
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    console.log(file);
-    if (file) {
-      try {
-        const profileImageUrl = await postProfileImage(file);
-        setProfileImage(profileImageUrl);
-      } catch (error) {
-        console.error("프로필 이미지 업로드 실패:", error);
-      }
-    }
+    const imageUrl = URL.createObjectURL(file);
+    setProfileImage(imageUrl);
+    setProfileImageFile(file);
   };
 
   const handleLocationSubmit = async (status) => {
+    const formData = new FormData();
+
     const updatedData = {
       ...signinData,
       nickname,
-      profileImageUrl: profileImage,
       locationStatus: status,
     };
-    setSigninData(updatedData);
+    formData.append("memberData", JSON.stringify(updatedData));
+    if (profileImageFile) {
+      formData.append("file", profileImageFile);
+    }
 
-    const response = await postSignin(updatedData);
+    setSigninData(updatedData);
     setIsLocationBottomSheetVisible(false);
     setIsBottomSheetVisible(true);
+
+    const response = await postSignin(formData);
   };
 
   const handleSubmit = () => {

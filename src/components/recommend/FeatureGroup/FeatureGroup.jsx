@@ -11,10 +11,10 @@ const FeatureGroup = ({label, options, selectedValue, onSelect}) => {
         <CheckboxContainer>
           {options.map((option) => (
             <Checkbox
-              key={option}
-              isChecked={selectedValue === option}
-              onClick={() => onSelect(option)}
-              label={option}
+              key={option.answerId}
+              isChecked={selectedValue === option.answerId}
+              onClick={() => onSelect(option.answerId)}
+              label={option.content}
             />
           ))}
         </CheckboxContainer>

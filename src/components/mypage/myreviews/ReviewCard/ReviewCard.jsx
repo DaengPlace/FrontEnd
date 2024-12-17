@@ -25,6 +25,8 @@ const ReviewCard = ({ review }) => {
     };
   }, []);
 
+  console.log(review);
+
   return (
     <Card>
       <CardHeader>

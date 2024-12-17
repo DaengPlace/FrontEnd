@@ -11,7 +11,6 @@ const DogInfo = ({dog}) => {
 
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
   const router = useRouter();
-  
   return (
     <Container>
       <DogNameImage>
@@ -44,7 +43,7 @@ const DogInfo = ({dog}) => {
             }
             confirmText='진행'
             cancelText='취소'
-            onConfirm={() => router.push('/recommend/dogtest')}
+            onConfirm={() => router.push(`/recommend/dogtest?petId=${dog.id}`)}
             onClose={() => setOpenBottomSheet(false)}
             setIsBottomSheetVisible={setOpenBottomSheet}
             warningText='새롭게 테스트를 진행할 경우 기존의 데이터는 삭제됩니다.'

@@ -13,6 +13,7 @@ import Image from "next/image";
 import { getUserProfile } from "@/apis/user/getUserProfile";
 import { sidoOptions, gunguOptions } from "@/data/data";
 import { putUserUpdate } from "@/apis/user/putUserUpdate";
+import { postCheckDuplicateNickname } from "@/apis/auth/postCheckDuplicateNickname";
 
 const MyProfilePage = () => {
   const router = useRouter();
@@ -75,12 +76,23 @@ const MyProfilePage = () => {
     }
   };
 
-  const handleCheckDuplicate = () => {
+  const handleCheckDuplicate = async () => {
     const currentNickname = watch("nickname");
-    const isNameDuplicate = currentNickname === "사용중인닉네임";
-    setIsDuplicate(isNameDuplicate);
-    setIsChecked(true);
     setNickname(currentNickname);
+
+    try {
+      const data = await postCheckDuplicateNickname(currentNickname);
+      if (!data.data.isValid) {
+        setIsDuplicate(true);
+      } else {
+        setIsDuplicate(false);
+      }
+      setIsChecked(true);
+    } catch (error) {
+      console.error("닉네임 중복 확인 실패:", error);
+      setIsChecked(true);
+      setIsDuplicate(true);
+    }
   };
 
   const handleSaveProfile = async () => {
@@ -190,7 +202,11 @@ const MyProfilePage = () => {
             />
             <Button
               isActive={!errors.nickname && watch("nickname")?.length > 0}
-              onClick={handleCheckDuplicate}
+              onClick={() => {
+                if (!errors.nickname && watch("nickname")?.length > 0) {
+                  handleCheckDuplicate();
+                }
+              }}
             >
               중복확인
             </Button>

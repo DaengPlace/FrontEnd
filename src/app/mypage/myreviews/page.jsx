@@ -25,6 +25,8 @@ const MyReviews = () => {
     fetchReviews();
   }, []);
 
+  console.log(reviews)
+
   return (
     <Container>
       <Header

@@ -9,7 +9,7 @@ const Footer = () => {
     width: "100%",
     fontSize: "12px",
     color: "${({ theme }) => theme.colors.divider}",
-    padding: "0 20px",
+    padding: "0 30px",
     zIndex: "1",
   };
 

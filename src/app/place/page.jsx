@@ -14,6 +14,7 @@ import Image from "next/image";
 import { reviews } from "@/data/reviewData";
 import Hr from "@/components/place/Hr/Hr";
 import Hr2 from "@/components/place/Hr2/Hr2";
+import Divider from "@/components/common/Divider/Divider";
 
 const BottomSheet = dynamic(() => import("@/components/common/BottomSheet/BottomSheet"), { ssr: false });
 const categoryMapping = {
@@ -147,10 +148,8 @@ const PlacePage = () => {
         <ReviewList reviews={filteredReviews} />
       </CategorySection>
       </CategoryWrapper>
-      <Hr2 />
-      <FooterWrapper>
-        <Footer />
-      </FooterWrapper>
+      <Divider />
+      <Footer />
     </Container>
   );
 };
@@ -199,6 +198,7 @@ const OverlayText = styled.div.withConfig({
 
 const CategoryWrapper = styled.div`
   padding: 0 1.25rem;
+  margin-bottom: 20px;
 `
 const CategorySection = styled.section`
   background: #fff;

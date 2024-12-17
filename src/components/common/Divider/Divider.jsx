@@ -17,5 +17,5 @@ const DivideLine = styled.div`
     max-width: 600px;
     height: 1px;
     background-color: ${theme.colors.divider};
-    margin: 10px auto;
+    margin: 0px auto 10px auto;
 `;

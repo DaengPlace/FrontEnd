@@ -1,8 +1,10 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import styled from "styled-components";
 
-const ReviewList = ({ reviews }) => {
+const ReviewList = ({ reviews, onClick }) => {
+  const router = useRouter();
   const NativeDate = global.Date;
   const formatDate = (dateString) => {
     const date = new NativeDate(dateString); 
@@ -17,14 +19,17 @@ const ReviewList = ({ reviews }) => {
     return `${year}.${month}.${day}`;
   };
   const topReviews = reviews.slice(0, 3);
+
   return (
     <Container>
       {topReviews.map((review, index) => (
-        <ReviewCard key={review.reviewId}>
+        <ReviewCard key={review.reviewId}  onClick={() => onClick(review.reviewId, review.placeId)}>
           <ReviewNumber>{index + 1}</ReviewNumber>
           <ReviewContent>
+          <ContentHeader>
             <CategoryBadge>{review.category}</CategoryBadge>
             <ReviewTitle>{review.placeName}</ReviewTitle>
+          </ContentHeader>
             <ReviewInfo>
               {review.memberName} | {formatDate(review.createdAt)} 작성
               <Rating>
@@ -34,16 +39,7 @@ const ReviewList = ({ reviews }) => {
               </Rating> 
             </ReviewInfo>
             <ReviewText>{review.content}</ReviewText>
-            {index !== reviews.length - 1 && (
-              <hr
-                style={{
-                  width: "138%",
-                  marginLeft: "-35px",
-                  marginTop: "15px",
-                  color: "#ABABAB",
-                }}
-              />
-            )}
+
           </ReviewContent>
           <ReviewImageWrapper>
             {review.imageUrls.length > 0 && (
@@ -75,8 +71,18 @@ const ReviewCard = styled.div`
   gap: 10px;
   padding: 5px 15px;
   position: relative;
+  border-bottom: 1px solid #ABABAB;
+  cursor: pointer;
+  &:last-child {
+    border-bottom: none; 
+  }
+    &:not(:first-child) {
+    margin-top: 10px; /* 두 번째 이후부터 위 간격 조절 */
+  }
 `;
-
+const ContentHeader = styled.div`
+  margin-bottom: 5px;
+`;
 const ReviewNumber = styled.div`
   position: absolute;
   top: 35px;
@@ -90,10 +96,13 @@ const ReviewNumber = styled.div`
 `;
 
 const ReviewContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin-left: 20px;
   flex: 1;
   min-width: 0;
-  gap: 5px;
+  margin-bottom: 10px;
 `;
 
 const CategoryBadge = styled.span`
@@ -112,6 +121,7 @@ const CategoryBadge = styled.span`
 
 const ReviewTitle = styled.span`
   font-weight: bold;
+  margin-right: 50px;
 `;
 
 const ReviewInfo = styled.p`
@@ -127,11 +137,15 @@ const ReviewText = styled.p`
   color: #000;
   font-weight: bold;
   margin-top: 10px;
+  flex-grow: 1;
 `;
 
 const ReviewImageWrapper = styled.div`
   border-radius: 10px;
   overflow: hidden;
+  flex-shrink: 0; 
+  width: 80px; 
+  height: 80px; 
 `;
 
 const StyledImage = styled(Image)`

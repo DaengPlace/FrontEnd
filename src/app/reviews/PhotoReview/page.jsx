@@ -24,6 +24,8 @@ const ActualPhotoReviewPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const placeId = searchParams.get("placeId");
+  const [category, setCategory] = useState("");
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -33,6 +35,9 @@ const ActualPhotoReviewPage = () => {
         const response = await axiosInstance.get(`/reviews/places/${placeId}`);
         const allImageUrls = response.data.data.flatMap((review) => review.imageUrls || []);
         setReviews(allImageUrls);
+        const placeResponse = await axiosInstance.get(`/places/${placeId}`);
+        setCategory(placeResponse.data.data.category);
+        setName(placeResponse.data.data.name);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -75,7 +80,7 @@ const ActualPhotoReviewPage = () => {
     <>
       <HeaderSection />
       <Container ref={containerRef}>
-        <SubHeader category="반려동물용품점" title="간식곳간" photoCount={reviews.length} />
+        <SubHeader category={category} name={name} photoCount={reviews.length} />
         <PhotoGrid reviews={reviews} onImageClick={handleImageClick} />
       </Container>
       <ScrollToTop show={showScrollToTop} onClick={scrollToTop} />

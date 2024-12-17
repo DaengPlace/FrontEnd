@@ -1,29 +1,24 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/navigation";
 import { deleteReview } from "@/apis/review/reviewApi";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 const DropdownMenu = ({ isOpen, toggleDropdown, reviewId, placeId }) => {
   const router = useRouter();
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [selectedReviewId, setSelectedReviewId] = useState(null);
   const handleEditClick = (reviewId, placeId, event) => {
     event.stopPropagation();
     router.push(`/reviews/reviewsInput?reviewId=${reviewId}&placeId=${placeId}`);
   };
 
   const handleDeleteClick = async (reviewId) => {
-    if (confirm("정말로 삭제하시겠습니까?")) {
-      try {
-        await deleteReview(reviewId);
-        alert("리뷰가 삭제되었습니다.");
-        router.back(); 
-      } catch (error) {
-        console.error("리뷰 삭제 실패:", error.message);
-        alert("리뷰 삭제에 실패했습니다.");
-      }
-    }
+    setSelectedReviewId(reviewId);
+    setIsConfirmModalOpen(true);
   };
   return (
     <DropdownWrapper>
@@ -44,6 +39,22 @@ const DropdownMenu = ({ isOpen, toggleDropdown, reviewId, placeId }) => {
             삭제
           </MenuItem>
         </Menu>
+      )}
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          title="리뷰 삭제"
+          message="정말로 삭제하시겠습니까?"
+          confirmText="확인"
+          onClose={async () => {
+            try {
+              await deleteReview(selectedReviewId);
+              setIsConfirmModalOpen(false);
+              router.back(); 
+            } catch (error) {
+              console.error("리뷰 삭제 실패:", error.message);
+            }
+          }}
+        />
       )}
     </DropdownWrapper>
   );

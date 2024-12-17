@@ -12,6 +12,7 @@ import {
   toggleReviewLike,
   deleteReview,
 } from "@/apis/review/reviewApi";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 const ReviewList = ({ reviews, setReviews }) => {
     const router = useRouter();
@@ -19,12 +20,16 @@ const ReviewList = ({ reviews, setReviews }) => {
     const [likeCounts, setLikeCounts] = useState({});
     const [dropdownStates, setDropdownStates] = useState({});
     const [currentUserNickname, setCurrentUserNickname] = useState("");
+    const [profile, setProfile] = useState("");
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [selectedReviewId, setSelectedReviewId] = useState(null);
 
     useEffect(() => {
       const loadUserProfile = async () => {
         try {
-          const profile = await fetchUserProfile();
-          setCurrentUserNickname(profile.nickname);
+          const profiledata = await fetchUserProfile();
+          setCurrentUserNickname(profiledata.nickname);
+          setProfile(profiledata);
         } catch (error) {
           console.error("Failed to load user profile:", error.message);
         }
@@ -73,18 +78,8 @@ const ReviewList = ({ reviews, setReviews }) => {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (confirm("정말로 삭제하시겠습니까?")) {
-      try {
-        await deleteReview(reviewId);
-        alert("리뷰가 삭제되었습니다.");
-        setReviews((prev) =>
-          prev.filter((review) => review.reviewId !== reviewId)
-        );
-      } catch (error) {
-        console.error("리뷰 삭제 실패:", error.message);
-        alert("리뷰 삭제에 실패했습니다.");
-      }
-    }
+    setSelectedReviewId(reviewId);
+    setIsConfirmModalOpen(true);
   };
     
     
@@ -112,11 +107,10 @@ const ReviewList = ({ reviews, setReviews }) => {
           <CardHeader>
             <AvatarWrapper>
               <Image
-                src="/assets/image (1).png"
+                src={profile.profileImageUrl}
                 alt="사용자 프로필"
                 width={40}
                 height={40}
-                style={{ borderRadius: "50%" }}
               />
             </AvatarWrapper>
             <Author>{review.memberNickname}</Author>
@@ -187,6 +181,24 @@ const ReviewList = ({ reviews, setReviews }) => {
           <Hr2/>
         </ReviewCard>
       ))}
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          title="리뷰 삭제"
+          message="정말로 삭제하시겠습니까?"
+          confirmText="확인"
+          onClose={async () => {
+            try {
+              await deleteReview(selectedReviewId);
+              setReviews((prev) =>
+                prev.filter((review) => review.reviewId !== selectedReviewId)
+              );
+              setIsConfirmModalOpen(false);
+            } catch (error) {
+              console.error("리뷰 삭제 실패:", error.message);
+            }
+          }}
+        />
+      )}
     </ReviewListContainer>
   );
 };
@@ -222,7 +234,6 @@ const AvatarWrapper = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #f4f4f4;
   margin-right: 8px;
   flex-shrink: 0;
 `;

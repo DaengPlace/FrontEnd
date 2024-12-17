@@ -94,6 +94,10 @@ const PlacePage = () => {
   const handleImageClick2 = () => {
     router.push(`/recommend`);
   }
+
+  const handleReviewClick = (reviewId, placeId) => {
+    router.push(`/reviews/ReviewDetail?reviewId=${reviewId}&placeId=${placeId}`);
+  };
   return (
     <Container>
       <Banner />
@@ -144,7 +148,7 @@ const PlacePage = () => {
           setHoveredCategory={setHoveredCategory}
         />
         <Hr />
-        <ReviewList reviews={filteredReviews} />
+        <ReviewList reviews={filteredReviews} onClick={handleReviewClick} />
       </CategorySection>
       </CategoryWrapper>
       <Hr2 />

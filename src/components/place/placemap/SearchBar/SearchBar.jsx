@@ -14,8 +14,6 @@ const SearchBar = ({ value, onClick }) => (
         style={{ marginRight: "10px" }}
       />
       <SearchInput
-        placeholder="내 위치 주변"
-        value={value || ""}
         readOnly
       />
     </SearchWrapper>

@@ -12,7 +12,7 @@ const SearchBar = ({ onClick }) => (
         height={30}
         style={{ marginRight: "10px" }}
       />
-      <SearchInput placeholder="내 위치 주변" />
+      <SearchInput />
     </SearchWrapper>
   </SearchBarContainer>
 );

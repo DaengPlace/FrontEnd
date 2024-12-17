@@ -45,9 +45,13 @@ const ActualReviewScanPage = ({ocrVisitDate}) => {
     router.push(`/reviews/reviewsInput?placeId=${placeId}`);
   };
 
+  const handleCloseClick = () => {
+    router.push(`/place/placedetail?placeId=${placeId}`);
+  };
+  
   return (
     <>
-      <Header title="리뷰 정보 확인" showX={NoTitleHeader.args.showX} onClose={() => setIsModalOpen(true)}/>
+      <Header title="리뷰 정보 확인" showX={NoTitleHeader.args.showX} onClose={handleCloseClick}/>
       <Container>
         <Content>
           <Subtitle>

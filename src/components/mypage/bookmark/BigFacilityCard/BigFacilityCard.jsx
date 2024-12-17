@@ -38,15 +38,11 @@ const BigFacilityCard = ({fac, toggleLike}) => {
         <Information>
           <Name>{fac.name}</Name>
           <Address>{fac.address}</Address>
-          <Details>
-            운영시간 {fac.startTime} ~ {fac.endTime} | {fac.dayoff}
-          </Details>
         </Information>
         <Tags>
-          {fac.is_parking && <Tag>주차 가능</Tag>}
-          {fac.weather_type === 1 && <Tag>실내공간</Tag>}
-          {fac.weight_limit === 0 && <Tag>무게 제한 없음</Tag>}
-          {fac.pet_fee === 0 && <Tag>애견 동반 요금 없음</Tag>}
+          {fac.tags.map((tag, index) => (
+            <Tag key={index}>{tag}</Tag>
+          ))}
         </Tags>
 
       </FacilityInfo>

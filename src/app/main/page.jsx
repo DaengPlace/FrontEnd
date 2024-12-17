@@ -24,17 +24,12 @@ const MainPage = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("accessToken");
-    const refreshToken = urlParams.get("refreshToken");
 
-    if (accessToken && refreshToken) {
+    if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
       setTokens({
         accessToken,
-        refreshToken,
       });
-
       router.push("/main");
     } else {
       console.log("Access Token이 URL에 없습니다.");

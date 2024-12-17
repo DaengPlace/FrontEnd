@@ -184,7 +184,7 @@ const ReviewsInputPage = () => {
           }
           cancelText='나가기'
           confirmText='계속 작성'
-          onCancel={() => router.push(`/reviews?placeId=${placeId}`)}
+          onCancel={() => router.push(`/place/placedetail?placeId=${placeId}`)}
           onConfirm={() => setIsModalOpen(false)}
         />
       )}

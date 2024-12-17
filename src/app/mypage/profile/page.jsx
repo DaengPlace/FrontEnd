@@ -25,6 +25,7 @@ const MyProfilePage = () => {
     setValue,
   } = useForm();
 
+  const [initialNickname, setInitialNickname] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [nickname, setNickname] = useState("");
@@ -56,6 +57,7 @@ const MyProfilePage = () => {
         setProfileImage(
           data.profileImageUrl || "/assets/profile/default_profile.svg"
         );
+        setInitialNickname(data.nickname);
       } catch (error) {
         console.error("프로필 조회 실패 : ", error);
       }
@@ -201,9 +203,17 @@ const MyProfilePage = () => {
               )}
             />
             <Button
-              isActive={!errors.nickname && watch("nickname")?.length > 0}
+              isActive={
+                !errors.nickname &&
+                watch("nickname")?.length > 0 &&
+                watch("nickname") !== initialNickname
+              }
               onClick={() => {
-                if (!errors.nickname && watch("nickname")?.length > 0) {
+                if (
+                  !errors.nickname &&
+                  watch("nickname")?.length > 0 &&
+                  watch("nickname") !== initialNickname
+                ) {
                   handleCheckDuplicate();
                 }
               }}
@@ -329,7 +339,14 @@ const MyProfilePage = () => {
         </InputBox>
 
         <ButtonContainer>
-          <Button isActive={true} onClick={handleSaveProfile}>
+          <Button
+            isActive={!isDuplicate && watch("nickname")?.length > 0}
+            onClick={() => {
+              if (!isDuplicate && watch("nickname")?.length > 0) {
+                handleSaveProfile();
+              }
+            }}
+          >
             저장하기
           </Button>
         </ButtonContainer>

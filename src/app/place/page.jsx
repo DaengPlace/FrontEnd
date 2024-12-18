@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import Banner from "@/components/place/Banner/Banner";
 import Footer from "@/components/common/Footer/Footer.jsx";
@@ -39,6 +39,7 @@ const PlacePage = () => {
   const router = useRouter();
   const [popularReviews, setPopularReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -47,11 +48,14 @@ const PlacePage = () => {
   useEffect(() => {
     const fetchPopularReviews = async () => {
       try {
+        setLoading(true);
         const response = await axios.get("https://api.daengplace.com/reviews/popular");
         console.log(response.data)
         setPopularReviews(response.data.data);
       } catch (error) {
         console.error("Failed to fetch popular reviews:", error);
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -102,6 +106,13 @@ const PlacePage = () => {
   };
   return (
     <Container>
+        {loading ? ( // 로딩 상태에 따라 스피너 표시
+        <LoadingContainer>
+          <Spinner />
+          <LoadingText>Loading...</LoadingText>
+        </LoadingContainer>
+      ) : (
+        <>
       <Banner />
       <ImagesSection>
         <ImageWrapper onClick={handleImageClick}>
@@ -155,6 +166,8 @@ const PlacePage = () => {
       </CategoryWrapper>
       <Divider />
       <Footer />
+      </>
+      )}
     </Container>
   );
 };
@@ -223,4 +236,34 @@ const FooterWrapper = styled.div`
   margin-top: 0.75rem;
   width: 100%; 
   padding: 0 1.25rem;
+`;
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const LoadingText = styled.p`
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0019f4;
+`;
+
+// 로딩 애니메이션 키프레임
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+// 스피너 스타일
+const Spinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #0019f4;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
 `;

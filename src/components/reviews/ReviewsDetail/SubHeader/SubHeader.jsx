@@ -2,14 +2,13 @@
 
 import React from "react";
 import styled from "styled-components";
-import Divider from "@/components/common/Divider/Divider";
 
 const SubHeader = ({ category, title }) => {
   return (
     <Wrapper>
       <CategoryBadge>{category}</CategoryBadge>
       <Title>{title}</Title>
-      <Divider />
+      <StyledDivider />
     </Wrapper>
   );
 };
@@ -40,4 +39,11 @@ const Title = styled.h2`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
+`;
+const StyledDivider = styled.div`
+  width: 95%; 
+  height: 1px; 
+  background-color: #ABABAB; 
+  margin-top: 10px; 
+  margin-bottom: 10px; 
 `;

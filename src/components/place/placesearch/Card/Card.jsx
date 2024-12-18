@@ -84,9 +84,9 @@ const Card = ({ card, onCardClick, toggleLike }) => {
 
 const CardContainer = styled.div`
   position: relative;
-  background: ${({ theme }) => theme.colors.defaultBackground};
+  background-color: white;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   overflow: hidden;
   display: flex;
   flex-direction: column;

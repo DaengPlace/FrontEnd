@@ -3,8 +3,8 @@ import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { sidoOptions, gunguOptions } from "@/data/data";
 import SelectBox from "@/components/common/SelectBox/SelectBox"; 
+import { CloseOutline } from "@styled-icons/evaicons-outline/CloseOutline";
 
 const BottomSheet = ({
   isOpen,
@@ -105,7 +105,7 @@ const BottomSheet = ({
       <Sheet>
         <BottomSheetHeader>
           <Title>검색</Title>
-          <CloseButton onClick={onClose}>X</CloseButton>
+          <CloseButton onClick={onClose}><CloseOutline width={30} height={30} /></CloseButton>
         </BottomSheetHeader>
         <hr style={{ marginTop: "20px", color: "#ABABAB" }} />
         <BottomSheetContent>
@@ -125,8 +125,8 @@ const BottomSheet = ({
                 <Image
                   src="/assets/image 14.png"
                   alt="돋보기"
-                  width={30}
-                  height={30}
+                  width={20}
+                  height={20}
                 />
               </SearchIcon>
               <FilterInput
@@ -228,7 +228,7 @@ const Sheet = styled.div`
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   z-index: 1000;
-  border-radius: 20px;
+  border-radius: 20px 20px 0 0;
   animation: slideUp 0.3s ease-out forwards;
 
   @keyframes slideUp {
@@ -267,7 +267,7 @@ const BottomSheetContent = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.divider};
   padding: 10px;
   border-radius: 10px;
-  width: 560px;
+  width: 100%;
   height: 453px;
 `;
 
@@ -291,11 +291,12 @@ const Label = styled.span`
 `;
 
 const FilterInputContainer = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 8px;
   position: relative;
+  padding: 8px 10px;
 `;
 
 const FilterInput = styled.input`
@@ -303,11 +304,10 @@ const FilterInput = styled.input`
   padding: 8px 16px 8px 60px;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   border-radius: 20px;
-  width: 440px;
+  width: 80%;
   height: 60px;
-  margin-left: 10px;
   color: ${({ theme }) => theme.colors.divider};
-  font-size: 20px;
+  font-size: 18px;
 `;
 
 const LocationButton = styled.button`
@@ -316,7 +316,7 @@ const LocationButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 8px;
-  width: 73px;
+  width: 30%;
   height: 60px;
   background-color: ${({ theme }) => theme.colors.defaultBackground};
   color: ${({ theme }) => theme.colors.primary};
@@ -341,78 +341,61 @@ const LocationButton = styled.button`
 `;
 
 const DropdownWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
-  gap: 40px;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
   align-items: center;
-  margin-left: 36px;
+  flex-wrap: wrap;
 `;
 
-const Dropdown = styled.select`
-  width: 230px;
-  height: 64px; 
-  overflow-y: auto; 
-  background-color: #f2f2f2;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
-  border-radius: 20px;
-  font-size: 16px;
-  padding: 10px;
-
-  option {
-    padding: 10px;
-  }
-`;
 
 const BottomSheetButtons = styled.div`
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
   margin-top: 16px;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+  padding: 10px 0;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  padding: 0 20px;
+
 `;
 
 const ResetButton = styled.button`
-  padding: 10px 20px;
+  flex: 1;
   background-color: ${({ theme }) => theme.colors.defaultBackground};
   border: 1px solid ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.primary};
   border-radius: 10px;
-  width: 219px;
-  height: 60px;
-  cursor: pointer;
-  position : fixed;
-  bottom:10px;
-  margin-left : 10px;
-  font-size: 18px;
+  height: 50px;
+  font-size: 16px;
   font-weight: bold;
-
+  cursor: pointer;
 `;
 
 const SearchButton = styled.button`
-  padding: 10px 20px;
+  flex: 1;
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
   border: none;
   border-radius: 10px;
-  cursor: pointer;
-  width: 326px;
-  height: 60px;
-  position : fixed;
-  bottom: 10px;
-  left: 260px;
-  font-size: 18px;
+  height: 50px;
+  font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
 `;
-const ImageWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 10px; 
-`;
+
 const SelectBoxWrapper = styled.div`
   flex: 1;
   max-width: 210px;
-  min-width: 210px; 
-  min-height: 64px; 
+  min-width: 210px;
 `;
-
 
 export default BottomSheet;

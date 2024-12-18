@@ -36,6 +36,7 @@ const Subtitle = styled.h2`
   margin-top: 10px;
   font-size: 18px;
   font-weight: bold;
+  margin-bottom: 10px;
 `;
 
 const PhotoCount = styled.div`

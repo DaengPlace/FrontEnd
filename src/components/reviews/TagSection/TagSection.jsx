@@ -106,12 +106,13 @@ const TagItem = styled.li`
   background: linear-gradient(
     to right,
     #ffe082 ${(props) => props.percentage}%,
-    #f9f9f9 ${(props) => props.percentage}% 
+    white ${(props) => props.percentage}% 
   );
   padding: 10px;
   border-radius: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 `;
 
 const TagIcon = styled.span`

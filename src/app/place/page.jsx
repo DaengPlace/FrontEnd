@@ -9,13 +9,10 @@ import Banner from "@/components/place/Banner/Banner";
 import Footer from "@/components/common/Footer/Footer.jsx";
 import CategorySelector from "@/components/place/CategorySelector/CategorySelector";
 import ReviewList from "@/components/place/ReviewList/ReviewList";
-import { Permission } from "@/components/common/BottomSheet/BottomSheet.stories";
 import Image from "next/image";
-import { reviews } from "@/data/reviewData";
 import Hr from "@/components/place/Hr/Hr";
-import Hr2 from "@/components/place/Hr2/Hr2";
-import ScrollToTopButton from "@/components/common/ScrollToTopButton/ScrollToTopButton";
 import Divider from "@/components/common/Divider/Divider";
+import theme from "@/styles/theme";
 
 const BottomSheet = dynamic(() => import("@/components/common/BottomSheet/BottomSheet"), { ssr: false });
 const categoryMapping = {
@@ -166,7 +163,7 @@ const Container = styled.div`
   width : 100%;
   min-height: 100vh;
   margin: 0 auto;
-  background-color: #f8f8f8;
+  background-color: ${theme.colors.defaultBackground};
   position: relative;
 `;
 
@@ -205,10 +202,11 @@ const CategoryWrapper = styled.div`
   margin-bottom: 20px;
 `
 const CategorySection = styled.section`
-  background: #fff;
+  background: white;
   padding: 1.25rem;
   border-radius: 1.25rem;
-  border: 1px solid #ababab;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  
   h2 {
     margin-bottom: 20px;
     font-size: 20px;

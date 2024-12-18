@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import Image from "next/image";
-import axios from "axios";
 import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchBar from "@/components/place/placesearch/SearchBar/SearchBar";
@@ -10,12 +8,13 @@ import FilterButtons from "@/components/place/placesearch/FilterButtons/FilterBu
 import CardList from "@/components/place/placesearch/CardList/CardList";
 import BottomSheet from "@/components/place/placesearch/BottomSheet/BottomSheet";
 import { sidoOptions, gunguOptions } from "@/data/data";
-import { Map, ArrowUp } from "@styled-icons/bootstrap";
+import { Map } from "@styled-icons/bootstrap";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { fetchPlaces } from "@/apis/place/places";
 import { addFavorite, removeFavorite } from "@/apis/place/favorite";
+import theme from "@/styles/theme";
 
 const PlaceSearchPage = () => {
   return (
@@ -360,6 +359,7 @@ const ScrollableContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  background-color: ${theme.colors.defaultBackground}
 `;
 
 const CardContainer = styled.div`

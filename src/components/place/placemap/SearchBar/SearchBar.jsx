@@ -23,6 +23,7 @@ const SearchBar = ({ value, onClick }) => (
 export default SearchBar;
 
 const SearchBarWrapper = styled.div`
+  margin-top: 20px;
   margin-bottom: 16px;
   margin-left: 20px;
     &:hover div {

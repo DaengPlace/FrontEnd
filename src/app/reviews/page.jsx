@@ -10,6 +10,7 @@ import PhotoReviewContainer from "@/components/reviews/PhotoReviewContainer/Phot
 import ReviewList from "@/components/reviews/ReviewList/ReviewList";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { fetchPlaceReviews, fetchPlaceDetails } from "@/apis/review/reviewApi";
+import theme from "@/styles/theme";
 
 const ReviewPage = () => {
   return (
@@ -94,35 +95,7 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  background-color: ${theme.colors.defaultBackground};
 `;
 
-const ScrollToTopButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: calc(50% - 280px); 
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.colors.defaultBackground};
-  color: ${({ theme }) => theme.colors.primary};
-  border: 2px solid ${({ theme }) => theme.colors.primary};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 1000;
-  transition: background-color 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: white;
-  }
-
-  span {
-    margin-top: -4px;
-  }
-`;

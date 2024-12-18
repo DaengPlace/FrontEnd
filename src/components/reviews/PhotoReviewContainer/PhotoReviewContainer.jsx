@@ -50,11 +50,12 @@ export default PhotoReviewContainer;
 const Container = styled.div`
   margin: 20px 0;
   height: 170px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   margin-left: 10px;
   padding: 10px 20px;
   border-radius: 20px;
   margin-right: 10px;
+  background-color: white
 `;
 
 const SectionHeader = styled.div`

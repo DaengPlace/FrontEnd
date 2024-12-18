@@ -223,10 +223,11 @@ export default ReviewList;
 const ReviewListContainer = styled.div`
   margin-bottom: 20px;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   margin-left: 10px;
   padding: 20px 20px;
   margin-right: 10px;
+  background-color: white;
 `;
 const Title = styled.h3`
   margin-bottom: -10px;

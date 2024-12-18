@@ -92,7 +92,7 @@ export default PhotoReviewPage;
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.defaultBackground};
-  padding: 16px;
+  padding: 30px;
   padding-top: 70px;
   height: calc(100vh - 50px);
   overflow-y: auto;
@@ -101,4 +101,5 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  width: 100%;
 `;

@@ -16,12 +16,15 @@ const Card = ({ card, onCardClick, toggleLike }) => {
     if (card.operationHour) {
       const openTime = card.operationHour.todayOpen;
       const closeTime = card.operationHour.todayClose;
-
+      if (!openTime || !closeTime) {
+        return "운영 시간 정보 없음";
+      }
+  
       if (openTime === "00:00:00" && closeTime === "00:00:00") {
         return "24시간 영업";
       }
-
-      return `${openTime || "N/A"} - ${closeTime || "N/A"}`;
+  
+      return `${openTime} - ${closeTime}`;
     }
     return "운영 시간 정보 없음";
   };
@@ -33,30 +36,28 @@ const Card = ({ card, onCardClick, toggleLike }) => {
         onCardClick(card.placeId); // 카드 전체 클릭 시 실행
       }}
     >
-      <AuthGuard>
-        <HeartIconContainer 
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            toggleLike(card.placeId, card.is_favorite)
-          }}
-          isliked={card.is_favorite}
-        >
-          {card.is_favorite ? <Favorite /> : <FavoriteBorder />}
-        </HeartIconContainer>
-      </AuthGuard>
-
-      <Image
-        src={"/assets/image 19.svg"}
-        alt={card.name || "이미지 설명 없음"}
-        width={510}
-        height={300}
-        style={{
-          objectFit: "cover",
-          borderRadius: "10px",
-          margin: "10px 13px",
+      <HeartIconContainer 
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          toggleLike(card.placeId, card.is_favorite)
         }}
-      />
+        isliked={card.is_favorite}
+      >
+        {card.is_favorite ? <Favorite /> : <FavoriteBorder />}
+      </HeartIconContainer>
+      <StyledImageWrapper>
+        <StyledImage
+          src={"/assets/image 19.svg"}
+          alt={card.name || "이미지 설명 없음"}
+          width={510}
+          height={300}
+          style={{
+            objectFit: "cover",
+            borderRadius: "10px",
+          }}
+        />
+      </StyledImageWrapper>
       <CardDetails>
         <Category>
           <CategoryBadge>{card.category}</CategoryBadge>
@@ -87,8 +88,7 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
-  height: 32rem;
-  margin-left: 30px;
+  height: 120%;
   cursor: pointer;
 `;
 
@@ -115,6 +115,16 @@ const HeartIconContainer = styled.div.withConfig({
   &:hover svg {
     transform: scale(1.2);
   }
+`;
+
+const StyledImageWrapper = styled.div`
+  width: 100%;
+  padding: 10px;
+`;
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  height: auto;
 `;
 
 const CardDetails = styled.div`
@@ -179,6 +189,7 @@ const Bottom = styled.div`
   font-size: 15px;
   color: ${({ theme }) => theme.colors.divider};
   margin-left: 17px;
+  margin-bottom: 20px;
 `;
 const ReviewsCount = styled.span`
   font-size: 17px;

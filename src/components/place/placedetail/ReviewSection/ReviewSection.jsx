@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ChevronRight } from "@styled-icons/bootstrap/ChevronRight";
 
 const ReviewSection = ({ placeId, rating, reviewCount, reviews}) => {
     const router = useRouter();
@@ -24,18 +25,14 @@ const ReviewSection = ({ placeId, rating, reviewCount, reviews}) => {
     return (
         <>
         <RatingContainer>
-            <StarIcon
-            src="/assets/star.png"
-            alt="별"
-            width={20}
-            height={20}
-            priority
-            />
+          <RatingAndReviewWrapper>
+            <StarIcon>⭐️</StarIcon>
             <Rating>{rating.toFixed(1)}</Rating>
             <ReviewCount>리뷰 {reviewCount}</ReviewCount>
-            <ViewAllButton onClick={handleViewAllClick}>
-                전체보기 ({reviewCount}) &gt;
-            </ViewAllButton>
+          </RatingAndReviewWrapper>
+          <ViewAllButton onClick={handleViewAllClick}>
+            전체보기 ({reviewCount})<ChevronRight style={{marginBottom: "2px", marginLeft: "5px"}} width={12} height={12} />
+          </ViewAllButton>
         </RatingContainer>
         <ReviewContainer>
             <ReviewSlider>
@@ -77,13 +74,10 @@ export default ReviewSection;
 const RatingContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 요소들을 양 끝으로 배치 */
   margin-bottom: 20px;
   width: 100%;
   position: relative;
-`;
-
-const StarIcon = styled(Image)`
-  margin-right: 8px;
 `;
 
 const Rating = styled.span`
@@ -102,11 +96,30 @@ const ViewAllButton = styled.button`
   background: none;
   border: none;
   font-size: 14px;
-  left: 63%;
-  top: 3px;
   color: #000000;
   cursor: pointer;
   padding: 0;
+  white-space: nowrap; /* 버튼이 한 줄로 유지되도록 */
+
+  @media (max-width: 768px) { /* 태블릿 이하 */
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+
+  @media (max-width: 480px) { /* 모바일 */
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+`;
+
+const StarIcon = styled.div`
+  margin-bottom: 6px;
+  margin-right: 5px;
+`;
+
+const RatingAndReviewWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const ReviewContainer = styled.div`
@@ -155,7 +168,7 @@ const ReviewHeader = styled.div`
 
 const StarContainer = styled.div`
   display: flex;
-   margin-bottom: 5px;
+  margin-bottom: 5px;
 `;
 
 const Star = styled.div`

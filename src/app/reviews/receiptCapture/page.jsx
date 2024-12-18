@@ -108,13 +108,9 @@ const ActualReceiptCapture = () => {
     return new Blob([arrayBuffer], { type: mimeString });
   };
 
-  const handleCloseClick = () => {
-    router.push(`/place/placedetail?placeId=${placeId}`);
-  };
-
   return (
     <>
-      <Header title="영수증 스캔" showX={NoTitleHeader.args.showX} onClose={handleCloseClick} />
+      <Header title="영수증 스캔" />
       <Container>
         {capturedImage ? (
           <PreviewContainer>

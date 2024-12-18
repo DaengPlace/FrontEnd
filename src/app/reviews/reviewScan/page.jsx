@@ -51,7 +51,7 @@ const ActualReviewScanPage = ({ocrVisitDate}) => {
   
   return (
     <>
-      <Header title="리뷰 정보 확인" showX={NoTitleHeader.args.showX} onClose={handleCloseClick}/>
+      <Header title="리뷰 정보 확인" />
       <Container>
         <Content>
           <Subtitle>

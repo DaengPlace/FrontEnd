@@ -25,11 +25,12 @@ const ReviewList = ({ reviews, onClick }) => {
       {topReviews.map((review, index) => (
         <ReviewCard key={review.reviewId}  onClick={() => onClick(review.reviewId, review.placeId)}>
           <ReviewNumber>{index + 1}</ReviewNumber>
+          
           <ReviewContent>
-          <ContentHeader>
-            <CategoryBadge>{review.category}</CategoryBadge>
-            <ReviewTitle>{review.placeName}</ReviewTitle>
-          </ContentHeader>
+            <ContentHeader>
+              <CategoryBadge>{review.category}</CategoryBadge>
+              <ReviewTitle>{review.placeName}</ReviewTitle>
+            </ContentHeader>
             <ReviewInfo>
               {review.memberName} | {formatDate(review.createdAt)} 작성
               <Rating>
@@ -39,8 +40,8 @@ const ReviewList = ({ reviews, onClick }) => {
               </Rating> 
             </ReviewInfo>
             <ReviewText>{review.content}</ReviewText>
-
           </ReviewContent>
+
           <ReviewImageWrapper>
             {review.imageUrls.length > 0 && (
               <StyledImage
@@ -67,22 +68,32 @@ const Container = styled.div`
 const ReviewCard = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   padding: 5px 15px;
   position: relative;
   border-bottom: 1px solid #ABABAB;
   cursor: pointer;
+
   &:last-child {
-    border-bottom: none; 
+    border-bottom: none;
   }
-    &:not(:first-child) {
-    margin-top: 10px; /* 두 번째 이후부터 위 간격 조절 */
+  &:not(:first-child) {
+    margin-top: 10px;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 10px;
   }
 `;
+
 const ContentHeader = styled.div`
   margin-bottom: 5px;
 `;
+
 const ReviewNumber = styled.div`
   position: absolute;
   top: 35px;
@@ -90,9 +101,12 @@ const ReviewNumber = styled.div`
   color: #0019f4;
   font-size: 20px;
   font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+  @media (max-width: 600px) {
+    position: static;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
 `;
 
 const ReviewContent = styled.div`
@@ -103,6 +117,10 @@ const ReviewContent = styled.div`
   flex: 1;
   min-width: 0;
   margin-bottom: 10px;
+
+  @media (max-width: 600px) {
+    margin-left: 0;
+  }
 `;
 
 const CategoryBadge = styled.span`
@@ -143,14 +161,29 @@ const ReviewText = styled.p`
 const ReviewImageWrapper = styled.div`
   border-radius: 10px;
   overflow: hidden;
-  flex-shrink: 0; 
-  width: 80px; 
-  height: 80px; 
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const StyledImage = styled(Image)`
   object-fit: cover;
+  width: 100%;
+  height: 100%;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    height: auto;
+  }
 `;
+
 const Rating = styled.span`
   margin-left: 10px;
   display: flex;

@@ -8,7 +8,7 @@ import { CloseOutline } from "@styled-icons/evaicons-outline/CloseOutline";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "@/../../public/assets/mainpage/Logo.svg";
-import AuthGuard from "../AuthGuard/AuthGuard";
+
 
 const Header = ({
   title,
@@ -46,12 +46,10 @@ const Header = ({
           </IconWrapper>
         )}
         {showFavoriteIcon && (
-          <AuthGuard>
-            <IconWrapper onClick={() => router.push("/mypage/bookmark")}>
-              <StyledHeart size="28" />
-            </IconWrapper>
-          </AuthGuard>
-        )}
+          <IconWrapper onClick={() => router.push("/mypage/bookmark")}>
+            <StyledHeart size="28" />
+          </IconWrapper>
+      )}
         {showHomeIcon && (
           <IconWrapper onClick={() => router.push("/main")}>
             <StyledHome size="28" />

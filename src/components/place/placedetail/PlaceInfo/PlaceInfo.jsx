@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
-import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 
 const PlaceInfo = ({
   isLiked,
@@ -102,12 +101,10 @@ const PlaceInfo = ({
       <CategoryBadge>{category}</CategoryBadge>
       <PlaceName>{placeName}</PlaceName>
 
-      <AuthGuard>
-        <HeartIconContainer isliked={isLiked} onClick={() => toggleLike()}>
-          {isLiked ? <Favorite /> : <FavoriteBorder />}
-        </HeartIconContainer>
+      <HeartIconContainer isliked={isLiked} onClick={() => toggleLike()}>
+        {isLiked ? <Favorite /> : <FavoriteBorder />}
+      </HeartIconContainer>
 
-      </AuthGuard>
       <Address onClick={handleAddressClick}>{address}</Address>
       <CurrentStatus>
         {isOpenNow ? (
@@ -159,8 +156,8 @@ const HeartIconContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => !["hovered", "isliked"].includes(prop),
 })`
   position: absolute;
-  right: 40px;
-  top: 350px;
+  right: 20px;
+  top: 20px;
   width: 32px;
   height: 32px;
   cursor: pointer;

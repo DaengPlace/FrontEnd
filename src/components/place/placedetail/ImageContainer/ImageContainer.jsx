@@ -20,9 +20,7 @@ export default ImageContainer;
 
 const Container = styled.div`
   width: 100%;
-  height: 300px;
   overflow: hidden;
-  margin-bottom: 20px;
 `;
 
 const StyledImage = styled(Image)`

@@ -2,18 +2,12 @@
 
 import Header from "@/components/common/Header/Header";
 import { WithBookmarkIcon } from "@/components/common/Header/Header.stories";
-<<<<<<< Updated upstream
-
-
-=======
 import styled,{ keyframes } from "styled-components";
->>>>>>> Stashed changes
 import theme from "@/styles/theme.js";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 import { getPetRecommend, getUserRecommend } from "@/apis/places/getRecommend";
 import { getGenderAgeFacilities, getPopularFacilities } from "@/apis/place/getPopularFacilities";
 import { getPets } from "@/apis/dog/getPets";

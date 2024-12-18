@@ -290,8 +290,9 @@ const ActualPlaceSearchPage = () => {
       <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
       {loading ? ( 
         <LoadingContainer>
-          <Spinner />
-          <LoadingText>Loading...</LoadingText>
+          <LoadingImage>
+            <img src="/assets/Loading.svg" alt = "Loading..."/>
+          </LoadingImage>
         </LoadingContainer>
       ) : (
         <>
@@ -475,26 +476,13 @@ const LoadingContainer = styled.div`
   align-items: center;
   height: 100vh;
 `;
-
-const LoadingText = styled.p`
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #0019f4;
-`;
-
-const spin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
-
-const Spinner = styled.div`
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #0019f4;
-  border-radius: 50%;
-  animation: ${spin} 1s linear infinite;
+const LoadingImage = styled.div`
+  width: 100px;
+  height: 100px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 export default PlaceSearchPage;

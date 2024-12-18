@@ -9,8 +9,8 @@ const SearchBar = ({ value, onClick }) => (
       <Image
         src="/assets/image 14.png"
         alt="돋보기"
-        width={30}
-        height={30}
+        width={25}
+        height={25}
         style={{ marginRight: "10px" }}
       />
       <SearchInput
@@ -38,8 +38,8 @@ const SearchWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.deactivate};
   border-radius: 30px;
   padding: 10px 16px;
-  width: 560px;
-  height: 80px;
+  width: 95%;
+  height: 50px;
 `;
 
 const SearchInput = styled.input`

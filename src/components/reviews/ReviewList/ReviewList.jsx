@@ -111,6 +111,7 @@ const ReviewList = ({ reviews, setReviews }) => {
                 alt="사용자 프로필"
                 width={40}
                 height={40}
+                style={{borderRadius: "50%"}}
               />
             </AvatarWrapper>
             <Author>{review.memberNickname}</Author>
@@ -220,7 +221,6 @@ const ReviewCard = styled.div`
   margin-bottom: 10px;
   padding-bottom: 5px;
   margin-top: 15px;
-  margin-left: 10px;
   cursor: pointer;
 `;
 const CardHeader = styled.div`

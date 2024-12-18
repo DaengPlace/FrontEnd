@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ChevronRight } from "@styled-icons/bootstrap/ChevronRight";
 
 const PhotoReviewContainer = ({ reviews, placeId }) => {
   const router = useRouter();
@@ -19,8 +20,8 @@ const PhotoReviewContainer = ({ reviews, placeId }) => {
   return (
     <Container>
       <SectionHeader>
-        <h3>포토/비디오 리뷰 모아보기</h3>
-        <ViewMore onClick={handleClick}>더보기 &gt;</ViewMore>
+        <h3 style={{marginTop: "5px"}}>포토/비디오 리뷰 모아보기</h3>
+        <ViewMore onClick={handleClick}>더보기 <ChevronRight style={{marginBottom: "2px"}} width={12} height={12} /></ViewMore>
       </SectionHeader>
       <PhotoList>
         {processedReviews.slice(0, 5).map((review) => (
@@ -67,7 +68,6 @@ const ViewMore = styled.button`
   border: none;
   color: #000000;
   cursor: pointer;
-  margin-right: 20px;
 `;
 
 const PhotoList = styled.div`

@@ -160,7 +160,6 @@ const ActualPlaceSearchPage = () => {
       setAllCards(mappedPlaces); 
       setCards(mappedPlaces);
       setSearchedLocation({ lat, lng });
-      console.log(places);
     } catch (error) {
       console.error("Error fetching places:", error);
     }

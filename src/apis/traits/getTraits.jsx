@@ -1,6 +1,6 @@
 import { axiosInstance as axios } from "@/apis/axiosInstance";
 
-export const getTraitsByPetId = async (petId) => {
+export const getTraits = async () => {
   const response = await axios.get('/traits/');
   return response.data;
 };

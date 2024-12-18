@@ -43,6 +43,8 @@ const RecommendPage = () => {
         // 반려견 기준 추천 시설
         const petsRes = await getPets();
         const pets = petsRes.data;
+      
+        console.log(pets)
 
         const fetchPetRecommendations = pets.map(async (pet) => {
           const recommendRes = await getPetRecommend(pet.petId);

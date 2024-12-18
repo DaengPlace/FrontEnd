@@ -6,7 +6,6 @@ const Header = ({ titleLines, onBack, onClose }) => {
   return (
     <HeaderContainer>
       <ButtonContainer>
-        <BackButton onClick={onBack}><ChevronLeft size={24} /></BackButton>
         <CloseButton onClick={onClose}><CloseOutline size={28} /></CloseButton>
       </ButtonContainer>
       <Title>
@@ -28,20 +27,13 @@ const HeaderContainer = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   width: 100%;
+  justify-content: flex-end;
   align-items: center;
 `;
 
-const BackButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: ${({ theme }) => theme.colors.black};
-`;
-
 const CloseButton = styled.button`
+  align-items: end;
   background: none;
   border: none;
   font-size: 1.5rem;

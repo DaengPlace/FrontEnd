@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
+import { ChevronLeft } from "@styled-icons/bootstrap/ChevronLeft";
+import { ChevronRight } from "@styled-icons/bootstrap/ChevronRight";
 
 const FilterButtons = ({
   filters,
@@ -20,7 +22,7 @@ const FilterButtons = ({
 
   return (
     <SliderContainer>
-      <ArrowButton onClick={scrollLeft}>&lt;</ArrowButton>
+      <ChevronLeft style={{marginBottom: "7px", color: "gray"}} width={25} height={25} onClick={scrollLeft}>&lt;</ChevronLeft>
       <FilterButtonsContainer ref={containerRef}>
         {filters.map((filter) => (
           <FilterButton
@@ -35,7 +37,7 @@ const FilterButtons = ({
           </FilterButton>
         ))}
       </FilterButtonsContainer>
-      <ArrowButton onClick={scrollRight}>&gt;</ArrowButton>
+      <ChevronRight style={{marginBottom: "7px", color: "gray"}} width={25} height={25} onClick={scrollRight}>&gt;</ChevronRight>
     </SliderContainer>
   );
 };
@@ -44,19 +46,7 @@ const SliderContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  padding: 0px 10px;
-`;
-
-const ArrowButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 0 10px;
-  &:hover {
-    color: #0019f4;
-  }
+  padding: 0px 20px;
 `;
 
 const FilterButtonsContainer = styled.div`

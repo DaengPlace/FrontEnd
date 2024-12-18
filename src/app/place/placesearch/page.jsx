@@ -433,10 +433,15 @@ const NoDataMessage = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; // 원하는 높이로 조절
+  height: 200px;
   font-size: 18px;
   color: ${({ theme }) => theme.colors.divider || "#888"};
   text-align: center;
   font-weight: bold;
+
+  @media (max-width: 600px) {
+    font-size: 16px;
+    height: 150px;
+  }
 `;
 export default PlaceSearchPage;

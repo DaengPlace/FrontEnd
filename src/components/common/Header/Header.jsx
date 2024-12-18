@@ -6,7 +6,6 @@ import { HeartOutlined } from "@styled-icons/entypo/HeartOutlined";
 import { Home } from "@styled-icons/feather/Home";
 import { CloseOutline } from "@styled-icons/evaicons-outline/CloseOutline";
 import { useRouter } from "next/navigation";
-import theme from "@/styles/theme.js";
 import Image from "next/image";
 import Logo from "@/../../public/assets/mainpage/Logo.svg";
 import AuthGuard from "../AuthGuard/AuthGuard";
@@ -29,7 +28,6 @@ const Header = ({
         {showLogo ? (
           <LogoWrapper onClick={() => router.push("/main")}>
             <LogoImage src={Logo} width={150} height={30} alt="logo" />
-            {/* <LogoTitle>댕댕플레이스</LogoTitle> */}
           </LogoWrapper>
         ) : (
           <>
@@ -80,10 +78,10 @@ const Container = styled.div`
   padding: 10px 20px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 0;
-
+  left: 50%;
+  transform: translateX(-50%);
   background-color: white;
   z-index: 500;
 `;

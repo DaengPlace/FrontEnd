@@ -66,7 +66,7 @@ const MyPage = () => {
 
       <MyPetsHeader>
         <SectionHeader header={`우리집 댕댕이들 ${pets.length}`} />
-        <AddPet onClick={() => router.push("/dog/info")}>
+        <AddPet onClick={() => router.push("/mypage/registerpet")}>
           추가하기
           <StyledChevronRight />{" "}
         </AddPet>
@@ -89,7 +89,7 @@ export default MyPage;
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
-  height: 100vh;
+  height: 105vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

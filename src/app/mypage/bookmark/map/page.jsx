@@ -9,7 +9,8 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import Map from "@/components/place/placemap/Map/Map";
 import FloatingButton from "@/components/place/placemap/FloatingButton/FloatingButton";
 import { CircularProgress } from "@mui/material";
-import { cards } from "@/data/cardsData"; // cards 데이터 가져오기
+import { getBookmarks } from "@/apis/favorite/getBookmarks";
+import { getPlacesByPlaceId } from "@/apis/places/getPlacesByPlaceId";
 
 const BookmarkMapPage = () => {
   const router = useRouter();
@@ -20,36 +21,32 @@ const BookmarkMapPage = () => {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
-  // Geocoding API를 통해 주소를 좌표로 변환
-  const fetchCoordinates = async (address) => {
+  // 장소 좌표 가져오기
+  const fetchCoordinatesFromAPI = async () => {
     try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          address
-        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-      );
-      const data = await response.json();
-      if (data.status === "OK" && data.results.length > 0) {
-        return data.results[0].geometry.location;
-      } else {
-        console.error(`Failed to fetch coordinates for address: ${address}`);
-        return null;
-      }
-    } catch (error) {
-      console.error(`Error fetching coordinates for address: ${address}`, error);
-      return null;
-    }
-  };
+      // 1. 즐겨찾기 목록 조회
+      const bookmarkResponse = await getBookmarks();
+      const bookmarks = bookmarkResponse.data.places || [];
 
-  useEffect(() => {
-    const loadMarkers = async () => {
-      const markerPromises = cards.map(async (card) => {
-        const location = await fetchCoordinates(card.address);
-        if (location) {
+      // 2. 각 placeId에 대한 상세 정보 요청
+      const markerPromises = bookmarks.map(async (bookmark) => {
+        const placeDetails = await getPlacesByPlaceId(bookmark.placeId);
+        const location = placeDetails.data.location;
+
+        // Geocoding API를 통해 주소를 좌표로 변환
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            location
+          )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+        );
+        const geocodeData = await response.json();
+
+        if (geocodeData.status === "OK" && geocodeData.results.length > 0) {
           return {
-            id: card.id,
-            position: location,
-            title: card.title,
+            id: placeDetails.data.placeId,
+            position: geocodeData.results[0].geometry.location,
+            name: placeDetails.data.name,
+            category: placeDetails.data.category,
           };
         }
         return null;
@@ -57,10 +54,14 @@ const BookmarkMapPage = () => {
 
       const resolvedMarkers = await Promise.all(markerPromises);
       setMarkers(resolvedMarkers.filter((marker) => marker !== null));
-    };
+    } catch (error) {
+      console.error("Error fetching bookmark locations:", error);
+    }
+  };
 
+  useEffect(() => {
     if (isLoaded) {
-      loadMarkers();
+      fetchCoordinatesFromAPI();
     }
   }, [isLoaded]);
 

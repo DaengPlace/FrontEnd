@@ -279,8 +279,10 @@ const MyProfilePage = () => {
             }}
             render={({ field, fieldState }) => (
               <Input
+                style={{"color": "gray"}}
                 placeholder="이메일 입력"
                 {...field}
+                readOnly
                 value={field.value || ""}
                 isValid={!fieldState.invalid}
                 onChange={async (e) => {
@@ -360,7 +362,7 @@ export default MyProfilePage;
 const Container = styled.div`
   margin: 0 auto;
   padding: 2rem;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;

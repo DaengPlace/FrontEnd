@@ -58,6 +58,7 @@ const ActualRecommendDogTest = () => {
       traitAnswerId: answerId,
     }));
     setPetTraits(petTraits); // Zustand에 저장
+    console.log(petTraits)
     router.push(`/recommend/usertest?petId=${petId}`);
   };
 
@@ -74,12 +75,9 @@ const ActualRecommendDogTest = () => {
           <FeatureGroup
             key={question.questionId}
             label={question.content}
-            options={question.answers.map((ans) => ans.content)}
+            options={question.answers}
             selectedValue={selectedTags[question.questionId]}
-            onSelect={(value) => {
-              const answerId = question.answers.find((ans) => ans.content === value)?.answerId;
-              handleCheckboxClick(question.questionId, answerId);
-            }}
+            onSelect={(answerId) => handleCheckboxClick(question.questionId, answerId)}
           />
         ))}
       </Content>

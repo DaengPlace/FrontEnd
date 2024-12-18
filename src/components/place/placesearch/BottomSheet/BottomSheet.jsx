@@ -119,8 +119,8 @@ const BottomSheet = ({
                 <Image
                   src="/assets/image 14.png"
                   alt="돋보기"
-                  width={30}
-                  height={30}
+                  width={25}
+                  height={25}
                 />
               </SearchIcon>
               <FilterInput

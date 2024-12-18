@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import styled from "styled-components";
+import Image from "next/image";
+import axios from "axios";
+import styled, { keyframes } from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchBar from "@/components/place/placesearch/SearchBar/SearchBar";
 import Tabs from "@/components/place/placesearch/Tabs/Tabs";
@@ -47,6 +49,7 @@ const ActualPlaceSearchPage = () => {
   const [page, setpage] = useState(1);
   const size = 20;
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
   
   const handleOpenBottomSheet = () => setIsBottomSheetOpen(true);
   const handleCloseBottomSheet = () => setIsBottomSheetOpen(false);
@@ -150,6 +153,7 @@ const ActualPlaceSearchPage = () => {
 
   const loadPlaces = async (lat, lng, page, size) => {
     try {
+      setLoading(true);
       const places = await fetchPlaces(lat, lng, page, size);
       const mappedPlaces = places.map((place) => ({
         ...place,
@@ -161,6 +165,8 @@ const ActualPlaceSearchPage = () => {
       setSearchedLocation({ lat, lng });
     } catch (error) {
       console.error("Error fetching places:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -282,6 +288,13 @@ const ActualPlaceSearchPage = () => {
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
       <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
+      {loading ? ( 
+        <LoadingContainer>
+          <Spinner />
+          <LoadingText>Loading...</LoadingText>
+        </LoadingContainer>
+      ) : (
+        <>
         <SearchBar onClick={handleOpenBottomSheet} />
         <Tabs
           categories={["전체", "서비스", "음식점", "의료시설", "문화시설"]}
@@ -344,6 +357,8 @@ const ActualPlaceSearchPage = () => {
           onGunguChange={handleGunguChange}
           showGunguDropdown={showGunguDropdown}
         />
+        </>
+        )}
       </ScrollableContainer>
     </>
   );
@@ -453,4 +468,33 @@ const NoDataMessage = styled.div`
     height: 150px;
   }
 `;
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const LoadingText = styled.p`
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0019f4;
+`;
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #0019f4;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+`;
+
 export default PlaceSearchPage;

@@ -33,8 +33,12 @@ const ActualPhotoReviewPage = () => {
         if (!placeId) return;
 
         const response = await axiosInstance.get(`/reviews/places/${placeId}`);
-        const allImageUrls = response.data.data.flatMap((review) => review.imageUrls || []);
-        setReviews(allImageUrls);
+        const reviewsData = response.data.data.map((review) => ({
+          reviewId: review.reviewId, 
+          imageUrls: review.imageUrls || [], 
+        }));
+  
+        setReviews(reviewsData);
         const placeResponse = await axiosInstance.get(`/places/${placeId}`);
         setCategory(placeResponse.data.data.category);
         setName(placeResponse.data.data.name);
@@ -46,8 +50,8 @@ const ActualPhotoReviewPage = () => {
     fetchReviews();
   }, [placeId]);
 
-  const handleImageClick = (index) => {
-    router.push(`/reviews/ReviewDetail?id=${index + 1}`);
+  const handleImageClick = (reviewId, placeId) => {
+    router.push(`/reviews/ReviewDetail?reviewId=${reviewId}&placeId=${placeId}`);
   };
 
   const scrollToTop = () => {
@@ -81,7 +85,7 @@ const ActualPhotoReviewPage = () => {
       <HeaderSection />
       <Container ref={containerRef}>
         <SubHeader category={category} name={name} photoCount={reviews.length} />
-        <PhotoGrid reviews={reviews} onImageClick={handleImageClick} />
+        <PhotoGrid reviews={reviews} placeId={placeId} onImageClick={handleImageClick} />
       </Container>
       <ScrollToTop show={showScrollToTop} onClick={scrollToTop} />
     </>

@@ -4,21 +4,26 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 
-const PhotoGrid = ({ reviews, onImageClick }) => {
+const PhotoGrid = ({ reviews, onImageClick, placeId }) => {
   return (
     <Grid>
-      {reviews.map((image, index) => (
-        <PhotoWrapper key={index} onClick={() => onImageClick(index)}>
-          <Image
-            src={image}
-            alt={`리뷰 이미지 ${index + 1}`}
-            width={300}
-            height={300}
-            style={{ borderRadius: "10px", objectFit: "cover" }}
-            priority
-          />
+      {reviews.map((review) =>
+        review.imageUrls.map((image, index) => (
+          <PhotoWrapper
+            key={`${review.reviewId}-${index}`}
+            onClick={() => onImageClick(review.reviewId, placeId)} 
+          >
+            <Image
+              src={image}
+              alt={`리뷰 이미지 ${review.reviewId}-${index}`}
+              width={300}
+              height={300}
+              style={{ borderRadius: "10px", objectFit: "cover" }}
+              priority
+            />
         </PhotoWrapper>
-      ))}
+      ))
+    )}
     </Grid>
   );
 };

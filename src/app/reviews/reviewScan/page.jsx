@@ -104,6 +104,7 @@ const ActualReviewScanPage = ({ocrVisitDate}) => {
 export default ReviewScanPage;
 
 const Container = styled.div`
+  widtj: 100%;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -112,6 +113,7 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -137,7 +139,7 @@ const InfoBox = styled.div`
   background: #ffffff;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   border-radius: 8px;
-  width: 540px;
+  width: 100%;
   height: 151px;
 `;
 

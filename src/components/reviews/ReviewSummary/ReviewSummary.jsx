@@ -62,8 +62,9 @@ const ReviewSummary = ({ averageRating, reviewCount }) => {
                 console.log("Extracted visit date:", visitDate);
                 setVisitDate(visitDate);
               } else {
-                setErrorMessage("영수증에 해당 장소명이 포함되어 있지 않습니다. 다시 촬영해주세요.");
+                setErrorMessage("영수증에 해당 장소명이 포함되어 있지 않습니다. <br />다시 촬영해주세요.");
                 setIsErrorModalOpen(true);
+                setIsReviewBottomSheetOpen(false);
               }
             } else {
               console.error("Failed to analyze text:", analyzeResponse.statusText);

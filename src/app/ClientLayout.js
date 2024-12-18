@@ -34,6 +34,8 @@ export default function ClientLayout({ children }) {
     "/recommend/usertest",
     "/reviews/reviewScan",
     "/reviews/reviewsInput",
+    "/reviews/PhotoReview",
+    "/reviews/ReviewDetail",
     "/reviews/receiptCapture",
     "/reviews",
   ];

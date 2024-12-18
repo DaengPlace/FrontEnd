@@ -147,7 +147,7 @@ const DogEditPage = () => {
           </BoxContainer>
         </InputBox>
         <InputBox>
-          <p>몸무게</p>
+          <p>몸무게 (kg)</p>
           <BoxContainer>
             <Input
               ref={(el) => (inputRefs.current[5] = el)}

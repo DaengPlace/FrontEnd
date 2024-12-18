@@ -115,9 +115,8 @@ const ReviewCard = ({ review, setReview, isOpen, toggleDropdown }) => {
               <Image
                 src={url}
                 alt={`리뷰 이미지 ${review.reviewId} - ${index}`}
-                width={540}
-                height={540}
-                objectFit="cover"
+                layout="fill"
+                objectFit="contain"
                 style={{ borderRadius: "10px" }}
                 priority
               />

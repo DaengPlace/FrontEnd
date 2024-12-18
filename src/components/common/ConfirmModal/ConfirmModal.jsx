@@ -77,12 +77,13 @@ const ModalActions = styled.div`
 
 const Button = styled.button`
   padding: 10px 20px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+  width: 100%;
 
   background-color: ${({ theme }) => theme.colors.primary || "#007BFF"};
   color: ${({ theme }) => theme.colors.white || "#ffffff"};

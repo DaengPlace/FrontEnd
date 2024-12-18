@@ -19,8 +19,8 @@ const Button = styled.button`
   font-size: 15px;
   font-weight: bold;
   width: 27%;
-  height: 4%;
-  top: -1.25rem;
+  height: 40px;
+  top: -2rem;
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};

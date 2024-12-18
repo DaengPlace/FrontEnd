@@ -12,10 +12,8 @@ import WriteReviewButton from "@/components/place/placedetail/WriteReviewButton/
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
-import { cards } from "@/data/cardsData";
 import axios from "axios";
 import useReviewStore from "@/stores/reviewStore";
-import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 import { getPlaceDetails } from "@/apis/place/places";
 import { addFavorite, removeFavorite } from "@/apis/place/favorite";
 
@@ -204,8 +202,8 @@ const ActualPlaceDetailPage = () => {
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
       <ScrollContainer>
+        <ImageContainer />
         <PageContainer>
-          <ImageContainer />
           <PlaceInfo
             isLiked={selectedCard.is_favorite}
             toggleLike={toggleLike}
@@ -227,8 +225,8 @@ const ActualPlaceDetailPage = () => {
             rating={selectedCard.rating}
             reviewCount={selectedCard.review_count}
             reviews={selectedCard.reviews}
-           />
-          <AuthGuard><WriteReviewButton onClick={handleWriteReviewButtonClick} /></AuthGuard>
+          />
+          <WriteReviewButton onClick={handleWriteReviewButtonClick} />
         </PageContainer>
         {isMapBottomSheetOpen && (
           <MapBottomSheet
@@ -315,6 +313,7 @@ const PageContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.defaultBackground};
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 const NotFound = styled.div`

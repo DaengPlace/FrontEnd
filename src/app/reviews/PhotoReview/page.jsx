@@ -39,6 +39,7 @@ const ActualPhotoReviewPage = () => {
         }));
   
         setReviews(reviewsData);
+        console.log(reviewsData)
         const placeResponse = await axiosInstance.get(`/places/${placeId}`);
         setCategory(placeResponse.data.data.category);
         setName(placeResponse.data.data.name);
@@ -98,7 +99,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.defaultBackground};
   padding: 16px;
   padding-top: 70px;
-  height: calc(100vh - 50px);
+  height: 100vh;
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;

@@ -92,6 +92,8 @@ const ReviewCard = styled.div`
 
 const ContentHeader = styled.div`
   margin-bottom: 5px;
+  display: flex;
+  align-items: center;
 `;
 
 const ReviewNumber = styled.div`

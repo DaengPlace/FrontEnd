@@ -26,19 +26,13 @@ const ReviewSection = ({ placeId, rating, reviewCount, reviews}) => {
         <>
         <RatingContainer>
           <RatingAndReviewWrapper>
-            <StarIcon
-            src="/assets/star.png"
-            alt="별"
-            width={20}
-            height={20}
-            priority
-            />
-              <Rating>{rating.toFixed(1)}</Rating>
-              <ReviewCount>리뷰 {reviewCount}</ReviewCount>
-            </RatingAndReviewWrapper>
-            <ViewAllButton onClick={handleViewAllClick}>
-                전체보기 ({reviewCount})<ChevronRight style={{marginBottom: "2px", marginLeft: "5px"}} width={12} height={12} />
-            </ViewAllButton>
+            <StarIcon>⭐️</StarIcon>
+            <Rating>{rating.toFixed(1)}</Rating>
+            <ReviewCount>리뷰 {reviewCount}</ReviewCount>
+          </RatingAndReviewWrapper>
+          <ViewAllButton onClick={handleViewAllClick}>
+            전체보기 ({reviewCount})<ChevronRight style={{marginBottom: "2px", marginLeft: "5px"}} width={12} height={12} />
+          </ViewAllButton>
         </RatingContainer>
         <ReviewContainer>
             <ReviewSlider>
@@ -86,10 +80,6 @@ const RatingContainer = styled.div`
   position: relative;
 `;
 
-const StarIcon = styled(Image)`
-  margin-right: 8px;
-`;
-
 const Rating = styled.span`
   font-size: 16px;
   font-weight: bold;
@@ -120,6 +110,11 @@ const ViewAllButton = styled.button`
     font-size: 10px;
     padding: 2px 4px;
   }
+`;
+
+const StarIcon = styled.div`
+  margin-bottom: 6px;
+  margin-right: 5px;
 `;
 
 const RatingAndReviewWrapper = styled.div`

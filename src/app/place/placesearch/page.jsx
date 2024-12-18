@@ -283,68 +283,70 @@ const ActualPlaceSearchPage = () => {
         showHomeIcon={WithMapIcon.args.showHomeIcon}
         showMapIcon={WithMapIcon.args.showMapIcon}
       />
-    <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
-      <SearchBar onClick={handleOpenBottomSheet} />
-      <Tabs
-        categories={["전체", "서비스", "음식점", "의료시설", "문화시설"]}
-        selectedCategory={selectedCategory}
-        hoveredCategory={hoveredCategory}
-        onCategoryClick={handleCategoryClick}
-        onHover={handleHover}
-      />
-      <hr></hr>
-      <FilterButtons
-        filters={[
-          "주차 가능",
-          "실내공간",
-          "야외공간",
-          "무게 제한 없음",
-          "애견 동반 요금 없음",
-          "영업중"
-        ]}
-        selectedFilters={selectedFilters}
-        hoveredFilter={hoveredFilter}
-        onFilterClick={handleFilterClick}
-        onHover={handleHover2}
-      />
-      {cards.length === 0 ? (
-        <NoDataMessage>주변에 해당 시설이 없습니다.</NoDataMessage>
-      ) : (
-        <CardList
-          cards={cards}
-          onCardClick={handleCardClick}
-          toggleLike={toggleLike}
-          keyExtractor={(card) => card.id || card.placeId}
+      <ScrollableContainer id="scrollable-container" ref={scrollableRef}>
+        <SearchBar onClick={handleOpenBottomSheet} />
+        <Tabs
+          categories={["전체", "서비스", "음식점", "의료시설", "문화시설"]}
+          selectedCategory={selectedCategory}
+          hoveredCategory={hoveredCategory}
+          onCategoryClick={handleCategoryClick}
+          onHover={handleHover}
         />
-      )}
-      {/* 리스트 마지막 감지용 */}
-      <div ref={bottomRef} style={{ height: "1px" }}></div>
-      <MapButton bottom={buttonBottom} onClick={handleMapView}>
-        <MapIcon />
-        지도 보기
-      </MapButton>
-      {showScrollToTop && (
-        <ScrollToTopButton bottom={buttonBottom} onClick={scrollToTop}>
-          <KeyboardArrowUpIcon sx={{ fontSize: 36, marginBottom:"-10px"}} />
-          <span>맨위로</span>
-        </ScrollToTopButton>
-      )}
-      <BottomSheet
-        isOpen={isBottomSheetOpen}
-        onClose={handleCloseBottomSheet}
-        onSearch={() => alert("검색 실행")}
-        onReset={() => alert("초기화 실행")}
-        sidoOptions={sidoOptions}
-        gunguOptions={gunguOptions}
-        selectedSido={selectedSido}
-        selectedGungu={selectedGungu}
-        setSelectedSido={setSelectedSido}
-        setSelectedGungu={setSelectedGungu}
-        onSidoChange={handleSidoChange}
-        onGunguChange={handleGunguChange}
-        showGunguDropdown={showGunguDropdown}
-      />
-    </ScrollableContainer>
+        <hr></hr>
+        <FilterButtons
+          filters={[
+            "주차 가능",
+            "실내공간",
+            "야외공간",
+            "무게 제한 없음",
+            "애견 동반 요금 없음",
+            "영업중"
+          ]}
+          selectedFilters={selectedFilters}
+          hoveredFilter={hoveredFilter}
+          onFilterClick={handleFilterClick}
+          onHover={handleHover2}
+        />
+        <CardContainer>
+          {cards.length === 0 ? (
+            <NoDataMessage>주변에 해당 시설이 없습니다.</NoDataMessage>
+          ) : (
+            <CardList
+              cards={cards}
+              onCardClick={handleCardClick}
+              toggleLike={toggleLike}
+              keyExtractor={(card) => card.id || card.placeId}
+            />
+          )}
+        </CardContainer>
+        {/* 리스트 마지막 감지용 */}
+        <div ref={bottomRef} style={{ height: "1px" }}></div>
+        <MapButton bottom={buttonBottom} onClick={handleMapView}>
+          <MapIcon />
+          지도 보기
+        </MapButton>
+        {showScrollToTop && (
+          <ScrollToTopButton bottom={buttonBottom} onClick={scrollToTop}>
+            <KeyboardArrowUpIcon sx={{ fontSize: 36, marginBottom:"-10px"}} />
+            <span>맨위로</span>
+          </ScrollToTopButton>
+        )}
+        <BottomSheet
+          isOpen={isBottomSheetOpen}
+          onClose={handleCloseBottomSheet}
+          onSearch={() => alert("검색 실행")}
+          onReset={() => alert("초기화 실행")}
+          sidoOptions={sidoOptions}
+          gunguOptions={gunguOptions}
+          selectedSido={selectedSido}
+          selectedGungu={selectedGungu}
+          setSelectedSido={setSelectedSido}
+          setSelectedGungu={setSelectedGungu}
+          onSidoChange={handleSidoChange}
+          onGunguChange={handleGunguChange}
+          showGunguDropdown={showGunguDropdown}
+        />
+      </ScrollableContainer>
     </>
   );
 };
@@ -360,6 +362,14 @@ const ScrollableContainer = styled.div`
     display: none;
   }
 `;
+
+const CardContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const MapButton = styled.button`
   position: fixed;
   bottom: ${({ bottom }) => `${bottom}px`};
@@ -419,7 +429,7 @@ const ScrollToTopButton = styled.button`
   }
 
   @media (max-width: 600px) {
-    bottom: 20px;
+    bottom: 30px;
     right: 10px;
     width: 50px;
     height: 50px;

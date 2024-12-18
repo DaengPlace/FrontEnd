@@ -71,12 +71,13 @@ export default SelectBox;
 
 const SelectWrapper = styled.div`
   width: 100%;
-  max-width: 300px;
+  // max-width: 300px;
   position: relative;
   cursor: pointer;
 `;
 
 const SelectedItem = styled.div`
+  width: 100%;
   padding: 12px;
   font-size: 16px;
   font-weight: 500;

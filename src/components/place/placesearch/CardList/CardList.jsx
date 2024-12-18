@@ -18,7 +18,9 @@ const CardList = memo(({ cards, onCardClick, toggleLike }) => (
 const CardListContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
+  width: 100%;
 `;
 
 export default CardList;

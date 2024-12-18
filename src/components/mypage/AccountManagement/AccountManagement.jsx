@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { postLogout } from '@/apis/user/postLogout';
 import { deleteUser } from '@/apis/user/deleteUser';
+import axios from 'axios';
 const Modal = dynamic(() => import("@/components/common/Modal/Modal"), {ssr: false});
 
 const AccountManagement = () => {
@@ -32,20 +33,10 @@ const AccountManagement = () => {
     }
   }
 
-  // const handleLogout = () => {
-  //   logout();
-  //   router.push("/");
-  // }
-
-  const handleLogout = async () => {
-    try {
-      logout();
-      await axios.post('https://api.daengplace.com/logout', {}, {withCredentials: true});
-      router.push("/");
-    } catch (error) {
-      console.error("로그아웃 실패 : ", error);
-    }
-  } 
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  }
 
   return (
     <Container>

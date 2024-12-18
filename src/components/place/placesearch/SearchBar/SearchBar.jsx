@@ -34,7 +34,7 @@ const SearchWrapper = styled.div`
   border-radius: 30px;
   padding: 10px 16px;
   width: 95%;
-  height: 60px;
+  height: 50px;
 `;
 
 const SearchInput = styled.input`

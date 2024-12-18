@@ -1,6 +1,8 @@
 "use client";
 import React, { useRef } from "react";
 import styled from "styled-components";
+import { ChevronLeft } from "@styled-icons/bootstrap/ChevronLeft";
+import { ChevronRight } from "@styled-icons/bootstrap/ChevronRight";
 
 const FilterButtons = ({ filters, selectedFilters, onFilterClick, hoveredFilter, setHoveredFilter }) => {
   const containerRef = useRef(null);
@@ -15,7 +17,7 @@ const FilterButtons = ({ filters, selectedFilters, onFilterClick, hoveredFilter,
 
   return (
     <SliderContainer>
-      <ArrowButton onClick={scrollLeft}>&lt;</ArrowButton>
+      <ChevronLeft style={{marginBottom: "7px", color: "gray"}} width={25} height={25} onClick={scrollLeft}>&lt;</ChevronLeft>
       <FilterButtonsContainer ref={containerRef}>
         {filters.map((filter) => (
           <FilterButton
@@ -30,7 +32,7 @@ const FilterButtons = ({ filters, selectedFilters, onFilterClick, hoveredFilter,
           </FilterButton>
         ))}
       </FilterButtonsContainer>
-      <ArrowButton onClick={scrollRight}>&gt;</ArrowButton>
+      <ChevronRight style={{marginBottom: "7px", color: "gray"}} width={25} height={25} onClick={scrollRight}>&lt;</ChevronRight>
     </SliderContainer>
   );
 };

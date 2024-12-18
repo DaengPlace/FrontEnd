@@ -30,7 +30,6 @@ const RecommendPage = () => {
       try {
         // 사용자 기준 추천 시설
         const userRecommendedRes = await getUserRecommend();
-        console.log(userRecommendedRes.data);
 
         // 최근 인기 시설
         const popularRes = await getPopularFacilities();
@@ -42,14 +41,11 @@ const RecommendPage = () => {
         const petsRes = await getPets();
         const pets = petsRes.data;
       
-        console.log(pets)
-
         const fetchPetRecommendations = pets.map(async (pet) => {
           const recommendRes = await getPetRecommend(pet.petId);
           return { petName: pet.name, facilities: recommendRes.data};
         });
         const petResults = await Promise.all(fetchPetRecommendations);
-        console.log(petResults);
 
         // 데이터 상태 업데이트
         setUserRecommended(userRecommendedRes.data || []);

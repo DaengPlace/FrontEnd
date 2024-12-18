@@ -36,7 +36,6 @@ const MainPage = () => {
       });
       router.push("/main");
     } else {
-      console.log("Access Token이 URL에 없습니다.");
     }
   }, [router]);
 

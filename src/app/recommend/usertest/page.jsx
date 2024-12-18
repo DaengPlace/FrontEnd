@@ -70,8 +70,6 @@ const ActualRecommendUserTest = () => {
     }));
     setMemberTraits(memberTraits);
 
-    console.log(memberTraits)
-
     try {
       // 서버로 반려견 성향과 보호자 성향 보내기
       await postPetTraits(petId, {petTraitResponseRequestList: petTraits})

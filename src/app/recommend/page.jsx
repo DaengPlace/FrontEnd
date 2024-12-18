@@ -225,8 +225,6 @@ const BannerText = styled.div`
   span {
     color: ${theme.colors.primary}
   }
-<<<<<<< Updated upstream
-=======
 `;
 
 const LoadingContainer = styled.div`
@@ -254,5 +252,4 @@ const Spinner = styled.div`
   border-top: 5px solid #0019f4;
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
->>>>>>> Stashed changes
 `;

@@ -2,7 +2,12 @@
 
 import Header from "@/components/common/Header/Header";
 import { WithBookmarkIcon } from "@/components/common/Header/Header.stories";
-import styled from "styled-components";
+<<<<<<< Updated upstream
+
+
+=======
+import styled,{ keyframes } from "styled-components";
+>>>>>>> Stashed changes
 import theme from "@/styles/theme.js";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection";
 import { useEffect, useState } from "react";
@@ -21,6 +26,7 @@ const RecommendPage = () => {
   const [petRecommended, setPetRecommended] = useState([]);
   const [popularFacilities, setPopularFacilities] = useState([]);
   const [genderAgePopular, setGenderAgePopular] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
@@ -28,6 +34,7 @@ const RecommendPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         // 사용자 기준 추천 시설
         const userRecommendedRes = await getUserRecommend();
 
@@ -56,6 +63,8 @@ const RecommendPage = () => {
         setGender(genderAgeRes.data.gender);
       } catch (error) {
         console.error("API 데이터 불러오기 실패: ", error);
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -65,6 +74,13 @@ const RecommendPage = () => {
 
   return (
     <Container>
+      {loading ? ( 
+        <LoadingContainer>
+          <Spinner />
+          <LoadingText>Loading...</LoadingText>
+        </LoadingContainer>
+      ) : (
+        <>
       <Header 
         title="성향별 시설 추천" 
         showHomeIcon={WithBookmarkIcon.args.showHomeIcon} 
@@ -125,7 +141,8 @@ const RecommendPage = () => {
         </Section>
 
       </ScrollableContent>
-    
+    </>
+    )}
     </Container>
   );
 };
@@ -214,4 +231,34 @@ const BannerText = styled.div`
   span {
     color: ${theme.colors.primary}
   }
+<<<<<<< Updated upstream
+=======
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const LoadingText = styled.p`
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0019f4;
+`;
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+const Spinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #0019f4;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+>>>>>>> Stashed changes
 `;

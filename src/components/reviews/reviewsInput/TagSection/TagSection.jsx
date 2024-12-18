@@ -32,11 +32,12 @@ const TagSection = ({ tags, onTagClick }) => (
 export default TagSection;
 
 const Section = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  margin-left: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   border-radius: 20px;
   padding: 10px 20px;
+  background-color: white;
 `;
 
 const SubTitle = styled.h4`

@@ -27,7 +27,6 @@ const ReviewPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const containerRef = useRef(null);
 
 

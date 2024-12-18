@@ -18,17 +18,19 @@ const ReviewTextSection = ({ reviewText, onChange, maxLength }) => (
 export default ReviewTextSection;
 
 const Section = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  margin-left: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   border-radius: 20px;
-  padding: 10px 20px;
+  padding: 15px 25px 20px;
+  background-color: white;
 `;
 
 const SubTitle = styled.h4`
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 5px;
 `;
 
 const ReviewTextarea = styled.textarea`

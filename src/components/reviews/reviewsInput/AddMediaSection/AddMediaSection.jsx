@@ -29,8 +29,8 @@ const AddMediaSection = ({ mediaFiles, onMediaFilesChange, onDeletedMediaUrlsCha
   
     return (
       <Section>
+        <SubTitle>사진/영상을 추가해 주세요</SubTitle>
         <Media>
-          <SubTitle>사진/영상을 추가해 주세요</SubTitle>
           <AddMediaButton onClick={handleButtonClick}>
             <AddIcon style={{ fontSize: "50px", color: "#0019F4" }} />
           </AddMediaButton>
@@ -63,18 +63,22 @@ const AddMediaSection = ({ mediaFiles, onMediaFilesChange, onDeletedMediaUrlsCha
 export default AddMediaSection;
 
 const Section = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  margin-left: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   border-radius: 20px;
-  padding: 10px 20px;
+  padding: 15px 25px 20px;
+  background-color: white;
 `;
 
 const SubTitle = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
+  margin-top: 5px;
   margin-bottom: 10px;
+  align-items: flex-start;
 `;
+
 const Media = styled.div`
   display: flex;
   flex-direction: column;

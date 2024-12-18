@@ -13,7 +13,7 @@ const Divider = () => {
 export default Divider;
 
 const DivideLine = styled.div`
-    width: 90%;
+    width: 100%;
     max-width: 600px;
     height: 1px;
     background-color: ${theme.colors.divider};

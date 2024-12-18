@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import theme from "@/styles/theme";
 
 const RatingSection = ({ rating, onRatingChange }) => {
   const [hoverRating, setHoverRating] = useState(0);
@@ -39,9 +40,9 @@ const RatingSection = ({ rating, onRatingChange }) => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                fill={index + 0.5 <= (hoverRating || rating) ? "yellow" : "none"} 
-                stroke={index + 0.5 <= (hoverRating || rating) ? "yellow" : "black"} 
-                strokeWidth="2"
+                fill={index + 0.5 <= (hoverRating || rating) ? "#FFC636" : "none"} 
+                stroke={index + 0.5 <= (hoverRating || rating) ? "#FFC636" : `${theme.colors.divider}`} 
+                strokeWidth="1"
               >
                 <path d="M12 .587l3.668 7.568L24 9.75l-6 5.922 1.434 8.567L12 19.077l-7.434 5.162L6 15.672 0 9.75l8.332-1.595z" />
               </svg>
@@ -56,11 +57,12 @@ const RatingSection = ({ rating, onRatingChange }) => {
 export default RatingSection;
 
 const Section = styled.div`
+  width: 100%;
   margin-bottom: 20px;
-  margin-left: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   border-radius: 20px;
-  padding: 10px 20px;
+  padding: 15px 25px 20px;
+  background-color: white;
 `;
 
 const SubTitle = styled.h4`
@@ -91,14 +93,14 @@ const StarRatingText = styled.div`
 `;
 
 const BigText = styled.span`
-  font-size: 32px;
+  font-size: 25px;
   font-weight: bold;
   line-height: 1;
   color: ${({ theme }) => theme.colors.primary};
 `;
 
 const SmallText = styled.span`
-  font-size: 16px;
+  font-size: 12px;
   color: #ababab;
   margin-left: 4px;
 `;
@@ -106,15 +108,14 @@ const SmallText = styled.span`
 const Stars = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: -10px;
   gap: 8px;
 `;
 
 const Star = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== "$isActive",
 })`
-  width: 48px;
-  height: 48px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 
   svg {
@@ -124,7 +125,7 @@ const Star = styled.div.withConfig({
   }
 
   &:hover svg {
-    fill: yellow;
-    stroke: yellow;
+    fill: #FFC636;
+    stroke: #FFC636;
   }
 `;

@@ -105,61 +105,75 @@ const ReviewList = ({ reviews, setReviews }) => {
         onClick={() => handleCardClick(review.reviewId, review.placeId)}
         >
           <CardHeader>
-            <AvatarWrapper>
-              <Image
-                src={profile.profileImageUrl}
-                alt="사용자 프로필"
-                width={40}
-                height={40}
-                style={{borderRadius: "50%"}}
-              />
-            </AvatarWrapper>
-            <Author>{review.memberNickname}</Author>
-            <span style={{ marginBottom: "20px" }}>|</span>
-            <Date>{formatDate(review.createdAt)}</Date>
-            <LikeButton
-              onClick={(event) => handleLikeToggle(review.placeId, review.reviewId, review.liked, event)}
-            >
-              {review.liked ? (
-                <FavoriteIcon style={{ color: "red" }} />
-              ) : (
-                <FavoriteBorderIcon style={{ color: "#ccc" }} />
-              )}
-            </LikeButton>
-            {currentUserNickname === review.memberNickname && (
-              <>
-                <IconButton
-                  onClick={(event) => toggleDropdown(review.reviewId, event)}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                {dropdownStates[review.reviewId] && (
-                  <Menu>
-                    <MenuItem
-                      onClick={(e) => handleEditClick(review.reviewId, review.placeId, e)}
-                    >
-                      수정
-                    </MenuItem>
-                    <MenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteReview(review.reviewId);
-                      }}
-                    >
-                      삭제
-                    </MenuItem>
-                  </Menu>
+            <AuthorWrapper>
+              <AvatarWrapper>
+                <Image
+                  src={profile.profileImageUrl}
+                  alt="사용자 프로필"
+                  width={40}
+                  height={40}
+                  style={{borderRadius: "50%"}}
+                />
+              </AvatarWrapper>
+
+              <AuthorInfoWrapper>
+                <AuthorInfo>
+                  <Author>{review.memberNickname}</Author>
+                  <span style={{ marginBottom: "20px" }}>|</span>
+                  <Date>{formatDate(review.createdAt)}</Date>
+                </AuthorInfo>
+                <RatingContainer>
+                  <Rating>
+                    {Array.from({ length: Math.round(review.rating) }).map((_, i) => (
+                      <span style={{marginRight:"-5px"}}key={i}>⭐</span>
+                    ))}
+                  </Rating>
+                </RatingContainer>
+              </AuthorInfoWrapper>
+            </AuthorWrapper>
+
+            <ButtonWrapper>
+            
+              <LikeButton
+                onClick={(event) => handleLikeToggle(review.placeId, review.reviewId, review.liked, event)}
+              >
+                {review.liked ? (
+                  <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                  <FavoriteBorderIcon style={{ color: "#ccc" }} />
                 )}
-              </>
-            )}
+              </LikeButton>
+              {currentUserNickname === review.memberNickname && (
+                <>
+                  <IconButton
+                    onClick={(event) => toggleDropdown(review.reviewId, event)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  {dropdownStates[review.reviewId] && (
+                    <Menu>
+                      <MenuItem
+                        onClick={(e) => handleEditClick(review.reviewId, review.placeId, e)}
+                      >
+                        수정
+                      </MenuItem>
+                      <MenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteReview(review.reviewId);
+                        }}
+                      >
+                        삭제
+                      </MenuItem>
+                    </Menu>
+                  )}
+                </>
+                )}
+              </ButtonWrapper>
+
+            
           </CardHeader>
-            <RatingContainer>
-            <Rating>
-              {Array.from({ length: Math.round(review.rating) }).map((_, i) => (
-                <span style={{marginRight:"-5px"}}key={i}>⭐</span>
-              ))}
-            </Rating>
-            </RatingContainer>
+            
           <CardContent>
             <Text>{review.content}</Text>
             <ImagesWrapper>
@@ -225,9 +239,11 @@ const ReviewCard = styled.div`
 `;
 const CardHeader = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   position: relative;
   margin-bottom: 8px;
+  margin-top: -5px;
   width: 100%;
 `;    
 const AvatarWrapper = styled.div`
@@ -238,7 +254,7 @@ const AvatarWrapper = styled.div`
   flex-shrink: 0;
 `;
 const RatingContainer = styled.div`
-  margin-left: 50px;
+  margin-left: 5px;
   display: flex;
 `
 const Author = styled.span`
@@ -260,8 +276,7 @@ const CardContent = styled.div``;
 
 const Rating = styled.div`
   font-size: 14px;
-  margin-top: -25px;
-  margin-left: 5px;
+  text-align: start;
 `;
 
 const Text = styled.p`
@@ -275,15 +290,35 @@ const ImageWrapper = styled.div`
   border-radius: 10px;
   overflow: hidden;
 `;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+`;
+
+const AuthorWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
+
+const AuthorInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const AuthorInfo = styled.div`
+
+`;
+
 const LikeButton = styled.div`
   cursor: pointer;
-  width: 40px;
+  width: 30px;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: auto; /* 왼쪽 여백 추가 */
-  margin-right: 10px; /* 수정/삭제 버튼과의 간격 */
+  margin-bottom: 3px;
+  padding-left: 15px;
   &:hover svg {
     transform: scale(1.2);
   }

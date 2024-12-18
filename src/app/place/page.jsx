@@ -48,7 +48,6 @@ const PlacePage = () => {
     const fetchPopularReviews = async () => {
       try {
         const response = await axios.get("https://api.daengplace.com/reviews/popular");
-        console.log(response.data)
         setPopularReviews(response.data.data);
       } catch (error) {
         console.error("Failed to fetch popular reviews:", error);

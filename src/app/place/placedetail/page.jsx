@@ -104,10 +104,8 @@ const ActualPlaceDetailPage = () => {
     try {
       if (selectedCard.is_favorite) {
         await removeFavorite(placeId); 
-        console.log("즐겨찾기 삭제 성공");
       } else {
         await addFavorite(placeId); 
-        console.log("즐겨찾기 등록 성공");
       }
 
       setSelectedCard((prevCard) => ({
@@ -153,7 +151,6 @@ const ActualPlaceDetailPage = () => {
   
         if (uploadResponse.status === 200) {
           const filePath = uploadResponse.data;
-          console.log("File uploaded successfully. Path:", filePath);
   
           const analyzeResponse = await axios.post(
             "https://api.daengplace.com/ocr/analyze",
@@ -165,16 +162,13 @@ const ActualPlaceDetailPage = () => {
   
           if (analyzeResponse.status === 200) {
             const extractedTexts = analyzeResponse.data;
-            console.log(extractedTexts);
             const combinedText = extractedTexts.join("");
             const placeName = useReviewStore.getState().placeName;
-            console.log("Extracted texts:", combinedText);
   
             if (combinedText.includes(placeName)) {
               setIsConfirmModalOpen(true);
               const visitDateMatch = combinedText.match(/\d{4}[./-]\d{2}[./-]\d{2}/); 
               const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
-              console.log("Extracted visit date:", visitDate);
               setVisitDate(visitDate);
             } else {
               setErrorMessage("영수증에 해당 장소명이 포함되어 있지 않습니다. <br />다시 촬영해주세요.");

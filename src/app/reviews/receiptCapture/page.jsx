@@ -59,7 +59,6 @@ const ActualReceiptCapture = () => {
 
       if (uploadResponse.status === 200) {
         const filePath = uploadResponse.data;
-        console.log("File uploaded successfully. Path:", filePath);
 
         const analyzeResponse = await axios.post(
           "https://api.daengplace.com/ocr/analyze",
@@ -72,13 +71,10 @@ const ActualReceiptCapture = () => {
         if (analyzeResponse.status === 200) {
           const extractedTexts = analyzeResponse.data;
           const combinedText = extractedTexts.join("");
-          console.log("Extracted texts:", combinedText);
-          console.log("Stored place name:", placeName);
         if (combinedText.includes(placeName)) {
           setIsConfirmModalOpen(true);
           const visitDateMatch = combinedText.match(/\d{4}[./-]\d{2}[./-]\d{2}/);
           const visitDate = visitDateMatch ? visitDateMatch[0].replace(/[\/-]/g, ".") : "날짜 없음";
-          console.log("Extracted visit date:", visitDate);
           setVisitDate(visitDate);
         } else {
           setErrorMessage("영수증에 해당 장소명이 포함되어 있지 않습니다. <br />다시 촬영해주세요.");

@@ -73,6 +73,7 @@ const SectionTitle = styled.div`
     font-size: 18px;
     font-weight: bold;
     margin-top: 5px;
+    margin-left: 10px;
     span {
       color: ${theme.colors.primary};
     }

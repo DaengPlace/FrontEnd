@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { ChevronDown } from "@styled-icons/bootstrap/ChevronDown";
+import { ChevronUp } from "@styled-icons/bootstrap/ChevronUp";
+import theme from "@/styles/theme";
 
 const tags = [
   {  traitTagId: 1, icon: "🐕", text: "활동적인 아이에게 추천해요", count: 0 },
@@ -28,7 +31,6 @@ const TagSection = ({ reviews }) => {
   });
 
   const totalReviews = reviews.length || 1;
-  console.log("업데이트된 태그:", updatedTags);
   const displayedTags = showAllTags ? updatedTags : updatedTags.slice(0, 4);
 
   return (
@@ -49,16 +51,26 @@ const TagSection = ({ reviews }) => {
           );
         })}
       </TagList>
-      {!showAllTags && (
-        <MoreButton onClick={() => setShowAllTags(true)}>더보기</MoreButton>
+
+
+      {!showAllTags ? (
+        <ButtonWrapper onClick={() => setShowAllTags(true)}>
+          <MoreButton>더보기</MoreButton>
+          <ChevronDown style={{color: 'black'}} width={16} height={16} />
+        </ButtonWrapper>
+      ) : (
+        <ButtonWrapper onClick={() => setShowAllTags(false)}>
+          <MoreButton>더보기</MoreButton>
+          <ChevronUp style={{color: 'black'}} width={16} height={16} />
+        </ButtonWrapper>
       )}
+
     </TagListContainer>
   );
 };
 
 export default TagSection;
 
-// 스타일 컴포넌트
 const TagListContainer = styled.div`
   margin-top: 20px;
 `;
@@ -79,6 +91,14 @@ const TagList = styled.ul`
   margin-top: 20px;
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 10px;
+`;
+
 const TagItem = styled.li`
   display: flex;
   align-items: center;
@@ -86,12 +106,13 @@ const TagItem = styled.li`
   background: linear-gradient(
     to right,
     #ffe082 ${(props) => props.percentage}%,
-    #f9f9f9 ${(props) => props.percentage}% 
+    white ${(props) => props.percentage}% 
   );
   padding: 10px;
   border-radius: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 `;
 
 const TagIcon = styled.span`
@@ -122,21 +143,9 @@ const ParticipantInfo = styled.span`
   margin-right: 10px;
 `;
 
-const MoreButton = styled.button`
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+const MoreButton = styled.div`
   padding: 10px;
-  background-color: ${({ theme }) => theme.colors.defaultBackground || "#f4f4f4"};
-  border: 1px solid ${({ theme }) => theme.colors.primary || "#ccc"};
-  border-radius: 10px;
-  color: ${({ theme }) => theme.colors.primary || "#555"};
-  font-weight: bold;
-  cursor: pointer;
+  color: black;
   text-align: center;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary || "#ccc"};
-    color: white;
-  }
+  font-size: 15px;
 `;

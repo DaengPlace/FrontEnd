@@ -6,7 +6,6 @@ import { useDogStore } from "@/stores/dogStore";
 
 const DogInfo = () => {
   const { dogData } = useDogStore();
-  console.log(dogData);
 
   const calculateAge = (birthDate) => {
     if (!birthDate || birthDate.length !== 8) return "";

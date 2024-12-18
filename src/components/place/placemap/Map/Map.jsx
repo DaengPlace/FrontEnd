@@ -56,7 +56,6 @@ const Map = ({ center, zoom, userLocation, markers }) => {
         )}
         {markers && markers.length > 0 && 
           markers.map((marker, index) => {
-            console.log(`Rendering marker #${index}:`, marker);
             return (
               <Marker
                 key={marker.id}

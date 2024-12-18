@@ -14,7 +14,6 @@ const RegisterConfirmPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const { dogData } = useDogStore();
-  console.log(dogData);
 
   const handleRegister = async () => {
     try {
@@ -26,7 +25,7 @@ const RegisterConfirmPage = () => {
         gender: dogData.gender === "여아" ? "FEMALE" : "MALE",
         isNeutered: dogData.isNeutered,
       });
-      router.push("/mypage");
+      router.push("/m");
     } catch (error) {
       alert("등록 중 오류가 발생했습니다. 다시 시도해주세요.");
     }

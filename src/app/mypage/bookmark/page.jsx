@@ -31,7 +31,6 @@ const BookmarkPage = () => {
 
         const placeResponses = await Promise.all(placeRequests);
         const places = placeResponses.map((res) => res.data);
-        console.log(places);
         setFacilities(
           places.map((place) => ({
             id: place.placeId,
@@ -58,25 +57,6 @@ const BookmarkPage = () => {
 
     fetchBookmarks();
   }, []);
-
-  // useEffect(() => {
-  //   // Scroll 및 Intersection Observer 설정
-  //   const container = document.getElementById("scrollable-container");
-  //   const handleScroll = () => setShowScrollToTop(container.scrollTop > 10);
-
-  //   container.addEventListener("scroll", handleScroll);
-
-  //   const observer = new IntersectionObserver(([entry]) => {
-  //     setButtonBottom(entry.isIntersecting ? 20 : 30);
-  //   }, { root: container, threshold: 0.1 });
-
-  //   if (bottomRef.current) observer.observe(bottomRef.current);
-
-  //   return () => {
-  //     container.removeEventListener("scroll", handleScroll);
-  //     if (bottomRef.current) observer.unobserve(bottomRef.current);
-  //   };
-  // }, []);
 
   return (
     <Container>

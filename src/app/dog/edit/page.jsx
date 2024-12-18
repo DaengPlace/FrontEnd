@@ -9,6 +9,7 @@ import Input from "@/components/common/Input/Input";
 import Button from "@/components/common/Button/Button";
 import Header from "@/components/signin/Header/Header";
 import Checkbox from "@/components/common/Checkbox/Checkbox";
+import DogBottomSheet from "@/components/dog/DogBottomSheet/DogBottomSheet";
 
 const DogEditPage = () => {
   const router = useRouter();
@@ -20,6 +21,8 @@ const DogEditPage = () => {
   } = useForm({
     mode: "onChange",
   });
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
   const [dogInfo, setDogInfo] = useState({
     name: dogData.name || "",
     breed: dogData.breed || "",
@@ -77,6 +80,7 @@ const DogEditPage = () => {
             placeholder="견종을 입력하세요"
             value={dogInfo.breed}
             onChange={(e) => handleInputChange("breed", e.target.value)}
+            onClick={()=> setIsBottomSheetOpen(true)} 
           />
         </InputBox>
         <InputBox>
@@ -171,6 +175,16 @@ const DogEditPage = () => {
           확인
         </Button>
       </FixedButtonContainer>
+
+      {isBottomSheetOpen && (
+        <DogBottomSheet
+          onClose={() => setIsBottomSheetOpen(false)}
+          onSelect={(breed) => {
+            handleInputChange("breed", breed.breedType);
+            setIsBottomSheetOpen(false);
+          }}
+        />
+      )}
     </Container>
   );
 };

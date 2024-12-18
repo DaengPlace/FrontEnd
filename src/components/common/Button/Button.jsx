@@ -92,6 +92,10 @@ const StyledButton = styled.button.withConfig({
       : undefined};
   transition: all 0.3s ease;
 
+  word-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+
   &:hover {
     background-color: ${({ $isActive, theme, disabled }) =>
       disabled ? "#f2f2f2" : $isActive ? theme.colors.primaryHover : "#f2f2f2"};

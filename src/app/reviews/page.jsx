@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header/Header";
 import PageHeader from "@/components/reviews/PageHeader/PageHeader";
@@ -10,8 +9,8 @@ import TagSection from "@/components/reviews/TagSection/TagSection";
 import PhotoReviewContainer from "@/components/reviews/PhotoReviewContainer/PhotoReviewContainer";
 import ReviewList from "@/components/reviews/ReviewList/ReviewList";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { fetchPlaceReviews, fetchPlaceDetails } from "@/apis/review/reviewApi";
+import theme from "@/styles/theme";
 
 const ReviewPage = () => {
   return (
@@ -29,7 +28,6 @@ const ReviewPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const containerRef = useRef(null);
 
 
@@ -39,7 +37,6 @@ const ReviewPage = () => {
         setLoading(true);
 
         const reviewsData = await fetchPlaceReviews(placeId);
-        console.log("Fetched reviews:", reviewsData);
         setReviews(reviewsData);
 
         const placeDetails = await fetchPlaceDetails(placeId);
@@ -58,32 +55,6 @@ const ReviewPage = () => {
       console.warn("placeId is undefined.");
     }
   }, [placeId]);
-
-  const scrollToTop = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const scrollTop = containerRef.current.scrollTop;
-        setShowScrollToTop(scrollTop > 10);
-      }
-    };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
 
   return (
     <>
@@ -107,12 +78,6 @@ const ReviewPage = () => {
         <PhotoReviewContainer reviews={reviews} placeId={placeId} />
         <ReviewList reviews={reviews} setReviews={setReviews}/>
       </Container>
-      {showScrollToTop && (
-        <ScrollToTopButton onClick={scrollToTop}>
-          <KeyboardArrowUpIcon sx={{ fontSize: 36, marginBottom: "-4px" }} />
-          <span>맨위로</span>
-        </ScrollToTopButton>
-      )}
     </>
   );
 };
@@ -130,35 +95,7 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  background-color: ${theme.colors.defaultBackground};
 `;
 
-const ScrollToTopButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: calc(50% - 280px); 
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.colors.defaultBackground};
-  color: ${({ theme }) => theme.colors.primary};
-  border: 2px solid ${({ theme }) => theme.colors.primary};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 1000;
-  transition: background-color 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: white;
-  }
-
-  span {
-    margin-top: -4px;
-  }
-`;

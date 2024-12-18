@@ -71,6 +71,7 @@ const ReviewCard = ({ review, setReview, isOpen, toggleDropdown }) => {
             alt="사용자 프로필"
             width={60}
             height={60}
+            style={{borderRadius: "50%"}}
           />
         ) : null}
         </AvatarWrapper>

@@ -6,6 +6,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { useSearchParams } from "next/navigation";
 import useReviewStore from "@/stores/reviewStore";
 import { fetchPlaceDetails } from "@/apis/review/reviewApi";
+import { Active } from "@/components/common/Button/Button.stories";
 
 const CategorySection = () => {
   const searchParams = useSearchParams();
@@ -85,7 +86,7 @@ const ReviewPolicyBottomSheet = ({ onClose }) => (
         <PolicyFooter>
           고객에 의 사항을 위반하여 발생하는 고객 또는 제3자에 모든 피해에 대해 댕댕플레이스는 책임지지 않으며, 게시된 내용에 대한 모든 책임은 고객에게 있습니다.
         </PolicyFooter>
-        <ConfirmButton onClick={onClose}>확인</ConfirmButton>
+        <Active isActive={true} onClick={onClose}>확인</Active>
       </PolicyContent>
     </PolicySheet>
   </Overlay>
@@ -118,7 +119,6 @@ const SectionTitle = styled.div`
   font-size: 17px;
   font-weight: bold;
   margin-left: 10px;
-  margin-bottom: 10px;
 `;
 
 const VisitDate = styled.span`
@@ -153,7 +153,8 @@ const PolicySheet = styled.div`
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0%);
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   right: 0;
   background: #fff;
   border-radius: 16px 16px 0 0;
@@ -204,24 +205,7 @@ const ContentHeader = styled.div`
 const PolicyFooter = styled.p`
   font-size: 15px;
   margin-top: 16px;
-`;
-
-const ConfirmButton = styled.button`
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  margin-top: 16px;
-  cursor: pointer;
-  height: 64px;
-
-  &:hover {
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  }
+  margin-bottom: 16px;
 `;
 
 const Span = styled.span`

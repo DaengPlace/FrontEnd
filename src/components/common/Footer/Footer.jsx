@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import logoPlace from "../../../../public/assets/mainpage/logoPlace.png"
+import styled from "styled-components";
 
 const Footer = () => {
   const footerStyle = {
@@ -29,7 +30,9 @@ const Footer = () => {
         </span>
       </p>
       <div style={{ fontSize: "13px", color: "#ABABAB" }}>
-        <p>고객센터: 09:00 ~ 18:00 (점심시간: 12:00 ~ 13:00)</p>
+        <KakaoTalk>
+          <a style={{textDecoration: "underline"}} href="http://pf.kakao.com/_uGNdn"><img style={{width: "20px", }} src="/assets/kakaotalk.png" /><span>카카오톡 채널 문의 09:00 ~ 18:00</span></a>
+        </KakaoTalk>
         <br></br>
         <p style={{ fontWeight: "bold" }}>제휴 입점 및 기타 문의</p>
         <p>입점 | daengplace@daengplace.co.kr</p>
@@ -48,3 +51,21 @@ const Footer = () => {
 };
 
 export default Footer;
+
+const KakaoTalk = styled.div`
+
+  a {
+    display: flex;
+    align-items: center;
+
+  }
+
+  span {
+    margin-left: 5px;
+  }
+`;
+
+const LogoImage = styled(Image)`
+  width: 150px;
+  height: 30px;
+`;

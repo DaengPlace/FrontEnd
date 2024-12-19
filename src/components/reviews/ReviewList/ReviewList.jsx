@@ -28,6 +28,7 @@ const ReviewList = ({ reviews, setReviews }) => {
       const loadUserProfile = async () => {
         try {
           const profiledata = await fetchUserProfile();
+          console.log("Fetched profile data:", profiledata);
           setCurrentUserNickname(profiledata.nickname);
           setProfile(profiledata);
         } catch (error) {
@@ -108,7 +109,7 @@ const ReviewList = ({ reviews, setReviews }) => {
             <AuthorWrapper>
               <AvatarWrapper>
                 <Image
-                  src={profile.profileImageUrl}
+                  src={review.memberProfileImage || "/assets/profile/default_profile.svg"}
                   alt="사용자 프로필"
                   width={40}
                   height={40}

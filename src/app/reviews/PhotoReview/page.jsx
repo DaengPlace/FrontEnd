@@ -39,7 +39,6 @@ const ActualPhotoReviewPage = () => {
         }));
   
         setReviews(reviewsData);
-        console.log(reviewsData)
         const placeResponse = await axiosInstance.get(`/places/${placeId}`);
         setCategory(placeResponse.data.data.category);
         setName(placeResponse.data.data.name);

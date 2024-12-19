@@ -58,6 +58,8 @@
 
 ## 3.2 프로젝트 아키텍쳐
 
+<img src="https://github.com/user-attachments/assets/fd0766cf-430c-4608-9469-80394765e961" width="600" height="1000"/>
+
 ## 3.3 API 명세서
 
 > API 명세서의 경우 현재 노션에서 관리하고 있습니다.

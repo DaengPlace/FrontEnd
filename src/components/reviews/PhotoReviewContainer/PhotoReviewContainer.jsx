@@ -11,10 +11,9 @@ const PhotoReviewContainer = ({ reviews, placeId }) => {
     router.push(`/reviews/PhotoReview?placeId=${placeId}`);
   };
 
-  // reviews 데이터 미리 처리하여 기본 이미지를 설정
   const processedReviews = reviews.map((review) => ({
     ...review,
-    imageUrls: review.imageUrls?.length > 0 ? review.imageUrls.slice(0, 4) : ["/assets/image.png"],
+    imageUrls: review.imageUrls?.slice(0, 4) || ["/assets/image.png"],
   }));
 
   return (
@@ -24,7 +23,7 @@ const PhotoReviewContainer = ({ reviews, placeId }) => {
         <ViewMore onClick={handleClick}>더보기 <ChevronRight style={{marginBottom: "2px"}} width={12} height={12} /></ViewMore>
       </SectionHeader>
       <PhotoList>
-        {processedReviews.slice(0, 5).map((review) => (
+        {processedReviews.slice(0, 3).map((review) => (
           <PhotoGroup key={review.reviewId}>
             {review.imageUrls.map((url, index) => (
               <PhotoWrapper key={index}>

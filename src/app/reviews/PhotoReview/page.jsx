@@ -80,12 +80,13 @@ const ActualPhotoReviewPage = () => {
       }
     };
   }, []);
+  const totalPhotoCount = reviews.reduce((count, review) => count + (review.imageUrls?.length || 0), 0);
 
   return (
     <>
       <HeaderSection />
       <Container ref={containerRef}>
-        <SubHeader category={category} name={name} photoCount={reviews.length} />
+        <SubHeader category={category} name={name} photoCount={totalPhotoCount} />
         <PhotoGrid reviews={reviews} placeId={placeId} onImageClick={handleImageClick} />
       </Container>
       <ScrollToTop show={showScrollToTop} onClick={scrollToTop} />

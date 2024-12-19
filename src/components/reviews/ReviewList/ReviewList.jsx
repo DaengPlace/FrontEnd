@@ -28,7 +28,6 @@ const ReviewList = ({ reviews, setReviews }) => {
       const loadUserProfile = async () => {
         try {
           const profiledata = await fetchUserProfile();
-          console.log("Fetched profile data:", profiledata);
           setCurrentUserNickname(profiledata.nickname);
           setProfile(profiledata);
         } catch (error) {

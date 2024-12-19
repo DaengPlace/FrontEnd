@@ -58,7 +58,6 @@ const ActualRecommendDogTest = () => {
       traitAnswerId: answerId,
     }));
     setPetTraits(petTraits); // Zustand에 저장
-    console.log(petTraits)
     router.push(`/recommend/usertest?petId=${petId}`);
   };
 

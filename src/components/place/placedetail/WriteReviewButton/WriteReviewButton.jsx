@@ -20,10 +20,8 @@ const Button = styled.button`
   font-weight: bold;
   width: 27%;
   height: 40px;
-  top: -1rem;
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
   }
-  margin-bottom: 0;
 `;

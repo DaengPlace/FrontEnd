@@ -2,15 +2,12 @@
 
 import Header from "@/components/common/Header/Header";
 import { WithBookmarkIcon } from "@/components/common/Header/Header.stories";
-import styled from "styled-components";
-import { initialFacilities } from "@/data/facilities";
+import styled,{ keyframes } from "styled-components";
 import theme from "@/styles/theme.js";
 import FacilitiesSection from "@/components/main/FacilitiesSection/FacilitiesSection";
-import Divider from "@/components/common/Divider/Divider";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import AuthGuard from "@/components/common/AuthGuard/AuthGuard";
 import { getPetRecommend, getUserRecommend } from "@/apis/places/getRecommend";
 import { getGenderAgeFacilities, getPopularFacilities } from "@/apis/place/getPopularFacilities";
 import { getPets } from "@/apis/dog/getPets";
@@ -23,6 +20,7 @@ const RecommendPage = () => {
   const [petRecommended, setPetRecommended] = useState([]);
   const [popularFacilities, setPopularFacilities] = useState([]);
   const [genderAgePopular, setGenderAgePopular] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
@@ -30,9 +28,9 @@ const RecommendPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         // 사용자 기준 추천 시설
         const userRecommendedRes = await getUserRecommend();
-        console.log(userRecommendedRes.data);
 
         // 최근 인기 시설
         const popularRes = await getPopularFacilities();
@@ -44,14 +42,11 @@ const RecommendPage = () => {
         const petsRes = await getPets();
         const pets = petsRes.data;
       
-        console.log(pets)
-
         const fetchPetRecommendations = pets.map(async (pet) => {
           const recommendRes = await getPetRecommend(pet.petId);
           return { petName: pet.name, facilities: recommendRes.data};
         });
         const petResults = await Promise.all(fetchPetRecommendations);
-        console.log(petResults);
 
         // 데이터 상태 업데이트
         setUserRecommended(userRecommendedRes.data || []);
@@ -62,6 +57,8 @@ const RecommendPage = () => {
         setGender(genderAgeRes.data.gender);
       } catch (error) {
         console.error("API 데이터 불러오기 실패: ", error);
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -71,6 +68,13 @@ const RecommendPage = () => {
 
   return (
     <Container>
+      {loading ? ( 
+        <LoadingContainer>
+          <Spinner />
+          <LoadingText>Loading...</LoadingText>
+        </LoadingContainer>
+      ) : (
+        <>
       <Header 
         title="성향별 시설 추천" 
         showHomeIcon={WithBookmarkIcon.args.showHomeIcon} 
@@ -82,9 +86,7 @@ const RecommendPage = () => {
       <ScrollableContent>
 
         <TestBanner>
-          <AuthGuard>
-            <BannerButton onClick={() => router.push('/recommend/testresult')}>성향 테스트 하러가기</BannerButton>
-          </AuthGuard>
+          <BannerButton onClick={() => router.push('/recommend/testresult')}>성향 테스트 하러가기</BannerButton>
         </TestBanner>
 
         {/* 사용자 기준 추천 */}
@@ -120,10 +122,7 @@ const RecommendPage = () => {
 
         <Banner>
           <BannerText>아직 <span>성향 테스트</span>를 하지 않으셨나요?</BannerText>
-          <AuthGuard>
-            <BannerImage onClick={() => router.push('/recommend/testresult')} src="/assets/recommend/recommendBanner.svg" alt="recommendBanner" width={560} height={373} />
-          </AuthGuard>
-          <Divider />
+          <BannerImage onClick={() => router.push('/recommend/testresult')} src="/assets/recommend/recommendBanner.svg" alt="recommendBanner" width={560} height={373} />
         </Banner>
 
         {/* 성별/연령대별 인기 시설 */}
@@ -136,7 +135,8 @@ const RecommendPage = () => {
         </Section>
 
       </ScrollableContent>
-    
+    </>
+    )}
     </Container>
   );
 };
@@ -176,7 +176,7 @@ const TestBanner = styled.div`
 
 const BannerButton = styled.button`
   background-color: white;
-  width: 560px;
+  width: 90%;
   height: 60px;
   border: 1px solid ${theme.colors.primary};
   color: ${theme.colors.primary};
@@ -225,4 +225,31 @@ const BannerText = styled.div`
   span {
     color: ${theme.colors.primary}
   }
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const LoadingText = styled.p`
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0019f4;
+`;
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+const Spinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #0019f4;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
 `;

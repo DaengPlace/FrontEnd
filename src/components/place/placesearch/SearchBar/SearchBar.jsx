@@ -25,6 +25,7 @@ const SearchBarContainer = styled.div`
     background-color: ${({ theme }) => theme.colors.divider};
     transition: background-color 0.3s ease;
   }
+  cursor: pointer;
 `;
 
 const SearchWrapper = styled.div`

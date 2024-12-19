@@ -23,8 +23,11 @@ const Card = ({ card, onCardClick, toggleLike }) => {
       if (openTime === "00:00:00" && closeTime === "00:00:00") {
         return "24시간 영업";
       }
+
+      const formattedOpenTime = openTime.slice(0, 5);
+      const formattedCloseTime = closeTime.slice(0, 5);
   
-      return `${openTime} - ${closeTime}`;
+      return `${formattedOpenTime} - ${formattedCloseTime}`;
     }
     return "운영 시간 정보 없음";
   };
@@ -81,9 +84,9 @@ const Card = ({ card, onCardClick, toggleLike }) => {
 
 const CardContainer = styled.div`
   position: relative;
-  background: ${({ theme }) => theme.colors.defaultBackground};
+  background-color: white;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.colors.divider};
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -181,7 +184,7 @@ const OpeningHours = styled.p`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.black};
   margin-left: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-bottom: 10px;
 `;
 

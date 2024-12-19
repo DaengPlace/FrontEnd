@@ -13,9 +13,7 @@ export const usePostSignin = () => {
       setData(responseData);
     } catch (err) {
       setError(err);
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   return {

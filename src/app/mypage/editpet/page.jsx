@@ -204,7 +204,7 @@ const ActualEditPetPage = () => {
             </BoxContainer>
           </InputBox>
           <InputBox>
-            <p>몸무게</p>
+            <p>몸무게 (kg)</p>
             <BoxContainer>
               <Input
                 type="number"
@@ -286,7 +286,7 @@ const InputBox = styled.div`
     font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 5px;
-    color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.divider};
   }
 `;
 

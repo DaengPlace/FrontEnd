@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 70px;
+  margin-top: 50px;
   margin-left: 20px;
 `;
 
@@ -32,6 +32,7 @@ const CategoryBadge = styled.div`
   background: #01003f;
   border-radius: 10px;
   text-align: center;
+  margin-top: 20px;
 `;
 
 const Title = styled.h2`

@@ -61,7 +61,6 @@ const SigninPage = () => {
 
   const onSubmit = (data) => {
     if (isVerified) {
-      console.log("Signin Data: ", data);
 
       setSigninData({
         name: data.name,
@@ -331,7 +330,7 @@ const SigninPage = () => {
                   onClick={isVerified ? null : handleSendVerificationCode}
                   type="button"
                 >
-                  {isVerificationSent ? "재발송" : "인증번호 발송"}
+                  {isVerificationSent ? "재발송" : "인증번호발송"}
                 </Button>
               </BoxContainer>
               {verificationErrorMessage && (

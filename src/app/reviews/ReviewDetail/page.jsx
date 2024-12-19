@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import axios from "axios";
 import styled from "styled-components";
 import HeaderSection from "@/components/reviews/ReviewsDetail/HeaderSection/HeaderSection";
 import SubHeader from "@/components/reviews/ReviewsDetail/SubHeader/SubHeader";
@@ -11,6 +10,7 @@ import {
   fetchReviewDetail,
   fetchPlaceDetails,
 } from "@/apis/review/reviewApi";
+import theme from "@/styles/theme";
 
 const ReviewDetailPage = () => {
   return (
@@ -64,7 +64,7 @@ const ActualReviewDetailPage = () => {
   }, [reviewId, placeId]);
 
   return (
-    <>
+    <LargeContainer>
       <HeaderSection />
       <SubHeader category={place?.category || "카테고리 없음"} title={place?.name || "제목 없음"} />
       <Container>
@@ -75,11 +75,16 @@ const ActualReviewDetailPage = () => {
           setReview={setReview}
         />
       </Container>
-    </>
+    </LargeContainer>
   );
 };
 
 export default ReviewDetailPage;
+
+const LargeContainer = styled.div`
+  background-color: ${theme.colors.defaultBackground};
+  height: 100vh;
+`;
 
 const Container = styled.div`
   margin-bottom: 20px;

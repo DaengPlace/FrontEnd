@@ -14,7 +14,6 @@ const RegisterConfirmPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const { dogData } = useDogStore();
-  console.log(dogData);
 
   const handleRegister = async () => {
     try {

@@ -21,11 +21,11 @@ const FacilityCard = ({image, category, name, rating, placeId}) => {
 export default FacilityCard;
 
 const CardContainer = styled.div`
-    background: ${({ theme }) => theme.colors.defaultbackground};
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     border-radius: 20px;
     overflow: hidden;
     transition: transform 0.2s;
-    border: 1px solid ${({ theme }) => theme.colors.divider};
     width: 200px;
 
     &:hover {
@@ -57,6 +57,10 @@ const Category = styled.span`
 
 const Name = styled.h4`
     font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 `;
 
 const Rating = styled.p`

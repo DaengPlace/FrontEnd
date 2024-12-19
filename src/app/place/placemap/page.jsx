@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { sidoOptions, gunguOptions } from "@/data/data";
-import axios from "axios";
 import SearchBar from "@/components/place/placemap/SearchBar/SearchBar";
 import Tabs from "@/components/place/placemap/Tabs/Tabs";
 import FilterButtons from "@/components/place/placemap/FilterButtons/FilterButtons";
@@ -15,6 +14,7 @@ import { CircularProgress } from "@mui/material";
 import Header from "@/components/common/Header/Header";
 import { WithMapIcon } from "@/components/common/Header/Header.stories";
 import { fetchPlaces } from "@/apis/place/places";
+import theme from "@/styles/theme";
 
 const PlaceMap = () => {
   return (
@@ -264,7 +264,7 @@ const handleMarkersUpdate = (places, searchTerm = "") => {
   }
   
   return (
-    <>
+    <Container>
     <Header
         title="동반가능시설 검색"
         showFavoriteIcon={WithMapIcon.args.showFavoriteIcon}
@@ -305,9 +305,12 @@ const handleMarkersUpdate = (places, searchTerm = "") => {
         onGunguChange={handleGunguChange}
       />
     </MapContainerWrapper>
-    </>
+    </Container>
   );
 };
+const Container = styled.div`
+  background-color: ${theme.colors.defaultBackground};
+`;
 
 const LoadingContainer = styled.div`
   display: flex;
@@ -328,6 +331,6 @@ const MapContainerWrapper = styled.div`
   height: 100vh;
   margin: 0;
   padding: 0;
-  margin-top: 70px;
+  margin-top: 50px;
 `;
 export default PlaceMap;

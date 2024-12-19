@@ -12,11 +12,11 @@ import RatingSection from "@/components/reviews/reviewsInput/RatingSection/Ratin
 import AddMediaSection from "@/components/reviews/reviewsInput/AddMediaSection/AddMediaSection";
 import ReviewTextSection from "@/components/reviews/reviewsInput/ReviewTextSection/ReviewTextSection";
 import TagSection from "@/components/reviews/reviewsInput/TagSection/TagSection";
-import SubmitButton from "@/components/reviews/reviewsInput/SubmitButton/SubmitButton";
-import ScrollToTopButton from "@/components/reviews/reviewsInput/ScrollToTopButton/ScrollToTopButton";
 import Divider from "@/components/common/Divider/Divider";
 import { NoTitleHeader } from "@/components/common/Header/Header.stories";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
+import theme from "@/styles/theme";
+import { Active } from "@/components/common/Button/Button.stories";
 
 const ReviewsInputPage = () => {
   return (
@@ -37,7 +37,6 @@ const ReviewsInputPage = () => {
   const [rating, setRating] = useState(0);
   const [mediaFiles, setMediaFiles] = useState([]); 
   const [loading, setLoading] = useState(false);
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const maxLength = 500;
   const [deletedMediaUrls, setDeletedMediaUrls] = useState([]);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -67,11 +66,6 @@ const ReviewsInputPage = () => {
     setMediaFiles(files);
   };
 
-  const scrollToTop = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
   useEffect(() => {
     if (reviewId) {
       const loadReviewData = async () => {
@@ -115,9 +109,6 @@ const ReviewsInputPage = () => {
       formData.append("file", fileObj.file);
     });
   
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
     try {
       setLoading(true);
       if (reviewId) {
@@ -136,43 +127,28 @@ const ReviewsInputPage = () => {
     }
   };
 
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const scrollTop = containerRef.current.scrollTop;
-        setShowScrollToTop(scrollTop > 10);
-      }
-    };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
-
   return (
-    <>
-        <Header title={reviewId ? "리뷰 수정" : "리뷰 작성"} showX={NoTitleHeader.args.showX} onClose={() => setIsModalOpen(true)} />
+    <Container>
+      <Header title={reviewId ? "리뷰 수정" : "리뷰 작성"} showX={NoTitleHeader.args.showX} onClose={() => setIsModalOpen(true)} />
       <MainContent ref={containerRef}>
-        <CategorySection />
-        <Divider />
-        <ProfileSection />
-        <RatingSection rating={rating} onRatingChange={handleRatingChange}/>
-        <AddMediaSection  mediaFiles={mediaFiles} onMediaFilesChange={handleMediaFilesChange} onDeletedMediaUrlsChange={setDeletedMediaUrls}/>
-        <ReviewTextSection
-          reviewText={reviewText}
-          onChange={handleReviewChange}
-          maxLength={maxLength}
-        />
-        <TagSection tags={tags} onTagClick={handleTagClick} />
-        <SubmitButton onClick={handleSubmit}>{reviewId ? "수정" : "등록"}</SubmitButton>
+        <HeaderWrapper>
+          <CategorySection />
+          <Divider />
+          <ProfileSection />
+        </HeaderWrapper>
+        
+        <BoxesWrapper>
+          <RatingSection rating={rating} onRatingChange={handleRatingChange}/>
+          <AddMediaSection  mediaFiles={mediaFiles} onMediaFilesChange={handleMediaFilesChange} onDeletedMediaUrlsChange={setDeletedMediaUrls}/>
+          <ReviewTextSection
+            reviewText={reviewText}
+            onChange={handleReviewChange}
+            maxLength={maxLength}
+          />
+          <TagSection tags={tags} onTagClick={handleTagClick} />
+          <Active isActive={true} onClick={handleSubmit}>{reviewId ? "수정" : "등록"}</Active>
+        </BoxesWrapper>
+
         {isModalOpen && (
         <Modal
           title='리뷰작성을 중단하시겠습니까?'
@@ -189,7 +165,6 @@ const ReviewsInputPage = () => {
         />
       )}
       </MainContent>
-      {showScrollToTop && <ScrollToTopButton onClick={scrollToTop} />}
       {isConfirmModalOpen && (
         <ConfirmModal
           title="알림"
@@ -201,12 +176,15 @@ const ReviewsInputPage = () => {
           }}
         />
       )}
-    </>
+    </Container>
   );
 };
 
 
 export default ReviewsInputPage;
+const Container = styled.div`
+  background-color: ${theme.colors.defaultBackground};
+`;
 
 const MainContent = styled.div`
   padding: 16px;
@@ -218,4 +196,20 @@ const MainContent = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const HeaderWrapper = styled.div`
+  width: 95%;
+`;
+
+const BoxesWrapper = styled.div`
+  width: 90%;
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;

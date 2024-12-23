@@ -83,7 +83,7 @@
 - 프레임워크: Next.js
 - 언어: JavaScript
 - 패키지 매니저: yarn
-- CSS 프레임워크: MUI
+- CSS 프레임워크: styled-components
 - 전역 상태 관리: Zustand
 - 통신: Axios, React-query
 - UI 문서화: Storybook
